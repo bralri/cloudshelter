@@ -17,6 +17,8 @@ const vertex = new THREE.Vector3();
 const color = new THREE.Color();
 
 let video, videoTexture;
+let width = window.innerWidth;
+let height = window.innerHeight;
 
 init();
 animate();
@@ -25,9 +27,10 @@ function init() {
 
     camera = new THREE.PerspectiveCamera( 
         75, 
-        window.innerWidth / window.innerHeight, 
+        width / height, 
         1, 
-        2000 );
+        2000 
+    );
     camera.position.y = 10;
 
     scene = new THREE.Scene();
@@ -41,22 +44,20 @@ function init() {
     controls = new THREE.PointerLockControls(camera, document.body);
 
     const blocker = document.getElementById('blocker');
-    const instructions = document.getElementById( 'instructions');
+    const title = document.getElementById( 'title');
 
-    instructions.addEventListener('click', function () {
+    title.addEventListener('click', function () {
         controls.lock();
     } );
 
     controls.addEventListener( 'lock', function () {
-        instructions.style.display = 'none';
+        title.style.display = 'none';
         blocker.style.display = 'none';
-        video.play();
     } );
 
     controls.addEventListener( 'unlock', function () {
         blocker.style.display = 'block';
-        instructions.style.display = '';
-        video.pause();
+        title.style.display = '';
     } );
 
     scene.add(controls.getObject());
@@ -158,8 +159,6 @@ function init() {
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     scene.add(floor);
 
-    // objects
-
     //video
     video = document.getElementById("video");
     videoTexture = new THREE.VideoTexture(video);
@@ -172,10 +171,11 @@ function init() {
         toneMapped: false
     });
 
-    let videoGeometry = new THREE.BoxGeometry(20, 20, 20);
+    let videoGeometry = new THREE.BoxGeometry(50, 50, 50);
     let videoCubeScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-    videoCubeScreen.position.set(0, 20, -20);
+    videoCubeScreen.position.set(0, 30, -80);
     scene.add(videoCubeScreen);
+    video.play();
 
     //
 
@@ -183,7 +183,7 @@ function init() {
         antialias: true 
     });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     renderer.outputEncoding = THREE.sRGBEncoding;
     document.body.appendChild(renderer.domElement);
 
@@ -194,10 +194,10 @@ function init() {
 }
 
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = width / heigh;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
 }
 
 function animate() {

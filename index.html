@@ -13,16 +13,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <title>Cloud Shelter</title>
+
+    <script>
+        $(window).on('load',function(){
+            $(".loader").fadeOut(2000);
+            $(".content").fadeIn(2000);
+        });
+    </script>
 </head>
 <body>
-
     <div class="loader">
         <div></div>
     </div>
 
     <div class="content">
         <div id="blocker">
-            <div id="instructions">
+            <div id="title">
                 <h2>
                     Cloud Shelter
                 </h2>
@@ -35,17 +41,32 @@
                         alt="logo of a cartoon cloud">
                 </a>
             </div>
+
+            <div id="info">
+                <a href="./about/">
+                    <img 
+                        src="./img/info.png"
+                        alt="information i emoji" >
+                </a>
+            </div>
         
             <div id="links">
-                <h4>
-                    <a href="./about/">about</a>
-                </h4>
-                <h4>
+                <h3>
+                    <a 
+                        href="./about/">
+                        about
+                    </a>
+                </h3>
+                <h3>
                     &nbsp;/&nbsp;
-                </h4>
-                <h4>
-                    <a href="https://www.instagram.com/cloud.shelter" target="_blank">instagram</a>
-                </h4>
+                </h3>
+                <h3>
+                    <a 
+                        href="https://www.instagram.com/cloud.shelter" 
+                        target="_blank">
+                        instagram
+                    </a>
+                </h3>
             </div>
         </div>
 
@@ -66,13 +87,5 @@
         <script src="./js/PointerLockControls.js"></script>
         <script src="./index.js"></script>
     </div>
-    
-    <script>
-        $(window).on('load',function(){
-            $(".loader").fadeOut(1500);
-            $(".content").fadeIn(1500);
-        });
-    </script>
-
 </body>
 </html>

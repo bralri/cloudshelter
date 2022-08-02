@@ -14,10 +14,11 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
 }
 
-#instructions {
+#title {
     width: 100%;
     height: 100%;
 
@@ -28,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
 
     text-align: center;
 }
-#instructions h2:hover {
+#title h2:hover {
     cursor: pointer;
     opacity: 60%;
 }
@@ -36,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
 #logo {
     position: absolute;
     top: 10px;
-    right: 30px;
+    left: 30px;
     z-index: 100;
     display: block;
 }
@@ -45,6 +46,22 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 80%;
 }
 #logo img:hover {
+    cursor: pointer;
+    opacity: 60%;
+}
+
+#info {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    z-index: 100;
+    display: block;
+}
+#info img {
+    width: 55px;
+    opacity: 80%;
+}
+#info img:hover {
     cursor: pointer;
     opacity: 60%;
 }

@@ -1,0 +1,65 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: whitesmoke;
+}
+
+#blocker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+}
+
+#instructions {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    font-size: 14px;
+}
+#instructions h2:hover {
+    cursor: pointer;
+    opacity: 60%;
+}
+
+#logo {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    z-index: 100;
+    display: block;
+}
+#logo img {
+    width: 80px;
+    opacity: 80%;
+}
+#logo img:hover {
+    cursor: pointer;
+    opacity: 60%;
+}
+
+#links {
+    position: absolute;
+    bottom: 10px;
+    right: 40px;
+    z-index: 100;
+    display: flex;
+}
+#links a {
+    color: whitesmoke;
+}
+#links a:hover {
+    cursor: pointer;
+    opacity: 60%;
+}

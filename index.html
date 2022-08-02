@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Description" content="Cloud Shelter is an online gallery and project space.">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" type="image/png" href="./img/cloud_t.png">
+
+    <link rel="stylesheet" href="./css/loader.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <title>Cloud Shelter</title>
+</head>
+<body>
+
+    <div class="loader">
+        <div></div>
+    </div>
+
+    <div class="content">
+        <div id="blocker">
+            <div id="instructions">
+                <h2>
+                    cloud shelter
+                </h2>
+            </div>
+    
+            <div id="logo">
+                <img 
+                    src="./img/cloud_t.png"
+                    href="#"
+                    alt="logo of a cartoon cloud">
+            </div>
+        
+            <div id="links">
+                <h4>
+                    <a href="./about/">about</a>
+                </h4>
+                <h4>
+                    &nbsp;/&nbsp;
+                </h4>
+                <h4>
+                    <a href="https://www.instagram.com/cloud.shelter" target="_blank">instagram</a>
+                </h4>
+            </div>
+        </div>
+        
+        <script src="./js/three.min.js"></script>
+        <script src="./js/PointerLockControls.js"></script>
+        <script src="./index.js"></script>
+    </div>
+    
+    <script>
+        $(window).on('load',function(){
+            $(".loader").fadeOut(1500);
+            $(".content").fadeIn(1500);
+        });
+    </script>
+
+</body>
+</html>

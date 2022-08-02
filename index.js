@@ -2,6 +2,8 @@ let camera, scene, renderer, controls;
 
 const objects = [];
 
+let video, videoTexture;
+
 let raycaster;
 
 let moveForward = false;
@@ -48,11 +50,13 @@ function init() {
     controls.addEventListener( 'lock', function () {
         instructions.style.display = 'none';
         blocker.style.display = 'none';
+        video.play();
     } );
 
     controls.addEventListener( 'unlock', function () {
         blocker.style.display = 'block';
         instructions.style.display = '';
+        video.pause();
     } );
 
     scene.add(controls.getObject());
@@ -152,11 +156,38 @@ function init() {
     const floorMaterial = new THREE.MeshBasicMaterial({vertexColors: true});
 
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    scene.add(floor);
+    //scene.add(floor);
 
     // objects
 
-    
+
+    //video
+    video = document.getElementById("video");
+    videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    const color1 = new THREE.Color(0xFFFFFF);
+
+    const videoMaterial = new THREE.MeshLambertMaterial({
+        map: videoTexture,
+        side: THREE.DoubleSide,
+        toneMapped: false,
+
+        emissive: color1,
+        emissiveMap: videoTexture,
+        emissiveIntensity: 1,
+
+        lighMap: videoTexture,
+        lightMapIntensity: 1,
+
+        transparent: true,
+        opacity: 0.5
+    });
+
+    let videoGeometry = new THREE.BoxGeometry(10, 10, 10);
+    let videoCubeScreen = new THREE.Mesh(videoGeometry, videoMaterial);
+    videoCubeScreen.position.set(0, 10, -20);
+    scene.add(videoCubeScreen);
 
     //
 
@@ -227,6 +258,8 @@ function animate() {
         }
 
     }
+
+    videoTexture.needsUpdate = true;
 
     prevTime = time;
 

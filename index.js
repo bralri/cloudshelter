@@ -2,8 +2,6 @@ let camera, scene, renderer, controls;
 
 const objects = [];
 
-let video, videoTexture;
-
 let raycaster;
 
 let moveForward = false;
@@ -17,6 +15,8 @@ const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 const color = new THREE.Color();
+
+let video, videoTexture;
 
 init();
 animate();
@@ -156,37 +156,25 @@ function init() {
     const floorMaterial = new THREE.MeshBasicMaterial({vertexColors: true});
 
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    //scene.add(floor);
+    scene.add(floor);
 
     // objects
-
 
     //video
     video = document.getElementById("video");
     videoTexture = new THREE.VideoTexture(video);
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
-    const color1 = new THREE.Color(0xFFFFFF);
 
-    const videoMaterial = new THREE.MeshLambertMaterial({
+    const videoMaterial = new THREE.MeshBasicMaterial({
         map: videoTexture,
         side: THREE.DoubleSide,
-        toneMapped: false,
-
-        emissive: color1,
-        emissiveMap: videoTexture,
-        emissiveIntensity: 1,
-
-        lighMap: videoTexture,
-        lightMapIntensity: 1,
-
-        transparent: true,
-        opacity: 0.5
+        toneMapped: false
     });
 
-    let videoGeometry = new THREE.BoxGeometry(10, 10, 10);
-    let videoCubeScreen = new THREE.Mesh(videoGeometry, videoMaterial);
-    videoCubeScreen.position.set(0, 10, -20);
+    let videoGeometry = new THREE.BoxGeometry(20, 20, 20);
+    let videoCubeScreen= new THREE.Mesh(videoGeometry, videoMaterial);
+    videoCubeScreen.position.set(0, 20, -20);
     scene.add(videoCubeScreen);
 
     //

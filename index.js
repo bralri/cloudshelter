@@ -157,7 +157,7 @@ function init() {
     const floorMaterial = new THREE.MeshBasicMaterial({vertexColors: true});
 
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    scene.add(floor);
+    //scene.add(floor);
 
     //video
     video = document.getElementById("video");
@@ -171,9 +171,9 @@ function init() {
         toneMapped: false
     });
 
-    let videoGeometry = new THREE.BoxGeometry(50, 50, 50);
+    let videoGeometry = new THREE.PlaneGeometry(10, 10);
     let videoCubeScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-    videoCubeScreen.position.set(0, 30, -80);
+    videoCubeScreen.position.set(0, 10, -20);
     scene.add(videoCubeScreen);
     video.play();
 

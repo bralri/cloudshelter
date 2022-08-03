@@ -37,9 +37,21 @@ function init() {
     scene.background = new THREE.Color(0xffffff);
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
-    const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
+    const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.5);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
+
+    const shadowLight = new THREE.PointLight(0xffffff, 0.8);
+    shadowLight.position.set(0, 60, -50);
+    shadowLight.angle = Math.PI * 0.2;
+    shadowLight.castShadow = true;
+
+    shadowLight.shadow.mapSize.width = 512;
+    shadowLight.shadow.mapSize.height = 512;
+    shadowLight.shadow.camera.near = 0.5;
+    shadowLight.shadow.camera.far = 500;
+
+    scene.add(shadowLight);
 
     controls = new THREE.PointerLockControls(camera, document.body);
 
@@ -125,57 +137,45 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
+    let floorGeometry = new THREE.PlaneGeometry(500, 500);
     floorGeometry.rotateX(- Math.PI / 2);
+    let floorMaterial = new THREE.MeshPhongMaterial({
+        color: 0xE1E1E1,
+        side: THREE.DoubleSide
+    });
+    let floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.receiveShadow = true;
+    scene.add(floor);
 
-    // vertex displacement
-
-    let position = floorGeometry.attributes.position;
-
-    for (let i = 0, l = position.count; i < l; i ++) {
-        vertex.fromBufferAttribute( position, i );
-
-        vertex.x += Math.random() * 20 - 10;
-        vertex.y += Math.random() * 2;
-        vertex.z += Math.random() * 20 - 10;
-
-        position.setXYZ(i, vertex.x, vertex.y, vertex.z);
-    }
-
-    floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
-
-    position = floorGeometry.attributes.position;
-    const colorsFloor = [];
-
-    for (let i = 0, l = position.count; i < l; i ++) {
-        color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-        colorsFloor.push( color.r, color.g, color.b );
-    }
-
-    floorGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsFloor, 3));
-
-    const floorMaterial = new THREE.MeshBasicMaterial({vertexColors: true});
-
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    //scene.add(floor);
+    //cube test
+    let cubeGeometry = new THREE.BoxGeometry(10, 10, 10)
+    let cubeMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+    });
+    let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.position.set(0, 20, -50)
+    cube.castShadow = true;
+    scene.add(cube);
 
     //video
-    video = document.getElementById("video");
-    videoTexture = new THREE.VideoTexture(video);
-    videoTexture.minFilter = THREE.LinearFilter;
-    videoTexture.magFilter = THREE.LinearFilter;
+    // video = document.getElementById("video");
+    // videoTexture = new THREE.VideoTexture(video);
+    // videoTexture.minFilter = THREE.LinearFilter;
+    // videoTexture.magFilter = THREE.LinearFilter;
 
-    const videoMaterial = new THREE.MeshBasicMaterial({
-        map: videoTexture,
-        side: THREE.DoubleSide,
-        toneMapped: false
-    });
+    // const videoMaterial = new THREE.MeshPhongMaterial({
+    //     map: videoTexture,
+    //     side: THREE.DoubleSide,
+    //     toneMapped: false
+    // });
 
-    let videoGeometry = new THREE.PlaneGeometry(10, 10);
-    let videoCubeScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-    videoCubeScreen.position.set(0, 10, -20);
-    scene.add(videoCubeScreen);
-    video.play();
+    // let videoGeometry = new THREE.PlaneGeometry(10, 10);
+    // let videoCubeScreen= new THREE.Mesh(videoGeometry, videoMaterial);
+    // videoCubeScreen.position.set(0, 10, -20);
+    // videoCubeScreen.castShadow = true;
+    // scene.add(videoCubeScreen);
+    // video.play();
 
     //
 
@@ -185,6 +185,8 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.body.appendChild(renderer.domElement);
 
     //
@@ -247,7 +249,7 @@ function animate() {
 
     }
 
-    videoTexture.needsUpdate = true;
+    // videoTexture.needsUpdate = true;
 
     prevTime = time;
 

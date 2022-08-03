@@ -41,17 +41,29 @@ function init() {
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight = new THREE.PointLight(0xffffff, 0.8);
-    shadowLight.position.set(0, 60, -50);
-    shadowLight.angle = Math.PI * 0.2;
-    shadowLight.castShadow = true;
+    const shadowLight1 = new THREE.PointLight(0xffffff, 0.6);
+    shadowLight1.position.set(-20, 100, -70);
+    shadowLight1.angle = Math.PI * 0.2;
+    shadowLight1.castShadow = true;
 
-    shadowLight.shadow.mapSize.width = 512;
-    shadowLight.shadow.mapSize.height = 512;
-    shadowLight.shadow.camera.near = 0.5;
-    shadowLight.shadow.camera.far = 500;
+    shadowLight1.shadow.mapSize.width = 512;
+    shadowLight1.shadow.mapSize.height = 512;
+    shadowLight1.shadow.camera.near = 0.5;
+    shadowLight1.shadow.camera.far = 500;
 
-    scene.add(shadowLight);
+    scene.add(shadowLight1);
+
+    const shadowLight2 = new THREE.PointLight(0xffffff, 0.2);
+    shadowLight2.position.set(20, 100, 70);
+    shadowLight2.angle = Math.PI * 0.2;
+    shadowLight2.castShadow = true;
+
+    shadowLight2.shadow.mapSize.width = 512;
+    shadowLight2.shadow.mapSize.height = 512;
+    shadowLight2.shadow.camera.near = 0.5;
+    shadowLight2.shadow.camera.far = 500;
+
+    scene.add(shadowLight2);
 
     controls = new THREE.PointerLockControls(camera, document.body);
 
@@ -145,18 +157,37 @@ function init() {
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
+    floor.position.z = -50;
     scene.add(floor);
 
     //cube test
-    let cubeGeometry = new THREE.BoxGeometry(10, 10, 10)
+    let cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
     let cubeMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide
     });
     let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(0, 20, -50)
+    cube.position.set(0, 20, -50);
     cube.castShadow = true;
-    scene.add(cube);
+    //scene.add(cube);
+
+    const shelterLoader = new THREE.GLTFLoader();
+    shelterLoader.load(
+
+        './glb/untitled.glb',
+
+        function(gltf) {
+            gltf.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            })
+            shelterModel = gltf.scene;
+            shelterModel.position.set(0, 0, -50);
+            shelterModel.scale.set(0.6, 0.6, 0.6);
+            scene.add(shelterModel);
+        }
+    )
 
     //video
     // video = document.getElementById("video");
@@ -227,8 +258,8 @@ function animate() {
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize(); // this ensures consistent movements in all directions
 
-        if (moveForward || moveBackward) velocity.z -= direction.z * 150.0 * delta;
-        if (moveLeft || moveRight) velocity.x -= direction.x * 150.0 * delta;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 200.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 200.0 * delta;
 
         if (onObject === true) {
             velocity.y = Math.max(0, velocity.y);

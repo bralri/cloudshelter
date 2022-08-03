@@ -20,6 +20,8 @@ let video, videoTexture;
 let width = window.innerWidth;
 let height = window.innerHeight;
 
+let cloudModel, shelterModel;
+
 init();
 animate();
 
@@ -35,35 +37,29 @@ function init() {
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 0, 750);
+    scene.fog = new THREE.Fog(0xffffff, 0, 120);
 
     const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.5);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight1 = new THREE.PointLight(0xffffff, 0.6);
-    shadowLight1.position.set(-20, 100, -70);
+    const shadowLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    shadowLight1.position.set(-20, 150, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
 
-    shadowLight1.shadow.mapSize.width = 512;
-    shadowLight1.shadow.mapSize.height = 512;
-    shadowLight1.shadow.camera.near = 0.5;
+    shadowLight1.shadow.mapSize.width = 4096;
+    shadowLight1.shadow.mapSize.height = 4096;
+    shadowLight1.shadow.camera.near = 0.1;
     shadowLight1.shadow.camera.far = 500;
 
+    shadowLight1.shadow.camera.left = -100;
+    shadowLight1.shadow.camera.right = 100;
+    shadowLight1.shadow.camera.top = 100;
+    shadowLight1.shadow.camera.bottom = -100;
+    
+
     scene.add(shadowLight1);
-
-    const shadowLight2 = new THREE.PointLight(0xffffff, 0.2);
-    shadowLight2.position.set(20, 100, 70);
-    shadowLight2.angle = Math.PI * 0.2;
-    shadowLight2.castShadow = true;
-
-    shadowLight2.shadow.mapSize.width = 512;
-    shadowLight2.shadow.mapSize.height = 512;
-    shadowLight2.shadow.camera.near = 0.5;
-    shadowLight2.shadow.camera.far = 500;
-
-    scene.add(shadowLight2);
 
     controls = new THREE.PointerLockControls(camera, document.body);
 
@@ -149,64 +145,90 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneGeometry(500, 500);
+    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 1000, 1000);
     floorGeometry.rotateX(- Math.PI / 2);
-    let floorMaterial = new THREE.MeshPhongMaterial({
+    let floorMaterial = new THREE.MeshLambertMaterial({
         color: 0xE1E1E1,
         side: THREE.DoubleSide
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
     floor.position.z = -50;
+    floor.position.y = 0.4;
     scene.add(floor);
 
-    //cube test
-    let cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
-    let cubeMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-    });
-    let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(0, 20, -50);
-    cube.castShadow = true;
-    //scene.add(cube);
-
-    const shelterLoader = new THREE.GLTFLoader();
-    shelterLoader.load(
+    const loader = new THREE.GLTFLoader();
+    loader.load(
 
         './glb/untitled.glb',
 
-        function(gltf) {
-            gltf.scene.traverse(function(node) {
+        function(gltf1) {
+            gltf1.scene.traverse(function(node) {
                 if (node.isMesh) {
                     node.castShadow = true;
+                    node.receiveShadow = true;
                 }
             })
-            shelterModel = gltf.scene;
+            shelterModel = gltf1.scene;
             shelterModel.position.set(0, 0, -50);
             shelterModel.scale.set(0.6, 0.6, 0.6);
             scene.add(shelterModel);
         }
     )
+    loader.load(
+        './glb/cloud.gltf',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                }
+            })
+            cloudModel = gltf2.scene;
+            cloudModel.position.set(-50, 90, -50);
+            cloudModel.scale.set(20, 20, 20);
+            scene.add(cloudModel);
+        }
+    )
+
 
     //video
-    // video = document.getElementById("video");
-    // videoTexture = new THREE.VideoTexture(video);
-    // videoTexture.minFilter = THREE.LinearFilter;
-    // videoTexture.magFilter = THREE.LinearFilter;
+    video = document.getElementById("video");
+    videoTexture = new THREE.VideoTexture(video);
+    videoTexture.encoding = THREE.sRGBEncoding;
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
 
-    // const videoMaterial = new THREE.MeshPhongMaterial({
-    //     map: videoTexture,
-    //     side: THREE.DoubleSide,
-    //     toneMapped: false
-    // });
+    const videoMaterial = new THREE.MeshPhongMaterial({
+        map: videoTexture,
+        side: THREE.DoubleSide,
+        emissive: 0xffffff,
+        emissiveMap: videoTexture,
+        emissiveIntensity: 2,
+    });
 
-    // let videoGeometry = new THREE.PlaneGeometry(10, 10);
-    // let videoCubeScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-    // videoCubeScreen.position.set(0, 10, -20);
-    // videoCubeScreen.castShadow = true;
-    // scene.add(videoCubeScreen);
-    // video.play();
+    let videoGeometry = new THREE.PlaneGeometry(11.5, 14.5);
+    videoGeometry.rotateY(- Math.PI / 2);
+    let videoPlaneScreen= new THREE.Mesh(videoGeometry, videoMaterial);
+    videoPlaneScreen.position.set(-13.68, 9.5, -51.2);
+    videoPlaneScreen.receiveShadow = true;
+    let videoScreen2 = videoPlaneScreen.clone();
+    videoScreen2.position.set(-12.61, 9.5, -51.2);
+    scene.add(videoScreen2);
+    scene.add(videoPlaneScreen);
+    video.play();
+
+    const videoLight1 = new THREE.PointLight(0xADD8E6, 1);
+    videoLight1.position.set(-12.61, 7, -51.2);
+    //videoLight1.distance = 1;
+    videoLight1.decay = 2;
+
+    scene.add(videoLight1);
+
+    const sphereSize = 1;
+    const pointLightHelper = new THREE.PointLightHelper(videoLight1, sphereSize);
+    //scene.add(pointLightHelper)
 
     //
 
@@ -233,8 +255,15 @@ function onWindowResize() {
     renderer.setSize(width, height);
 }
 
+function update() {
+    if (cloudModel) {
+        cloudModel.rotation.y += 0.0005;
+    }
+}
+
 function animate() {
     requestAnimationFrame(animate);
+    update()
 
     const time = performance.now();
 
@@ -280,7 +309,7 @@ function animate() {
 
     }
 
-    // videoTexture.needsUpdate = true;
+    videoTexture.needsUpdate = true;
 
     prevTime = time;
 

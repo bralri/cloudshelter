@@ -14,13 +14,22 @@ let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
-const color = new THREE.Color();
 
 let video, videoTexture;
 let width = window.innerWidth;
 let height = window.innerHeight;
 
 let cloudModel, shelterModel;
+
+//colours
+const white = new THREE.Color(0xffffff);
+white.convertSRGBToLinear();
+const lightGrey = new THREE.Color(0xD3D3D3);
+lightGrey.convertSRGBToLinear();
+const midGrey = new THREE.Color(0x63666A);
+midGrey.convertSRGBToLinear();
+const lightBlue = new THREE.Color(0xADD8E6);
+lightBlue.convertSRGBToLinear();
 
 init();
 animate();
@@ -36,29 +45,28 @@ function init() {
     camera.position.y = 10;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 0, 120);
+    scene.background = white;
+    scene.fog = new THREE.Fog(white, 0, 150);
 
-    const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.5);
+    const light = new THREE.HemisphereLight(white, lightGrey, 1);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.4);
     shadowLight1.position.set(-20, 150, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
 
-    shadowLight1.shadow.mapSize.width = 4096;
-    shadowLight1.shadow.mapSize.height = 4096;
+    shadowLight1.shadow.mapSize.width = 2048;
+    shadowLight1.shadow.mapSize.height = 2048;
     shadowLight1.shadow.camera.near = 0.1;
     shadowLight1.shadow.camera.far = 500;
 
-    shadowLight1.shadow.camera.left = -100;
-    shadowLight1.shadow.camera.right = 100;
-    shadowLight1.shadow.camera.top = 100;
-    shadowLight1.shadow.camera.bottom = -100;
+    shadowLight1.shadow.camera.left = -300;
+    shadowLight1.shadow.camera.right = 300;
+    shadowLight1.shadow.camera.top = 300;
+    shadowLight1.shadow.camera.bottom = -300;
     
-
     scene.add(shadowLight1);
 
     controls = new THREE.PointerLockControls(camera, document.body);
@@ -145,10 +153,10 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 1000, 1000);
+    let floorGeometry = new THREE.PlaneGeometry(300, 300, 100, 100);
     floorGeometry.rotateX(- Math.PI / 2);
     let floorMaterial = new THREE.MeshLambertMaterial({
-        color: 0xE1E1E1,
+        color: lightGrey,
         side: THREE.DoubleSide
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -157,7 +165,17 @@ function init() {
     floor.position.y = 0.4;
     scene.add(floor);
 
-    const loader = new THREE.GLTFLoader();
+    //loding manager
+    const loadingManager = new THREE.LoadingManager();
+    loadingManager.onLoad = function() {
+        console.log('Manager onLoad called, render started.');
+    }
+    loadingManager.onProgress = function(item, loaded, total) {
+        console.log('Manager onProgress: loading of', item, 'finished: ', loaded, ' of ', total, 'objects loaded.');
+    }
+
+
+    const loader = new THREE.GLTFLoader(loadingManager);
     loader.load(
 
         './glb/untitled.glb',
@@ -165,29 +183,37 @@ function init() {
         function(gltf1) {
             gltf1.scene.traverse(function(node) {
                 if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = true;
+                    node.castShadow = false;
+                    node.receiveShadow = false;
+
+                    node.material.opacity = 0.5;
+                    node.material.transparent = true;
+                    console.log(node);
                 }
             })
             shelterModel = gltf1.scene;
             shelterModel.position.set(0, 0, -50);
             shelterModel.scale.set(0.6, 0.6, 0.6);
-            scene.add(shelterModel);
+            //scene.add(shelterModel);
         }
     )
     loader.load(
+
         './glb/cloud.gltf',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
                 if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = true;
+                    node.castShadow = false;
+                    node.receiveShadow = false;
+
+                    node.material.opacity = 0.8;
+                    node.material.transparent = true;
                 }
             })
             cloudModel = gltf2.scene;
-            cloudModel.position.set(-50, 90, -50);
-            cloudModel.scale.set(20, 20, 20);
+            cloudModel.position.set(-50, 120, -50);
+            cloudModel.scale.set(30, 30, 30);
             scene.add(cloudModel);
         }
     )
@@ -200,46 +226,47 @@ function init() {
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
 
-    const videoMaterial = new THREE.MeshPhongMaterial({
+    const videoMaterial = new THREE.MeshBasicMaterial({
         map: videoTexture,
         side: THREE.DoubleSide,
-        emissive: 0xffffff,
+        emissive: white,
         emissiveMap: videoTexture,
-        emissiveIntensity: 2,
+
+        transparent: false,
+        opacity: 0.1
     });
 
-    let videoGeometry = new THREE.PlaneGeometry(11.5, 14.5);
-    videoGeometry.rotateY(- Math.PI / 2);
+    let videoGeometry = new THREE.PlaneGeometry(50, 50);
+    // let videoGeometry = new THREE.PlaneGeometry(11.5, 14.5);
+    //videoGeometry.rotateY(- Math.PI / 2);
     let videoPlaneScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-    videoPlaneScreen.position.set(-13.68, 9.5, -51.2);
+    //videoPlaneScreen.position.set(-13.1, 9.5, -51.2);
+    videoPlaneScreen.position.set(0, 35, -50);
     videoPlaneScreen.receiveShadow = true;
-    let videoScreen2 = videoPlaneScreen.clone();
-    videoScreen2.position.set(-12.61, 9.5, -51.2);
-    scene.add(videoScreen2);
+    //let videoScreen2 = videoPlaneScreen.clone();
+    //videoScreen2.position.set(-12.61, 9.5, -51.2);
+    //scene.add(videoScreen2);
     scene.add(videoPlaneScreen);
     video.play();
 
-    const videoLight1 = new THREE.PointLight(0xADD8E6, 1);
+    const videoLight1 = new THREE.PointLight(white, 5);
     videoLight1.position.set(-12.61, 7, -51.2);
-    //videoLight1.distance = 1;
     videoLight1.decay = 2;
-
-    scene.add(videoLight1);
-
-    const sphereSize = 1;
-    const pointLightHelper = new THREE.PointLightHelper(videoLight1, sphereSize);
-    //scene.add(pointLightHelper)
+    //scene.add(videoLight1);
 
     //
 
     renderer = new THREE.WebGLRenderer({ 
-        antialias: true 
+        antialias: true,
+        alpha: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
+    renderer.gammaFactor = 2.2;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.physicallyCorrectLights = true;
     document.body.appendChild(renderer.domElement);
 
     //

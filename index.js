@@ -21,7 +21,6 @@ let height = window.innerHeight;
 
 let cloudModel, shelterModel;
 
-//colours
 const white = new THREE.Color(0xffffff);
 white.convertSRGBToLinear();
 const lightGrey = new THREE.Color(0xD3D3D3);
@@ -30,6 +29,8 @@ const midGrey = new THREE.Color(0x63666A);
 midGrey.convertSRGBToLinear();
 const lightBlue = new THREE.Color(0xADD8E6);
 lightBlue.convertSRGBToLinear();
+const black = new THREE.Color(0x000000);
+black.convertSRGBToLinear();
 
 init();
 animate();
@@ -46,9 +47,9 @@ function init() {
 
     scene = new THREE.Scene();
     scene.background = white;
-    scene.fog = new THREE.Fog(white, 0, 150);
+    scene.fog = new THREE.Fog(white, 0, 115);
 
-    const light = new THREE.HemisphereLight(white, lightGrey, 1);
+    const light = new THREE.HemisphereLight(white, midGrey, 1);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
@@ -56,17 +57,14 @@ function init() {
     shadowLight1.position.set(-20, 150, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
-
     shadowLight1.shadow.mapSize.width = 2048;
     shadowLight1.shadow.mapSize.height = 2048;
     shadowLight1.shadow.camera.near = 0.1;
     shadowLight1.shadow.camera.far = 500;
-
     shadowLight1.shadow.camera.left = -300;
     shadowLight1.shadow.camera.right = 300;
     shadowLight1.shadow.camera.top = 300;
     shadowLight1.shadow.camera.bottom = -300;
-    
     scene.add(shadowLight1);
 
     controls = new THREE.PointerLockControls(camera, document.body);
@@ -153,10 +151,10 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneGeometry(500, 500, 100, 100);
+    let floorGeometry = new THREE.PlaneGeometry(500, 500, 50, 50);
     floorGeometry.rotateX(- Math.PI / 2);
     let floorMaterial = new THREE.MeshLambertMaterial({
-        color: lightGrey,
+        color: midGrey,
         side: THREE.DoubleSide
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -165,7 +163,8 @@ function init() {
     floor.position.y = 0.4;
     scene.add(floor);
 
-    //loding manager
+    //
+
     const loadingManager = new THREE.LoadingManager();
     loadingManager.onLoad = function() {
         console.log('Manager onLoad called, render started.');
@@ -173,8 +172,6 @@ function init() {
     loadingManager.onProgress = function(item, loaded, total) {
         console.log('Manager onProgress: loading of', item, 'finished: ', loaded, ' of ', total, 'objects loaded.');
     }
-
-
     const loader = new THREE.GLTFLoader(loadingManager);
     loader.load(
 
@@ -217,41 +214,52 @@ function init() {
         }
     )
 
+    //
 
-    //video
     video = document.getElementById("video");
     videoTexture = new THREE.VideoTexture(video);
     videoTexture.encoding = THREE.sRGBEncoding;
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
-
-    const videoMaterial = new THREE.MeshBasicMaterial({
-        map: videoTexture,
-        side: THREE.DoubleSide,
-        emissive: white,
-        emissiveMap: videoTexture,
-
-        transparent: false,
-        opacity: 0.1
-    });
-
-    let videoGeometry = new THREE.PlaneGeometry(50, 50);
-    // let videoGeometry = new THREE.PlaneGeometry(11.5, 14.5);
-    //videoGeometry.rotateY(- Math.PI / 2);
+    let videoGeometry = new THREE.BoxGeometry(50, 50, 1);
+    const videoMaterials = [
+        new THREE.MeshBasicMaterial({
+            color: lightGrey, 
+            side: THREE.DoubleSide //RIGHT
+        }),
+        new THREE.MeshBasicMaterial({
+            color: lightGrey, 
+            side: THREE.DoubleSide //LEFT
+        }),
+        new THREE.MeshBasicMaterial({
+            color: lightGrey, 
+            side: THREE.DoubleSide //TOP
+        }),
+        new THREE.MeshBasicMaterial({
+            color: lightGrey, 
+            side: THREE.DoubleSide //BOTTOM
+        }),
+        new THREE.MeshPhongMaterial({
+            map: videoTexture, 
+            side: THREE.DoubleSide, //FRONT
+            emissive: white,
+            emissiveMap: videoTexture,
+            emissiveIntensity: 1,
+            transparent: false,
+            opacity: 0.5
+        }),
+        new THREE.MeshBasicMaterial({
+            color: lightGrey, 
+            side: THREE.DoubleSide //BACK
+        })
+    ]
+    let videoMaterial = new THREE.MeshFaceMaterial(videoMaterials);
     let videoPlaneScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-    //videoPlaneScreen.position.set(-13.1, 9.5, -51.2);
-    videoPlaneScreen.position.set(0, 35, -50);
-    videoPlaneScreen.receiveShadow = true;
-    //let videoScreen2 = videoPlaneScreen.clone();
-    //videoScreen2.position.set(-12.61, 9.5, -51.2);
-    //scene.add(videoScreen2);
+    videoPlaneScreen.position.set(0, 30, -50);
+    videoPlaneScreen.receiveShadow = false;
+    videoPlaneScreen.castShadow = false;
     scene.add(videoPlaneScreen);
     video.play();
-
-    const videoLight1 = new THREE.PointLight(white, 5);
-    videoLight1.position.set(-12.61, 7, -51.2);
-    videoLight1.decay = 2;
-    //scene.add(videoLight1);
 
     //
 
@@ -271,7 +279,6 @@ function init() {
     //
 
     window.addEventListener('resize', onWindowResize);
-
 }
 
 function onWindowResize() {

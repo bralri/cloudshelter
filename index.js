@@ -153,7 +153,7 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneGeometry(300, 300, 100, 100);
+    let floorGeometry = new THREE.PlaneGeometry(500, 500, 100, 100);
     floorGeometry.rotateX(- Math.PI / 2);
     let floorMaterial = new THREE.MeshLambertMaterial({
         color: lightGrey,
@@ -188,7 +188,6 @@ function init() {
 
                     node.material.opacity = 0.5;
                     node.material.transparent = true;
-                    console.log(node);
                 }
             })
             shelterModel = gltf1.scene;
@@ -204,8 +203,8 @@ function init() {
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
                 if (node.isMesh) {
-                    node.castShadow = false;
-                    node.receiveShadow = false;
+                    node.castShadow = true;
+                    node.receiveShadow = true;
 
                     node.material.opacity = 0.8;
                     node.material.transparent = true;

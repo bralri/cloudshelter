@@ -6,8 +6,14 @@
     overflow: none;
 }
 
-h1, h2, h3, h4, h5, h6, p, a {
+h1, h2, h3, h4, h6 {
     color: #242526;
+}
+a {
+    color: #242526;
+}
+h5 {
+    font-size: 18px;
 }
 
 body {
@@ -16,13 +22,14 @@ body {
 
 #logo {
     position: absolute;
-    top: 10px;
-    right: 30px;
+    bottom: 0px;
+    left: 15px;
     z-index: 100;
     display: block;
 }
 #logo img {
-    width: 80px;
+    width: 70px;
+    height: 70px;
     opacity: 80%;
 }
 #logo img:hover {
@@ -32,24 +39,24 @@ body {
 
 #about-title {
     position: absolute;
-    top: 150px;
+    top: 250px;
     left: 300px;
 }
 
 #about-text {
     position: absolute;
-    top: 250px;
+    top: 350px;
     left: 300px;
 }
 
-#links {
+#about-links {
     position: absolute;
-    bottom: 10px;
-    right: 40px;
+    bottom: 20px;
+    right: 20px;
     z-index: 100;
     display: flex;
 }
-#links a:hover {
+#about-links a:hover {
     cursor: pointer;
     opacity: 60%;
 }

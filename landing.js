@@ -57,14 +57,14 @@ function cameraSetup() {
 
 function sceneSetup() {
     scene = new THREE.Scene();
-    scene.background = white;
-    scene.fog = new THREE.Fog(white, 0, 115);
+    scene.background = lightGrey;
+    scene.fog = new THREE.Fog(lightGrey, 0, 115);
 
-    const light = new THREE.HemisphereLight(white, lightGrey, 1);
+    const light = new THREE.HemisphereLight(lightGrey, lightGrey, 1);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight1 = new THREE.DirectionalLight(white, 0.4);
+    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.4);
     shadowLight1.position.set(0, 100, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;

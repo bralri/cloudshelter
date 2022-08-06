@@ -56,14 +56,14 @@ function cameraSetup() {
 
 function sceneSetup() {
     scene = new THREE.Scene();
-    scene.background = white;
-    scene.fog = new THREE.Fog(white, 0, 115);
+    scene.background = lightGrey;
+    scene.fog = new THREE.Fog(lightGrey, 0, 115);
 
-    const light = new THREE.HemisphereLight(white, midGrey, 1);
+    const light = new THREE.HemisphereLight(lightGrey, midGrey, 1);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.4);
+    const shadowLight1 = new THREE.DirectionalLight(white, 0.4);
     shadowLight1.position.set(-20, 150, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
@@ -77,7 +77,7 @@ function sceneSetup() {
     shadowLight1.shadow.camera.bottom = -300;
     scene.add(shadowLight1);
 
-    let floorGeometry = new THREE.PlaneGeometry(500, 500, 50, 50);
+    let floorGeometry = new THREE.PlaneGeometry(150, 150, 50, 50);
     floorGeometry.rotateX(- Math.PI / 2);
     let floorMaterial = new THREE.MeshLambertMaterial({
         color: midGrey,
@@ -85,8 +85,7 @@ function sceneSetup() {
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
-    floor.position.z = -50;
-    floor.position.y = 0.4;
+    floor.position.z = -70;
     scene.add(floor);
 }
 
@@ -214,13 +213,17 @@ function loadModels() {
                     node.castShadow = true;
                     node.receiveShadow = true;
 
+                    node.material = new THREE.MeshPhongMaterial({
+                        color: lightBlue,
+                        side: THREE.DoubleSide
+                    })
                     node.material.opacity = 0.8;
                     node.material.transparent = true;
                 }
             })
             cloudModel = gltf2.scene;
-            cloudModel.position.set(-50, 120, -50);
-            cloudModel.scale.set(30, 30, 30);
+            cloudModel.position.set(0, 25, -70);
+            cloudModel.scale.set(20, 20, 20);
             scene.add(cloudModel);
         }
     )
@@ -269,8 +272,8 @@ function videoScreen() {
     videoPlaneScreen.position.set(0, 30, -50);
     videoPlaneScreen.receiveShadow = false;
     videoPlaneScreen.castShadow = false;
-    scene.add(videoPlaneScreen);
-    video.play();
+    //scene.add(videoPlaneScreen);
+    //video.play();
 }
 
 function rendererSetup() {
@@ -299,7 +302,7 @@ function onWindowResize() {
 
 function update() {
     if (cloudModel) {
-        cloudModel.rotation.y += 0.0005;
+        cloudModel.rotation.y += 0.002;
     }
 }
 

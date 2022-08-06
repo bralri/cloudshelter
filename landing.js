@@ -20,6 +20,7 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 
 let cloudModel, shelterModel;
+let loadingManager;
 
 const white = new THREE.Color(0xffffff);
 white.convertSRGBToLinear();
@@ -56,15 +57,15 @@ function cameraSetup() {
 
 function sceneSetup() {
     scene = new THREE.Scene();
-    scene.background = lightGrey;
-    scene.fog = new THREE.Fog(lightGrey, 0, 115);
+    scene.background = white;
+    scene.fog = new THREE.Fog(white, 0, 115);
 
-    const light = new THREE.HemisphereLight(lightGrey, midGrey, 1);
+    const light = new THREE.HemisphereLight(white, lightGrey, 1);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
     const shadowLight1 = new THREE.DirectionalLight(white, 0.4);
-    shadowLight1.position.set(-20, 150, -70);
+    shadowLight1.position.set(0, 100, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
     shadowLight1.shadow.mapSize.width = 2048;
@@ -77,11 +78,20 @@ function sceneSetup() {
     shadowLight1.shadow.camera.bottom = -300;
     scene.add(shadowLight1);
 
-    let floorGeometry = new THREE.PlaneGeometry(150, 150, 50, 50);
+    let floorGeometry = new THREE.PlaneGeometry(150, 150, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
+    let floorTexture = new THREE.TextureLoader(loadingManager).load('../img/floor2.png');
+    floorTexture.wrapS = THREE.RepeatWrapping;
+    floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(2, 2);
+    floorTexture.offset.set(0.3, 0.5);
+    floorTexture.anisotropy = 0;
+    floorTexture.magFilter = THREE.NearestFilter;
+    floorTexture.minFilter = THREE.NearestFilter;
+    floorTexture.encoding = THREE.sRGBEncoding;
+
     let floorMaterial = new THREE.MeshLambertMaterial({
-        color: midGrey,
-        side: THREE.DoubleSide
+        map: floorTexture
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
@@ -175,7 +185,7 @@ function controlsSetup() {
 }
 
 function loadModels() {
-    const loadingManager = new THREE.LoadingManager();
+    loadingManager = new THREE.LoadingManager();
     loadingManager.onLoad = function() {
         console.log('Manager onLoad called, render started.');
     }
@@ -205,25 +215,24 @@ function loadModels() {
     )
     loader.load(
 
-        './glb/cloud.gltf',
+        '../glb/cloud_model.gltf',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
                 if (node.isMesh) {
                     node.castShadow = true;
                     node.receiveShadow = true;
-
-                    node.material = new THREE.MeshPhongMaterial({
-                        color: lightBlue,
-                        side: THREE.DoubleSide
+                    node.material = new THREE.MeshLambertMaterial({
+                        color: lightGrey,
+                        side: THREE.BackSide,
                     })
-                    node.material.opacity = 0.8;
+                    node.material.opacity = 0.9;
                     node.material.transparent = true;
                 }
             })
             cloudModel = gltf2.scene;
-            cloudModel.position.set(0, 25, -70);
-            cloudModel.scale.set(20, 20, 20);
+            cloudModel.position.set(0, 35, -70);
+            cloudModel.scale.set(30, 30, 30);
             scene.add(cloudModel);
         }
     )

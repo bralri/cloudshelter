@@ -60,11 +60,11 @@ function sceneSetup() {
     scene.background = lightGrey;
     scene.fog = new THREE.Fog(lightGrey, 0, 115);
 
-    const light = new THREE.HemisphereLight(lightGrey, lightGrey, 1);
+    const light = new THREE.HemisphereLight(lightGrey, lightGrey, 0.5);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.4);
+    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.2);
     shadowLight1.position.set(0, 100, -70);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
@@ -77,6 +77,10 @@ function sceneSetup() {
     shadowLight1.shadow.camera.top = 300;
     shadowLight1.shadow.camera.bottom = -300;
     scene.add(shadowLight1);
+
+    const pLight = new THREE.PointLight(white, 1, 100, 2);
+    pLight.position.set(0, 30, -70);
+    scene.add(pLight);
 
     let floorGeometry = new THREE.PlaneGeometry(150, 150, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
@@ -221,9 +225,9 @@ function loadModels() {
             gltf2.scene.traverse(function(node) {
                 if (node.isMesh) {
                     node.castShadow = true;
-                    node.receiveShadow = true;
-                    node.material = new THREE.MeshLambertMaterial({
-                        color: lightGrey,
+                    node.receiveShadow = false;
+                    node.material = new THREE.MeshPhongMaterial({
+                        color: midGrey,
                         side: THREE.BackSide,
                     })
                     node.material.opacity = 0.9;

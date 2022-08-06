@@ -231,8 +231,8 @@ function loadModels() {
                 }
             })
             cloudModel = gltf2.scene;
-            cloudModel.position.set(0, 35, -70);
-            cloudModel.scale.set(30, 30, 30);
+            cloudModel.position.set(0, 25, -70);
+            cloudModel.scale.set(25, 25, 25);
             scene.add(cloudModel);
         }
     )

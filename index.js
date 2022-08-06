@@ -36,7 +36,15 @@ init();
 animate();
 
 function init() {
+    cameraSetup();
+    sceneSetup();
+    controlsSetup();
+    loadModels();
+    videoScreen();
+    rendererSetup();
+}
 
+function cameraSetup() {
     camera = new THREE.PerspectiveCamera( 
         75, 
         width / height, 
@@ -44,7 +52,9 @@ function init() {
         2000 
     );
     camera.position.y = 10;
+}
 
+function sceneSetup() {
     scene = new THREE.Scene();
     scene.background = white;
     scene.fog = new THREE.Fog(white, 0, 115);
@@ -67,6 +77,20 @@ function init() {
     shadowLight1.shadow.camera.bottom = -300;
     scene.add(shadowLight1);
 
+    let floorGeometry = new THREE.PlaneGeometry(500, 500, 50, 50);
+    floorGeometry.rotateX(- Math.PI / 2);
+    let floorMaterial = new THREE.MeshLambertMaterial({
+        color: midGrey,
+        side: THREE.DoubleSide
+    });
+    let floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.receiveShadow = true;
+    floor.position.z = -50;
+    floor.position.y = 0.4;
+    scene.add(floor);
+}
+
+function controlsSetup() {
     controls = new THREE.PointerLockControls(camera, document.body);
 
     const blocker = document.getElementById('blocker');
@@ -147,24 +171,11 @@ function init() {
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
 
+    
     raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
+}
 
-    // floor
-
-    let floorGeometry = new THREE.PlaneGeometry(500, 500, 50, 50);
-    floorGeometry.rotateX(- Math.PI / 2);
-    let floorMaterial = new THREE.MeshLambertMaterial({
-        color: midGrey,
-        side: THREE.DoubleSide
-    });
-    let floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.receiveShadow = true;
-    floor.position.z = -50;
-    floor.position.y = 0.4;
-    scene.add(floor);
-
-    //
-
+function loadModels() {
     const loadingManager = new THREE.LoadingManager();
     loadingManager.onLoad = function() {
         console.log('Manager onLoad called, render started.');
@@ -213,9 +224,9 @@ function init() {
             scene.add(cloudModel);
         }
     )
+}
 
-    //
-
+function videoScreen() {
     video = document.getElementById("video");
     videoTexture = new THREE.VideoTexture(video);
     videoTexture.encoding = THREE.sRGBEncoding;
@@ -241,7 +252,7 @@ function init() {
         }),
         new THREE.MeshPhongMaterial({
             map: videoTexture, 
-            side: THREE.DoubleSide, //FRONT
+            side: THREE.FrontSide, //FRONT
             emissive: white,
             emissiveMap: videoTexture,
             emissiveIntensity: 1,
@@ -260,9 +271,9 @@ function init() {
     videoPlaneScreen.castShadow = false;
     scene.add(videoPlaneScreen);
     video.play();
+}
 
-    //
-
+function rendererSetup() {
     renderer = new THREE.WebGLRenderer({ 
         antialias: true,
         alpha: true
@@ -275,8 +286,6 @@ function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.physicallyCorrectLights = true;
     document.body.appendChild(renderer.domElement);
-
-    //
 
     window.addEventListener('resize', onWindowResize);
 }

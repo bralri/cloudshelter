@@ -64,8 +64,8 @@ function sceneSetup() {
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
 
-    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.2);
-    shadowLight1.position.set(0, 100, -70);
+    const shadowLight1 = new THREE.DirectionalLight(lightGrey, 0.5);
+    shadowLight1.position.set(0, 160, -90);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
     shadowLight1.shadow.mapSize.width = 2048;
@@ -79,10 +79,10 @@ function sceneSetup() {
     scene.add(shadowLight1);
 
     const pLight = new THREE.PointLight(white, 1, 100, 2);
-    pLight.position.set(0, 30, -70);
+    pLight.position.set(0, 30, -90);
     scene.add(pLight);
 
-    let floorGeometry = new THREE.PlaneGeometry(150, 150, 4, 4);
+    let floorGeometry = new THREE.PlaneGeometry(200, 200, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
     let floorTexture = new THREE.TextureLoader(loadingManager).load('../img/floor2.png');
     floorTexture.wrapS = THREE.RepeatWrapping;
@@ -99,8 +99,16 @@ function sceneSetup() {
     });
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
-    floor.position.z = -70;
+    floor.position.z = -90;
     scene.add(floor);
+
+    let cubeGeometry = new THREE.BoxGeometry(1, 1);
+    let cubeMaterial = new THREE.MeshLambertMaterial({
+        color: black,
+    });
+    let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.position.set(0, 0, -90);
+    scene.add(cube);
 }
 
 function controlsSetup() {
@@ -219,7 +227,7 @@ function loadModels() {
     )
     loader.load(
 
-        '../glb/cloud_model.gltf',
+        '../glb/5/cloud_group.glb',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
@@ -227,16 +235,16 @@ function loadModels() {
                     node.castShadow = true;
                     node.receiveShadow = false;
                     node.material = new THREE.MeshPhongMaterial({
-                        color: midGrey,
+                        color: lightGrey,
                         side: THREE.BackSide,
                     })
-                    node.material.opacity = 0.9;
+                    node.material.opacity = 0.7;
                     node.material.transparent = true;
                 }
             })
             cloudModel = gltf2.scene;
-            cloudModel.position.set(0, 25, -70);
-            cloudModel.scale.set(25, 25, 25);
+            cloudModel.position.set(0, 45, -90);
+            cloudModel.scale.set(5, 5, 5);
             scene.add(cloudModel);
         }
     )

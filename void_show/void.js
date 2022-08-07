@@ -33,8 +33,12 @@ lightBlue.convertSRGBToLinear();
 const black = new THREE.Color(0x000000);
 black.convertSRGBToLinear();
 
+//
+
 init();
 animate();
+
+//
 
 function init() {
     cameraSetup();

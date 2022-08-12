@@ -17,10 +17,12 @@ const vertex = new THREE.Vector3();
 
 let video, video2, video3, video4, video5, video6, video7;
 let videoTexture, videoTexture2, videoTexture3, videoTexture4, videoTexture5, videoTexture6, videoTexture7;
+let videoPlaneScreen5;
+
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let bagModel, cakeModel, fruitModel;
+let bagModel, cakeModel, fruitModel, arcadeModelY;
 let loadingManager;
 
 const white = new THREE.Color(0xffffff);
@@ -105,7 +107,7 @@ function sceneSetup() {
 
     let floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
-    floor.position.set(0, 0, 0);
+    floor.position.set(0, -3, 0);
     scene.add(floor);
 }
 
@@ -260,6 +262,7 @@ function loadModels() {
             scene.add(fruitModel);
         }
     )
+
 }
 
 function loadVideo() {
@@ -460,7 +463,7 @@ function loadVideo() {
     videoTexture5.encoding = THREE.sRGBEncoding;
     videoTexture5.minFilter = THREE.LinearFilter;
     videoTexture5.magFilter = THREE.LinearFilter;
-    let videoGeometry5 = new THREE.PlaneGeometry(25, 50);
+    let videoGeometry5 = new THREE.PlaneGeometry(15, 30);
     const videoMaterials5 = new THREE.MeshPhongMaterial({
         
         map: videoTexture5, 
@@ -474,8 +477,8 @@ function loadVideo() {
     })
 
     let videoMaterial5 = new THREE.MeshFaceMaterial(videoMaterials5);
-    let videoPlaneScreen5 = new THREE.Mesh(videoGeometry5, videoMaterial5);
-    videoPlaneScreen5.position.set(-110, 30, -40);
+    videoPlaneScreen5 = new THREE.Mesh(videoGeometry5, videoMaterial5);
+    videoPlaneScreen5.position.set(0, 11, -40);
     videoPlaneScreen5.receiveShadow = false;
     videoPlaneScreen5.castShadow = false;
     scene.add(videoPlaneScreen5);
@@ -489,11 +492,12 @@ function loadVideo() {
     videoTexture6.encoding = THREE.sRGBEncoding;
     videoTexture6.minFilter = THREE.LinearFilter;
     videoTexture6.magFilter = THREE.LinearFilter;
-    let videoGeometry6 = new THREE.PlaneGeometry(25, 50);
+    let videoGeometry6 = new THREE.PlaneGeometry(10, 15);
+    videoGeometry6.rotateX(- Math.PI / 2);
     const videoMaterials6 = new THREE.MeshPhongMaterial({
         
         map: videoTexture6, 
-        side: THREE.DoubleSide,
+        side: THREE.FrontSide,
         emissive: white,
         emissiveMap: videoTexture6,
         emissiveIntensity: 1,
@@ -504,7 +508,7 @@ function loadVideo() {
 
     let videoMaterial6 = new THREE.MeshFaceMaterial(videoMaterials6);
     let videoPlaneScreen6 = new THREE.Mesh(videoGeometry6, videoMaterial6);
-    videoPlaneScreen6.position.set(-140, 30, -40);
+    videoPlaneScreen6.position.set(0, -2, 0);
     videoPlaneScreen6.receiveShadow = false;
     videoPlaneScreen6.castShadow = false;
     scene.add(videoPlaneScreen6);
@@ -590,6 +594,22 @@ function onWindowResize() {
 
 function update() {
 
+    videoTexture.needsUpdate = true; //AI-SHIP
+    videoTexture2.needsUpdate = true; //Tanqueray-18
+    videoTexture3.needsUpdate = true; //ppt1609_1
+    videoTexture4.needsUpdate = true; //ppt1609_2
+    videoTexture5.needsUpdate = true; //bebe
+    videoTexture6.needsUpdate = true; //morph
+    videoTexture7.needsUpdate = true; //TOD_AD
+
+    let pos = camera.position;
+    videoPlaneScreen5.lookAt(pos); //bebe lookat camera
+
+    //model rotations
+    // bagModel.rotation.y += 0.009;
+    // cakeModel.rotation.y += 0.009;
+    // fruitModel.rotation.y += 0.009;
+    
 }
 
 function animate() {
@@ -639,14 +659,6 @@ function animate() {
         }
 
     }
-
-    videoTexture.needsUpdate = true; //AI-SHIP
-    videoTexture2.needsUpdate = true; //Tanqueray-18
-    videoTexture3.needsUpdate = true; //ppt1609_1
-    videoTexture4.needsUpdate = true; //ppt1609_2
-    videoTexture5.needsUpdate = true; //bebe
-    videoTexture6.needsUpdate = true; //morph
-    videoTexture7.needsUpdate = true; //TOD_AD
 
     prevTime = time;
 

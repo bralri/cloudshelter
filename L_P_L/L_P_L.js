@@ -211,7 +211,7 @@ function loadModels() {
     const loader = new THREE.GLTFLoader(loadingManager);
     loader.load( //bag.glb
 
-        '../Leisure_Pursuit_Lounge/models/bag.glb',
+        '../Leisure_Pursuit_Lounge/models/bag_e.glb',
 
         function(bag) {
             bag.scene.traverse(function(node) {
@@ -229,7 +229,7 @@ function loadModels() {
 
     loader.load( //cake.glb
 
-        '../Leisure_Pursuit_Lounge/models/cake.glb',
+        '../Leisure_Pursuit_Lounge/models/cake_e.glb',
 
         function(cake) {
             cake.scene.traverse(function(node) {
@@ -247,7 +247,7 @@ function loadModels() {
 
     loader.load( //fruit.glb
 
-        '../Leisure_Pursuit_Lounge/models/fruit.glb',
+        '../Leisure_Pursuit_Lounge/models/fruit_e.glb',
 
         function(fruit) {
             fruit.scene.traverse(function(node) {

@@ -15,9 +15,16 @@ const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 
-let video, video2, video3, video4, video5, video6, video7;
-let videoTexture, videoTexture2, videoTexture3, videoTexture4, videoTexture5, videoTexture6, videoTexture7;
-let videoPlaneScreen5;
+let video, video2, video6, video7;
+let PPT1609_1, PPT1609_2, bebeVideo;
+let videoTexture, videoTexture2, videoTexture5, videoTexture6, videoTexture7;
+let PPT1609_1_Texture, PPT1609_2_Texture, bebeTexture;
+let videoPlaneScreen6;
+let bebePlaneScreen;
+let videoPlaneScreen4;
+let videoPlaneScreen3;
+let videoPlaneScreen2;
+let videoPlaneScreen;
 
 let width = window.innerWidth;
 let height = window.innerHeight;
@@ -35,6 +42,10 @@ const lightBlue = new THREE.Color(0xADD8E6);
 lightBlue.convertSRGBToLinear();
 const black = new THREE.Color(0x000000);
 black.convertSRGBToLinear();
+const pink = new THREE.Color(0xFF47E6);
+pink.convertSRGBToLinear();
+const darkPink = new THREE.Color(0xD03BBB);
+darkPink.convertSRGBToLinear();
 
 //
 
@@ -48,9 +59,18 @@ function init() {
     sceneSetup();
     controlsSetup();
     loadModels();
-    loadVideo();
-    loadImg();
+    loadVideos();
+    loadAudios();
+    loadImgs();
     rendererSetup();
+
+    document.body.addEventListener('keydown', onDocumentKeyDown, false);
+    function onDocumentKeyDown(event) {
+        const keyCode = event.which;
+        if (keyCode == 89) {
+            window.open('https://www.gwens.online/ppt1609', '_blank').focus();
+        }
+    }
 }
 
 function cameraSetup() {
@@ -65,16 +85,16 @@ function cameraSetup() {
 
 function sceneSetup() {
     scene = new THREE.Scene();
-    scene.background = white;
-    //scene.fog = new THREE.Fog(midGrey, 0, 1800);
+    scene.background = pink;
+    scene.fog = new THREE.Fog(pink, 0, 160);
 
-    const light = new THREE.HemisphereLight(white, midGrey, 0.5);
+    const light = new THREE.HemisphereLight(pink, darkPink, 0.5);
     light.position.set(0, 10, 0);
     scene.add(light);
 
     //
 
-    const shadowLight1 = new THREE.DirectionalLight(white, 1);
+    const shadowLight1 = new THREE.DirectionalLight(darkPink, 1);
     shadowLight1.position.set(0, 30, 0);
     shadowLight1.angle = Math.PI * 0.2;
     shadowLight1.castShadow = true;
@@ -265,44 +285,25 @@ function loadModels() {
 
 }
 
-function loadVideo() {
+function loadVideos() {
     video = document.getElementById("AI-SHIP");
     videoTexture = new THREE.VideoTexture(video);
     videoTexture.encoding = THREE.sRGBEncoding;
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
-    let videoGeometry = new THREE.BoxGeometry(80, 45, 1);
-    const videoMaterials = [
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //RIGHT
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //LEFT
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //TOP
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BOTTOM
-        }),
-        new THREE.MeshPhongMaterial({
+    let videoGeometry = new THREE.PlaneGeometry(80, 45);
+    const videoMaterials = new THREE.MeshPhongMaterial({
+
             map: videoTexture, 
-            side: THREE.FrontSide, //FRONT
+            side: THREE.DoubleSide,
             emissive: white,
             emissiveMap: videoTexture,
             emissiveIntensity: 1,
             transparent: false,
             opacity: 0.5
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BACK
-        })
-    ]
+
+    })
+
     let videoMaterial = new THREE.MeshFaceMaterial(videoMaterials);
     let videoPlaneScreen = new THREE.Mesh(videoGeometry, videoMaterial);
     videoPlaneScreen.position.set(0, 50, -50);
@@ -319,38 +320,19 @@ function loadVideo() {
     videoTexture2.encoding = THREE.sRGBEncoding;
     videoTexture2.minFilter = THREE.LinearFilter;
     videoTexture2.magFilter = THREE.LinearFilter;
-    let videoGeometry2 = new THREE.BoxGeometry(80, 45, 1);
-    const videoMaterials2 = [
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //RIGHT
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //LEFT
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //TOP
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BOTTOM
-        }),
-        new THREE.MeshPhongMaterial({
+    let videoGeometry2 = new THREE.PlaneGeometry(80, 45);
+    const videoMaterials2 = new THREE.MeshPhongMaterial({
+
             map: videoTexture2, 
-            side: THREE.FrontSide, //FRONT
+            side: THREE.DoubleSide, //FRONT
             emissive: white,
             emissiveMap: videoTexture2,
             emissiveIntensity: 1,
             transparent: false,
             opacity: 0.5
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BACK
-        })
-    ]
+
+    })
+
     let videoMaterial2 = new THREE.MeshFaceMaterial(videoMaterials2);
     let videoPlaneScreen2 = new THREE.Mesh(videoGeometry2, videoMaterial2);
     videoPlaneScreen2.position.set(100, 50, -50);
@@ -360,15 +342,22 @@ function loadVideo() {
     video2.muted = true;
     video2.play();
 
-    //
+    // PPT1609 Video BoxPanel
 
-    video3 = document.getElementById("PPT1609_1");
-    videoTexture3 = new THREE.VideoTexture(video3);
-    videoTexture3.encoding = THREE.sRGBEncoding;
-    videoTexture3.minFilter = THREE.LinearFilter;
-    videoTexture3.magFilter = THREE.LinearFilter;
-    let videoGeometry3 = new THREE.BoxGeometry(25, 50, 1);
-    const videoMaterials3 = [
+    PPT1609_1 = document.getElementById("PPT1609_1");
+    PPT1609_1_Texture = new THREE.VideoTexture(PPT1609_1);
+    PPT1609_1_Texture.encoding = THREE.sRGBEncoding;
+    PPT1609_1_Texture.minFilter = THREE.LinearFilter;
+    PPT1609_1_Texture.magFilter = THREE.LinearFilter;
+
+    PPT1609_2 = document.getElementById("PPT1609_2");
+    PPT1609_2_Texture = new THREE.VideoTexture(PPT1609_2);
+    PPT1609_2_Texture.encoding = THREE.sRGBEncoding;
+    PPT1609_2_Texture.minFilter = THREE.LinearFilter;
+    PPT1609_2_Texture.magFilter = THREE.LinearFilter;
+
+    let PPT1609_Geometry = new THREE.BoxGeometry(25, 50, 5);
+    const PPT1609_Materials = [
         new THREE.MeshBasicMaterial({
             color: lightGrey, 
             side: THREE.DoubleSide //RIGHT
@@ -386,104 +375,76 @@ function loadVideo() {
             side: THREE.DoubleSide //BOTTOM
         }),
         new THREE.MeshPhongMaterial({
-            map: videoTexture3, 
-            side: THREE.FrontSide, //FRONT
+            map: PPT1609_1_Texture, 
+            side: THREE.DoubleSide, //FRONT
             emissive: white,
-            emissiveMap: videoTexture3,
+            emissiveMap: PPT1609_1_Texture,
             emissiveIntensity: 1,
             transparent: false,
             opacity: 0.5
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BACK
-        })
-    ]
-    let videoMaterial3 = new THREE.MeshFaceMaterial(videoMaterials3);
-    let videoPlaneScreen3 = new THREE.Mesh(videoGeometry3, videoMaterial3);
-    videoPlaneScreen3.position.set(-50, 30, -40);
-    videoPlaneScreen3.receiveShadow = false;
-    videoPlaneScreen3.castShadow = false;
-    scene.add(videoPlaneScreen3);
-    video3.muted = true;
-    video3.play();
-
-    //
-
-    video4 = document.getElementById("PPT1609_2");
-    videoTexture4 = new THREE.VideoTexture(video4);
-    videoTexture4.encoding = THREE.sRGBEncoding;
-    videoTexture4.minFilter = THREE.LinearFilter;
-    videoTexture4.magFilter = THREE.LinearFilter;
-    let videoGeometry4 = new THREE.BoxGeometry(25, 50, 1);
-    const videoMaterials4 = [
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //RIGHT
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //LEFT
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //TOP
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BOTTOM
-        }),
+        }),  
         new THREE.MeshPhongMaterial({
-            map: videoTexture4, 
-            side: THREE.FrontSide, //FRONT
+            map: PPT1609_2_Texture, 
+            side: THREE.DoubleSide, //BACK
             emissive: white,
-            emissiveMap: videoTexture4,
+            emissiveMap: PPT1609_2_Texture,
             emissiveIntensity: 1,
             transparent: false,
             opacity: 0.5
-        }),
-        new THREE.MeshBasicMaterial({
-            color: lightGrey, 
-            side: THREE.DoubleSide //BACK
         })
     ]
-    let videoMaterial4 = new THREE.MeshFaceMaterial(videoMaterials4);
-    let videoPlaneScreen4 = new THREE.Mesh(videoGeometry4, videoMaterial4);
-    videoPlaneScreen4.position.set(-80, 30, -40);
-    videoPlaneScreen4.receiveShadow = false;
-    videoPlaneScreen4.castShadow = false;
-    scene.add(videoPlaneScreen4);
-    video4.muted = true;
-    video4.play();
 
-    //
+    let PPT1609_Material = new THREE.MeshFaceMaterial(PPT1609_Materials);
+    let PPT1609_PlaneScreen = new THREE.Mesh(PPT1609_Geometry, PPT1609_Material);
+    PPT1609_PlaneScreen.position.set(-35, 22.1, -40);
+    PPT1609_PlaneScreen.receiveShadow = false;
+    PPT1609_PlaneScreen.castShadow = false;
 
-    video5 = document.getElementById("bebe");
-    videoTexture5 = new THREE.VideoTexture(video5);
-    videoTexture5.encoding = THREE.sRGBEncoding;
-    videoTexture5.minFilter = THREE.LinearFilter;
-    videoTexture5.magFilter = THREE.LinearFilter;
-    let videoGeometry5 = new THREE.PlaneGeometry(15, 30);
-    const videoMaterials5 = new THREE.MeshPhongMaterial({
+    scene.add(PPT1609_PlaneScreen);
+
+    PPT1609_1.muted = true;
+    PPT1609_1.play();
+    PPT1609_2.muted = true;
+    PPT1609_2.play();
+
+    // Bebe Video & Podium
+
+    bebeVideo = document.getElementById("bebe");
+    bebeTexture = new THREE.VideoTexture(bebeVideo);
+    bebeTexture.encoding = THREE.sRGBEncoding;
+    bebeTexture.minFilter = THREE.LinearFilter;
+    bebeTexture.magFilter = THREE.LinearFilter;
+    let bebeGeometry = new THREE.PlaneGeometry(15, 30);
+    const bebeMaterials = new THREE.MeshPhongMaterial({
         
-        map: videoTexture5, 
+        map: bebeTexture, 
         side: THREE.DoubleSide,
         emissive: white,
-        emissiveMap: videoTexture5,
+        emissiveMap: bebeTexture,
         emissiveIntensity: 1,
         transparent: true,
         opacity: 1
 
     })
 
-    let videoMaterial5 = new THREE.MeshFaceMaterial(videoMaterials5);
-    videoPlaneScreen5 = new THREE.Mesh(videoGeometry5, videoMaterial5);
-    videoPlaneScreen5.position.set(0, 11, -40);
-    videoPlaneScreen5.receiveShadow = false;
-    videoPlaneScreen5.castShadow = false;
-    scene.add(videoPlaneScreen5);
-    video5.muted = true;
-    video5.play();
+    let bebeMaterial = new THREE.MeshFaceMaterial(bebeMaterials);
+    bebePlaneScreen = new THREE.Mesh(bebeGeometry, bebeMaterial);
+    bebePlaneScreen.position.set(0, 11, -40);
+    bebePlaneScreen.receiveShadow = false;
+    bebePlaneScreen.castShadow = false;
+    scene.add(bebePlaneScreen);
+    bebeVideo.muted = true;
+    bebeVideo.play();
+
+    const cylinderGeometry = new THREE.CylinderGeometry(10, 10, 1, 64);
+    const cylinderMaterial = new THREE.MeshBasicMaterial({
+        color: midGrey
+    });
+    const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+    cylinder.position.set(0, -3, -40);
+    cylinder.receiveShadow = true;
+    cylinder.castShadow = true;
+    scene.add(cylinder);
 
     //
 
@@ -564,7 +525,210 @@ function loadVideo() {
     video7.play();
 }
 
-function loadImg() {
+function loadAudios() {
+    const audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
+    const sound = new THREE.PositionalAudio(audioListener);
+
+    // const audioHelper = new THREE.PositionalAudioHelper(sound);
+    // sound.add(audioHelper);
+
+    const audioLoader = new THREE.AudioLoader(loadingManager);
+    audioLoader.load('../Leisure_Pursuit_Lounge/sound/CF.mp3', function(buffer) {
+        sound.setBuffer(buffer);
+        sound.setLoop(false);
+        sound.setRefDistance(20);
+        sound.setVolume(0.5);
+        sound.setDirectionalCone(360, 360, 0.1);
+        sound.position.y = 10;
+    })
+
+    document.body.addEventListener('keydown', onDocumentKeyDown, false);
+    function onDocumentKeyDown(event) {
+        const keyCode = event.which;
+        if (keyCode == 69) {
+            sound.play();
+        }
+    }
+    bebePlaneScreen.add(sound);
+}
+
+function loadImgs() {
+
+    const imgGeometry_1 = new THREE.PlaneGeometry(14, 20);
+    const imgTexture_1 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/xw11PtEw.jpg');
+    imgTexture_1.magFilter = THREE.NearestFilter;
+    imgTexture_1.minFilter = THREE.NearestFilter;
+    imgTexture_1.encoding = THREE.sRGBEncoding;
+    const imgMaterial_1 = new THREE.MeshPhongMaterial({
+        map: imgTexture_1,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_1,
+        emissiveIntensity: 1
+    });
+
+    const imgPlane_1 = new THREE.Mesh(imgGeometry_1, imgMaterial_1);
+    imgPlane_1.position.set(0, 15, 0)
+    scene.add(imgPlane_1); 
+
+    //
+
+    const imgGeometry_2 = new THREE.PlaneGeometry(7, 10);
+    const imgTexture_2 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/bag1.png');
+    imgTexture_2.magFilter = THREE.NearestFilter;
+    imgTexture_2.minFilter = THREE.NearestFilter;
+    imgTexture_2.encoding = THREE.sRGBEncoding;
+    const imgMaterial_2 = new THREE.MeshPhongMaterial({
+        map: imgTexture_2,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_2,
+        emissiveIntensity: 1,
+        transparent: true,
+        opacity: 1
+    });
+
+    const imgPlane_2 = new THREE.Mesh(imgGeometry_2, imgMaterial_2);
+    imgPlane_2.position.set(20, 15, 0)
+    scene.add(imgPlane_2);
+    
+    //
+
+    const imgGeometry_3 = new THREE.PlaneGeometry(7, 15);
+    const imgTexture_3 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/bag2.png');
+    imgTexture_3.magFilter = THREE.NearestFilter;
+    imgTexture_3.minFilter = THREE.NearestFilter;
+    imgTexture_3.encoding = THREE.sRGBEncoding;
+    const imgMaterial_3 = new THREE.MeshPhongMaterial({
+        map: imgTexture_3,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_3,
+        emissiveIntensity: 1,
+        transparent: true,
+        opacity: 1
+    });
+
+    const imgPlane_3 = new THREE.Mesh(imgGeometry_3, imgMaterial_3);
+    imgPlane_3.position.set(30, 15, 0)
+    scene.add(imgPlane_3); 
+
+    //
+
+    const imgGeometry_4 = new THREE.PlaneGeometry(7, 10);
+    const imgTexture_4 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/bag3.png');
+    imgTexture_4.magFilter = THREE.NearestFilter;
+    imgTexture_4.minFilter = THREE.NearestFilter;
+    imgTexture_4.encoding = THREE.sRGBEncoding;
+    const imgMaterial_4 = new THREE.MeshPhongMaterial({
+        map: imgTexture_4,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_4,
+        emissiveIntensity: 1,
+        transparent: true,
+        opacity: 1
+    });
+
+    const imgPlane_4 = new THREE.Mesh(imgGeometry_4, imgMaterial_4);
+    imgPlane_4.position.set(40, 15, 0)
+    scene.add(imgPlane_4);
+
+    //
+
+    const imgGeometry_5 = new THREE.PlaneGeometry(14, 20);
+    const imgTexture_5 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/book.png');
+    imgTexture_5.magFilter = THREE.NearestFilter;
+    imgTexture_5.minFilter = THREE.NearestFilter;
+    imgTexture_5.encoding = THREE.sRGBEncoding;
+    const imgMaterial_5 = new THREE.MeshPhongMaterial({
+        map: imgTexture_5,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_5,
+        emissiveIntensity: 1
+    });
+
+    const imgPlane_5 = new THREE.Mesh(imgGeometry_5, imgMaterial_5);
+    imgPlane_5.position.set(-20, 15, 0)
+    scene.add(imgPlane_5); 
+
+    //
+
+    const imgGeometry_6 = new THREE.PlaneGeometry(14, 20);
+    const imgTexture_6 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/DwlaJXhU.jpg');
+    imgTexture_6.magFilter = THREE.NearestFilter;
+    imgTexture_6.minFilter = THREE.NearestFilter;
+    imgTexture_6.encoding = THREE.sRGBEncoding;
+    const imgMaterial_6 = new THREE.MeshPhongMaterial({
+        map: imgTexture_6,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_6,
+        emissiveIntensity: 1
+    });
+
+    const imgPlane_6 = new THREE.Mesh(imgGeometry_6, imgMaterial_6);
+    imgPlane_6.position.set(-40, 15, 0)
+    scene.add(imgPlane_6); 
+
+    //
+
+    const imgGeometry_7 = new THREE.PlaneGeometry(20, 20);
+    const imgTexture_7 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/ppt1609.jpg');
+    imgTexture_7.magFilter = THREE.NearestFilter;
+    imgTexture_7.minFilter = THREE.NearestFilter;
+    imgTexture_7.encoding = THREE.sRGBEncoding;
+    const imgMaterial_7 = new THREE.MeshPhongMaterial({
+        map: imgTexture_7,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_7,
+        emissiveIntensity: 1
+    });
+
+    const imgPlane_7 = new THREE.Mesh(imgGeometry_7, imgMaterial_7);
+    imgPlane_7.position.set(-60, 15, 0)
+    scene.add(imgPlane_7); 
+
+    //
+
+    const imgGeometry_8 = new THREE.PlaneGeometry(15, 30);
+    const imgTexture_8 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/ai-ship.jpg');
+    imgTexture_8.magFilter = THREE.NearestFilter;
+    imgTexture_8.minFilter = THREE.NearestFilter;
+    imgTexture_8.encoding = THREE.sRGBEncoding;
+    const imgMaterial_8 = new THREE.MeshPhongMaterial({
+        map: imgTexture_8,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_8,
+        emissiveIntensity: 1
+    });
+
+    const imgPlane_8 = new THREE.Mesh(imgGeometry_8, imgMaterial_8);
+    imgPlane_8.position.set(-80, 15, 0)
+    scene.add(imgPlane_8); 
+
+    //
+
+    const imgGeometry_9 = new THREE.PlaneGeometry(15, 30);
+    const imgTexture_9 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/tod.jpg');
+    imgTexture_9.magFilter = THREE.NearestFilter;
+    imgTexture_9.minFilter = THREE.NearestFilter;
+    imgTexture_9.encoding = THREE.sRGBEncoding;
+    const imgMaterial_9 = new THREE.MeshPhongMaterial({
+        map: imgTexture_9,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: imgTexture_9,
+        emissiveIntensity: 1
+    });
+
+    const imgPlane_9 = new THREE.Mesh(imgGeometry_9, imgMaterial_9);
+    imgPlane_9.position.set(-100, 15, 0)
+    scene.add(imgPlane_9); 
 
 }
 
@@ -586,7 +750,7 @@ function rendererSetup() {
 }
 
 function onWindowResize() {
-    camera.aspect = width / heigh;
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
     renderer.setSize(width, height);
@@ -596,19 +760,21 @@ function update() {
 
     videoTexture.needsUpdate = true; //AI-SHIP
     videoTexture2.needsUpdate = true; //Tanqueray-18
-    videoTexture3.needsUpdate = true; //ppt1609_1
-    videoTexture4.needsUpdate = true; //ppt1609_2
-    videoTexture5.needsUpdate = true; //bebe
+
+    PPT1609_1_Texture.needsUpdate = true; //ppt1609_1
+    PPT1609_2_Texture.needsUpdate = true; //ppt1609_2
+
+    bebeTexture.needsUpdate = true; //bebe
     videoTexture6.needsUpdate = true; //morph
     videoTexture7.needsUpdate = true; //TOD_AD
 
-    let pos = camera.position;
-    videoPlaneScreen5.lookAt(pos); //bebe lookat camera
+    // let pos = camera.position;
+    // videoPlaneScreen5.lookAt(pos); //bebe lookat camera
 
     //model rotations
-    // bagModel.rotation.y += 0.009;
-    // cakeModel.rotation.y += 0.009;
-    // fruitModel.rotation.y += 0.009;
+    bagModel.rotation.y += 0.0095;
+    cakeModel.rotation.y += 0.0095;
+    fruitModel.rotation.y += 0.0095;
     
 }
 

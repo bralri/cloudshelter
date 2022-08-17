@@ -64,9 +64,12 @@ function sceneSetup() {
     scene.background = black;
     scene.fog = new THREE.Fog(midGrey, 0, 1800);
 
+    const ambLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambLight);
+
     const light = new THREE.HemisphereLight(midGrey, black, 0.5);
     light.position.set(0, 10, 0);
-    scene.add(light);
+    //scene.add(light);
 
     //
 
@@ -82,7 +85,7 @@ function sceneSetup() {
     shadowLight1.shadow.camera.right = 1000;
     shadowLight1.shadow.camera.top = 1000;
     shadowLight1.shadow.camera.bottom = -1000;
-    scene.add(shadowLight1);
+    //scene.add(shadowLight1);
 
     //
 
@@ -98,7 +101,7 @@ function sceneSetup() {
     const pLight4 = pLight.clone();
     pLight4.position.set(0, 30, 800);
 
-    scene.add(pLight, pLight2, pLight3, pLight4);
+    //scene.add(pLight, pLight2, pLight3, pLight4);
 
     //
 
@@ -130,7 +133,7 @@ function sceneSetup() {
     let floor4 = floor.clone();
     floor4.position.set(0, 0, 800);
 
-    scene.add(floor, floor2, floor3, floor4);
+    //scene.add(floor, floor2, floor3, floor4);
 
     //
 
@@ -261,37 +264,37 @@ function loadModels() {
 
     loader.load(
 
-        '../../glb/5/cloud_group.glb',
+        './ROOM_PHGRM_1.glb',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
                 if (node.isMesh) {
                     node.castShadow = true;
                     node.receiveShadow = false;
-                    node.material = new THREE.MeshPhongMaterial({
-                        color: lightGrey,
-                        side: THREE.BackSide,
-                    })
-                    node.material.opacity = 0.7;
-                    node.material.transparent = true;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
                 }
             })
 
             cloudModel = gltf2.scene;
-            cloudModel.position.set(0, 45, -800);
-            cloudModel.scale.set(5, 5, 5);
+            cloudModel.position.set(0, 0, -800);
+            cloudModel.scale.set(15, 15, 15);
 
             cloudModel2 = cloudModel.clone()
-            cloudModel2.position.set(800, 45, 0);
-            cloudModel2.scale.set(5, 5, 5);
+            cloudModel2.position.set(800, 0, 0);
+            cloudModel2.scale.set(15, 15, 15);
 
             cloudModel3 = cloudModel.clone()
-            cloudModel3.position.set(-800, 45, 0);
-            cloudModel3.scale.set(5, 5, 5);
+            cloudModel3.position.set(-800, 0, 0);
+            cloudModel3.scale.set(15, 15, 15);
 
             cloudModel4 = cloudModel.clone()
-            cloudModel4.position.set(0, 45, 800);
-            cloudModel4.scale.set(5, 5, 5);
+            cloudModel4.position.set(0, 0, 800);
+            cloudModel4.scale.set(15, 15, 15);
 
             scene.add(cloudModel, cloudModel2, cloudModel3, cloudModel4);
         }
@@ -370,18 +373,18 @@ function onWindowResize() {
 }
 
 function update() {
-    if (cloudModel) {
-        cloudModel.rotation.y += 0.002;
-    }
-    if (cloudModel2) {
-        cloudModel2.rotation.y += 0.002;
-    }
-    if (cloudModel3) {
-        cloudModel3.rotation.y += 0.002;
-    }
-    if (cloudModel4) {
-        cloudModel4.rotation.y += 0.002;
-    }
+    // if (cloudModel) {
+    //     cloudModel.rotation.y += 0.002;
+    // }
+    // if (cloudModel2) {
+    //     cloudModel2.rotation.y += 0.002;
+    // }
+    // if (cloudModel3) {
+    //     cloudModel3.rotation.y += 0.002;
+    // }
+    // if (cloudModel4) {
+    //     cloudModel4.rotation.y += 0.002;
+    // }
 }
 
 function animate() {

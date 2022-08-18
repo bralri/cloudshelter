@@ -58,6 +58,7 @@ function init() {
     cameraSetup();
     sceneSetup();
     controlsSetup();
+    rendererSetup();
 
     loadingManager();
 
@@ -65,12 +66,11 @@ function init() {
     loadVideos();
     loadAudios();
     loadImgs();
-    rendererSetup();
 
     document.body.addEventListener('keydown', onDocumentKeyDown, false);
     function onDocumentKeyDown(event) {
         const keyCode = event.which;
-        if (keyCode == 89) {
+        if (keyCode == 89) { //Y
             window.open('https://www.gwens.online/ppt1609', '_blank').focus();
         }
     }
@@ -292,7 +292,7 @@ function loadVideos() {
     videoTexture.encoding = THREE.sRGBEncoding;
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
-    let videoGeometry = new THREE.PlaneGeometry(80, 45);
+    let videoGeometry = new THREE.PlaneBufferGeometry(80, 45);
     const videoMaterials = new THREE.MeshPhongMaterial({
 
             map: videoTexture, 
@@ -321,7 +321,7 @@ function loadVideos() {
     videoTexture2.encoding = THREE.sRGBEncoding;
     videoTexture2.minFilter = THREE.LinearFilter;
     videoTexture2.magFilter = THREE.LinearFilter;
-    let videoGeometry2 = new THREE.PlaneGeometry(80, 45);
+    let videoGeometry2 = new THREE.PlaneBufferGeometry(80, 45);
     const videoMaterials2 = new THREE.MeshPhongMaterial({
 
             map: videoTexture2, 
@@ -357,7 +357,7 @@ function loadVideos() {
     PPT1609_2_Texture.minFilter = THREE.LinearFilter;
     PPT1609_2_Texture.magFilter = THREE.LinearFilter;
 
-    let PPT1609_Geometry = new THREE.BoxGeometry(25, 50, 5);
+    let PPT1609_Geometry = new THREE.BoxBufferGeometry(25, 50, 5);
     const PPT1609_Materials = [
         new THREE.MeshBasicMaterial({
             color: lightGrey, 
@@ -415,7 +415,7 @@ function loadVideos() {
     bebeTexture.encoding = THREE.sRGBEncoding;
     bebeTexture.minFilter = THREE.LinearFilter;
     bebeTexture.magFilter = THREE.LinearFilter;
-    let bebeGeometry = new THREE.PlaneGeometry(15, 30);
+    let bebeGeometry = new THREE.PlaneBufferGeometry(15, 30);
     const bebeMaterials = new THREE.MeshPhongMaterial({
         
         map: bebeTexture, 
@@ -437,7 +437,7 @@ function loadVideos() {
     bebeVideo.muted = true;
     bebeVideo.play();
 
-    const cylinderGeometry = new THREE.CylinderGeometry(10, 10, 1, 64);
+    const cylinderGeometry = new THREE.CylinderBufferGeometry(10, 10, 1, 64);
     const cylinderMaterial = new THREE.MeshBasicMaterial({
         color: midGrey
     });
@@ -454,7 +454,7 @@ function loadVideos() {
     videoTexture6.encoding = THREE.sRGBEncoding;
     videoTexture6.minFilter = THREE.LinearFilter;
     videoTexture6.magFilter = THREE.LinearFilter;
-    let videoGeometry6 = new THREE.PlaneGeometry(10, 15);
+    let videoGeometry6 = new THREE.PlaneBufferGeometry(10, 15);
     videoGeometry6.rotateX(- Math.PI / 2);
     const videoMaterials6 = new THREE.MeshPhongMaterial({
         
@@ -484,7 +484,7 @@ function loadVideos() {
     videoTexture7.encoding = THREE.sRGBEncoding;
     videoTexture7.minFilter = THREE.LinearFilter;
     videoTexture7.magFilter = THREE.LinearFilter;
-    let videoGeometry7 = new THREE.BoxGeometry(40, 50, 1);
+    let videoGeometry7 = new THREE.BoxBufferGeometry(40, 50, 1);
     const videoMaterials7 = [
         new THREE.MeshBasicMaterial({
             color: lightGrey, 
@@ -556,7 +556,7 @@ function loadAudios() {
 
 function loadImgs() {
 
-    const imgGeometry_1 = new THREE.PlaneGeometry(14, 20);
+    const imgGeometry_1 = new THREE.PlaneBufferGeometry(14, 20);
     const imgTexture_1 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/xw11PtEw.jpg');
     imgTexture_1.magFilter = THREE.NearestFilter;
     imgTexture_1.minFilter = THREE.NearestFilter;
@@ -570,12 +570,12 @@ function loadImgs() {
     });
 
     const imgPlane_1 = new THREE.Mesh(imgGeometry_1, imgMaterial_1);
-    imgPlane_1.position.set(0, 15, 0)
+    imgPlane_1.position.set(0, 15, -10)
     scene.add(imgPlane_1); 
 
     //
 
-    const imgGeometry_2 = new THREE.PlaneGeometry(7, 10);
+    const imgGeometry_2 = new THREE.PlaneBufferGeometry(7, 10);
     const imgTexture_2 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/bag1.png');
     imgTexture_2.magFilter = THREE.NearestFilter;
     imgTexture_2.minFilter = THREE.NearestFilter;
@@ -591,12 +591,12 @@ function loadImgs() {
     });
 
     const imgPlane_2 = new THREE.Mesh(imgGeometry_2, imgMaterial_2);
-    imgPlane_2.position.set(20, 15, 0)
+    imgPlane_2.position.set(20, 15, -10)
     scene.add(imgPlane_2);
     
     //
 
-    const imgGeometry_3 = new THREE.PlaneGeometry(7, 15);
+    const imgGeometry_3 = new THREE.PlaneBufferGeometry(7, 15);
     const imgTexture_3 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/bag2.png');
     imgTexture_3.magFilter = THREE.NearestFilter;
     imgTexture_3.minFilter = THREE.NearestFilter;
@@ -612,12 +612,12 @@ function loadImgs() {
     });
 
     const imgPlane_3 = new THREE.Mesh(imgGeometry_3, imgMaterial_3);
-    imgPlane_3.position.set(30, 15, 0)
+    imgPlane_3.position.set(30, 15, -10)
     scene.add(imgPlane_3); 
 
     //
 
-    const imgGeometry_4 = new THREE.PlaneGeometry(7, 10);
+    const imgGeometry_4 = new THREE.PlaneBufferGeometry(7, 10);
     const imgTexture_4 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/bag3.png');
     imgTexture_4.magFilter = THREE.NearestFilter;
     imgTexture_4.minFilter = THREE.NearestFilter;
@@ -633,12 +633,12 @@ function loadImgs() {
     });
 
     const imgPlane_4 = new THREE.Mesh(imgGeometry_4, imgMaterial_4);
-    imgPlane_4.position.set(40, 15, 0)
+    imgPlane_4.position.set(40, 15, -10)
     scene.add(imgPlane_4);
 
     //
 
-    const imgGeometry_5 = new THREE.PlaneGeometry(14, 20);
+    const imgGeometry_5 = new THREE.PlaneBufferGeometry(14, 20);
     const imgTexture_5 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/book.png');
     imgTexture_5.magFilter = THREE.NearestFilter;
     imgTexture_5.minFilter = THREE.NearestFilter;
@@ -652,12 +652,12 @@ function loadImgs() {
     });
 
     const imgPlane_5 = new THREE.Mesh(imgGeometry_5, imgMaterial_5);
-    imgPlane_5.position.set(-20, 15, 0)
+    imgPlane_5.position.set(-20, 15, -10)
     scene.add(imgPlane_5); 
 
     //
 
-    const imgGeometry_6 = new THREE.PlaneGeometry(14, 20);
+    const imgGeometry_6 = new THREE.PlaneBufferGeometry(14, 20);
     const imgTexture_6 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/DwlaJXhU.jpg');
     imgTexture_6.magFilter = THREE.NearestFilter;
     imgTexture_6.minFilter = THREE.NearestFilter;
@@ -671,12 +671,12 @@ function loadImgs() {
     });
 
     const imgPlane_6 = new THREE.Mesh(imgGeometry_6, imgMaterial_6);
-    imgPlane_6.position.set(-40, 15, 0)
+    imgPlane_6.position.set(-40, 15, -10)
     scene.add(imgPlane_6); 
 
     //
 
-    const imgGeometry_7 = new THREE.PlaneGeometry(20, 20);
+    const imgGeometry_7 = new THREE.PlaneBufferGeometry(20, 20);
     const imgTexture_7 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/ppt1609.jpg');
     imgTexture_7.magFilter = THREE.NearestFilter;
     imgTexture_7.minFilter = THREE.NearestFilter;
@@ -690,12 +690,12 @@ function loadImgs() {
     });
 
     const imgPlane_7 = new THREE.Mesh(imgGeometry_7, imgMaterial_7);
-    imgPlane_7.position.set(-60, 15, 0)
+    imgPlane_7.position.set(-60, 15, -10)
     scene.add(imgPlane_7); 
 
     //
 
-    const imgGeometry_8 = new THREE.PlaneGeometry(15, 30);
+    const imgGeometry_8 = new THREE.PlaneBufferGeometry(15, 30);
     const imgTexture_8 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/ai-ship.jpg');
     imgTexture_8.magFilter = THREE.NearestFilter;
     imgTexture_8.minFilter = THREE.NearestFilter;
@@ -709,12 +709,12 @@ function loadImgs() {
     });
 
     const imgPlane_8 = new THREE.Mesh(imgGeometry_8, imgMaterial_8);
-    imgPlane_8.position.set(-80, 15, 0)
+    imgPlane_8.position.set(-80, 15, -10)
     scene.add(imgPlane_8); 
 
     //
 
-    const imgGeometry_9 = new THREE.PlaneGeometry(15, 30);
+    const imgGeometry_9 = new THREE.PlaneBufferGeometry(15, 30);
     const imgTexture_9 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/tod.jpg');
     imgTexture_9.magFilter = THREE.NearestFilter;
     imgTexture_9.minFilter = THREE.NearestFilter;
@@ -728,7 +728,7 @@ function loadImgs() {
     });
 
     const imgPlane_9 = new THREE.Mesh(imgGeometry_9, imgMaterial_9);
-    imgPlane_9.position.set(-100, 15, 0)
+    imgPlane_9.position.set(-100, 15, -10)
     scene.add(imgPlane_9); 
 
 }

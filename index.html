@@ -9,123 +9,91 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" type="image/png" href="./img/cloud_t.png">
 
-    <link rel="stylesheet" href="./css/loader.css">
+    <link rel="stylesheet" href="./css/loader_landing.css">
     <link rel="stylesheet" href="./css/modal.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <title>Cloud Shelter</title>
 </head>
 <body>
-    <div class="loader">
-        <div></div>
-    </div>
 
-    <div class="content">
+    <section id="loading-screen">
 
-        <div id="blocker">
-            <div id="title">
-                <h2>
-                    
-                </h2>
-            </div>
+        <div id="loader"></div>
+    
+    </section>
 
-            <div class="w3-container">
-                <div id="id01" class="w3-modal" style="padding: 400px 0px 0px;">
-                    <div id="modal" class="w3-modal-content w3-center w3-animate-opacity" style="width: 375px; padding: 30px;">
-                        <div class="w3-container">
-                            <h5>[WASD] or [Arrows] to move</h5>
-                            <h5>[Mouse] to look around</h5>
-                        </div>
+
+    <div id="blocker">
+        <div id="title">
+            <h2>
+                
+            </h2>
+        </div>
+
+        <div class="w3-container">
+            <div id="id01" class="w3-modal" style="padding: 400px 0px 0px;">
+                <div id="modal" class="w3-modal-content w3-center w3-animate-opacity" style="width: 375px; padding: 30px;">
+                    <div class="w3-container">
+                        <h5>[WASD] or [Arrows] to move</h5>
+                        <h5>[Mouse] to look around</h5>
                     </div>
                 </div>
             </div>
+        </div>
     
-            
-            <!-- <div id="logo">
-                <a href="./about/">
-                    <img 
-                        src="./img/cloud_t.png"
-                        alt="logo of a cartoon cloud">
+        <div id="links">
+            <h5>
+                <a 
+                    href="#"
+                    class="info_btn"
+                    onclick="document.getElementById('id01').style.display='block'"
+                >
+                    controls
                 </a>
-            </div> -->
-    
-            <!-- <div id="info">
-                <a href="#">
-                    <img
-                        class="info_btn"
-                        onclick="document.getElementById('id01').style.display='block'"
-                        src="./img/info.png"
-                        alt="information i emoji" >
+            </h5>
+            <h5>
+                &nbsp;/&nbsp;
+            </h5>
+            <h5>
+                <a 
+                    href="./about/"
+                >
+                    about
                 </a>
-            </div> -->
-        
-            <div id="links">
-                <h5>
-                    <a 
-                        href="#"
-                        class="info_btn"
-                        onclick="document.getElementById('id01').style.display='block'"
-                    >
-                        controls
-                    </a>
-                </h5>
-                <h5>
-                    &nbsp;/&nbsp;
-                </h5>
-                <h5>
-                    <a 
-                        href="./about/"
-                    >
-                        about
-                    </a>
-                </h5>
-                <h5>
-                    &nbsp;/&nbsp;
-                </h5>
-                <h5>
-                    <a 
-                        href="https://www.instagram.com/cloud.shelter" 
-                        target="_blank"
-                    >
-                        instagram
-                    </a>
-                </h5>
-            </div>
-
+            </h5>
+            <h5>
+                &nbsp;/&nbsp;
+            </h5>
+            <h5>
+                <a 
+                    href="https://www.instagram.com/cloud.shelter" 
+                    target="_blank"
+                >
+                    instagram
+                </a>
+            </h5>
         </div>
 
-        <video
-            id="video"
-            playsinLine
-            webkit-playsinLine
-            muted
-            loop
-            autoplay
-            width="1072"
-            height="1340" 
-            src="./video/video.mp4"
-            style="display: none;"
-        ></video>
-        
-        <script src="./js/three.min.js"></script>
-        <script src="./js/GLTFLoader.js"></script>
-        <script src="./js/PointerLockControls.js"></script>
-        <script type="module" src="./landing.js"></script>
     </div>
 
-    <script>
-        $(window).on('load',function(){
-            $(".loader").fadeOut(2500);
-            $(".content").fadeIn(2500);
-        });
+    <video
+        id="video"
+        playsinLine
+        webkit-playsinLine
+        muted
+        loop
+        autoplay
+        width="1072"
+        height="1340" 
+        src="./video/video.mp4"
+        style="display: none;"
+    ></video>
+    
+    <script src="./js/three.min.js"></script>
+    <script src="./js/GLTFLoader.js"></script>
+    <script src="./js/PointerLockControls.js"></script>
+    <script type="module" src="./landing.js"></script>
 
-        const modal = document.getElementById('id01');
-        window.onclick = function(close) {
-            if (close.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
 </body>
 </html>

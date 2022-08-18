@@ -30,7 +30,7 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 
 let bagModel, cakeModel, fruitModel, arcadeModelY;
-let loadingManager;
+let manager;
 
 const white = new THREE.Color(0xffffff);
 white.convertSRGBToLinear();
@@ -58,6 +58,9 @@ function init() {
     cameraSetup();
     sceneSetup();
     controlsSetup();
+
+    loadingManager();
+
     loadModels();
     loadVideos();
     loadAudios();
@@ -112,7 +115,7 @@ function sceneSetup() {
 
     let floorGeometry = new THREE.PlaneGeometry(200, 200, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
-    let floorTexture = new THREE.TextureLoader(loadingManager).load('../img/floor2.png');
+    let floorTexture = new THREE.TextureLoader(manager).load('../img/floor2.png');
     floorTexture.wrapS = THREE.RepeatWrapping;
     floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(2, 2);
@@ -216,19 +219,17 @@ function controlsSetup() {
     raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
 }
 
+function loadingManager() {
+    manager = new THREE.LoadingManager( () => {
+        const loadingScreen = document.getElementById( 'loading-screen' );
+        loadingScreen.classList.add( 'fade-out' );
+        loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
+    });
+}
+
 function loadModels() {
 
-    loadingManager = new THREE.LoadingManager();
-    loadingManager.onLoad = function() {
-        console.log('Manager onLoad called, render started.');
-    }
-    loadingManager.onProgress = function(item, loaded, total) {
-        console.log('Manager onProgress: loading of', item, 'finished: ', loaded, ' of ', total, 'objects loaded.');
-    }
-
-    //
-
-    const loader = new THREE.GLTFLoader(loadingManager);
+    const loader = new THREE.GLTFLoader(manager);
     loader.load( //bag.glb
 
         '../Leisure_Pursuit_Lounge/models/bag_e.glb',
@@ -533,7 +534,7 @@ function loadAudios() {
     // const audioHelper = new THREE.PositionalAudioHelper(sound);
     // sound.add(audioHelper);
 
-    const audioLoader = new THREE.AudioLoader(loadingManager);
+    const audioLoader = new THREE.AudioLoader(manager);
     audioLoader.load('../Leisure_Pursuit_Lounge/sound/CF.mp3', function(buffer) {
         sound.setBuffer(buffer);
         sound.setLoop(false);
@@ -556,7 +557,7 @@ function loadAudios() {
 function loadImgs() {
 
     const imgGeometry_1 = new THREE.PlaneGeometry(14, 20);
-    const imgTexture_1 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/xw11PtEw.jpg');
+    const imgTexture_1 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/xw11PtEw.jpg');
     imgTexture_1.magFilter = THREE.NearestFilter;
     imgTexture_1.minFilter = THREE.NearestFilter;
     imgTexture_1.encoding = THREE.sRGBEncoding;
@@ -575,7 +576,7 @@ function loadImgs() {
     //
 
     const imgGeometry_2 = new THREE.PlaneGeometry(7, 10);
-    const imgTexture_2 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/bag1.png');
+    const imgTexture_2 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/bag1.png');
     imgTexture_2.magFilter = THREE.NearestFilter;
     imgTexture_2.minFilter = THREE.NearestFilter;
     imgTexture_2.encoding = THREE.sRGBEncoding;
@@ -596,7 +597,7 @@ function loadImgs() {
     //
 
     const imgGeometry_3 = new THREE.PlaneGeometry(7, 15);
-    const imgTexture_3 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/bag2.png');
+    const imgTexture_3 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/bag2.png');
     imgTexture_3.magFilter = THREE.NearestFilter;
     imgTexture_3.minFilter = THREE.NearestFilter;
     imgTexture_3.encoding = THREE.sRGBEncoding;
@@ -617,7 +618,7 @@ function loadImgs() {
     //
 
     const imgGeometry_4 = new THREE.PlaneGeometry(7, 10);
-    const imgTexture_4 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/bag3.png');
+    const imgTexture_4 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/bag3.png');
     imgTexture_4.magFilter = THREE.NearestFilter;
     imgTexture_4.minFilter = THREE.NearestFilter;
     imgTexture_4.encoding = THREE.sRGBEncoding;
@@ -638,7 +639,7 @@ function loadImgs() {
     //
 
     const imgGeometry_5 = new THREE.PlaneGeometry(14, 20);
-    const imgTexture_5 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/book.png');
+    const imgTexture_5 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/book.png');
     imgTexture_5.magFilter = THREE.NearestFilter;
     imgTexture_5.minFilter = THREE.NearestFilter;
     imgTexture_5.encoding = THREE.sRGBEncoding;
@@ -657,7 +658,7 @@ function loadImgs() {
     //
 
     const imgGeometry_6 = new THREE.PlaneGeometry(14, 20);
-    const imgTexture_6 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/DwlaJXhU.jpg');
+    const imgTexture_6 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/DwlaJXhU.jpg');
     imgTexture_6.magFilter = THREE.NearestFilter;
     imgTexture_6.minFilter = THREE.NearestFilter;
     imgTexture_6.encoding = THREE.sRGBEncoding;
@@ -676,7 +677,7 @@ function loadImgs() {
     //
 
     const imgGeometry_7 = new THREE.PlaneGeometry(20, 20);
-    const imgTexture_7 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/ppt1609.jpg');
+    const imgTexture_7 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/ppt1609.jpg');
     imgTexture_7.magFilter = THREE.NearestFilter;
     imgTexture_7.minFilter = THREE.NearestFilter;
     imgTexture_7.encoding = THREE.sRGBEncoding;
@@ -695,7 +696,7 @@ function loadImgs() {
     //
 
     const imgGeometry_8 = new THREE.PlaneGeometry(15, 30);
-    const imgTexture_8 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/ai-ship.jpg');
+    const imgTexture_8 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/ai-ship.jpg');
     imgTexture_8.magFilter = THREE.NearestFilter;
     imgTexture_8.minFilter = THREE.NearestFilter;
     imgTexture_8.encoding = THREE.sRGBEncoding;
@@ -714,7 +715,7 @@ function loadImgs() {
     //
 
     const imgGeometry_9 = new THREE.PlaneGeometry(15, 30);
-    const imgTexture_9 = new THREE.TextureLoader(loadingManager).load('../Leisure_Pursuit_Lounge/img/tod.jpg');
+    const imgTexture_9 = new THREE.TextureLoader(manager).load('../Leisure_Pursuit_Lounge/img/tod.jpg');
     imgTexture_9.magFilter = THREE.NearestFilter;
     imgTexture_9.minFilter = THREE.NearestFilter;
     imgTexture_9.encoding = THREE.sRGBEncoding;
@@ -829,4 +830,8 @@ function animate() {
     prevTime = time;
 
     renderer.render(scene, camera);
+}
+
+function onTransitionEnd(transition) {
+    transition.target.remove();
 }

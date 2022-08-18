@@ -20,7 +20,7 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 
 let cloudModel, shelterModel;
-let loadingManager;
+let manager;
 
 const white = new THREE.Color(0xffffff);
 white.convertSRGBToLinear();
@@ -40,6 +40,9 @@ function init() {
     cameraSetup();
     sceneSetup();
     controlsSetup();
+
+    loadingManager();
+
     loadModels();
     videoScreen();
     rendererSetup();
@@ -84,7 +87,7 @@ function sceneSetup() {
 
     let floorGeometry = new THREE.PlaneGeometry(200, 200, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
-    let floorTexture = new THREE.TextureLoader(loadingManager).load('../img/floor2.png');
+    let floorTexture = new THREE.TextureLoader(manager).load('../img/floor2.png');
     floorTexture.wrapS = THREE.RepeatWrapping;
     floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(2, 2);
@@ -196,15 +199,17 @@ function controlsSetup() {
     raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
 }
 
+function loadingManager() {
+    manager = new THREE.LoadingManager( () => {
+        const loadingScreen = document.getElementById( 'loading-screen' );
+        loadingScreen.classList.add( 'fade-out' );
+        loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
+    });
+}
+
 function loadModels() {
-    loadingManager = new THREE.LoadingManager();
-    loadingManager.onLoad = function() {
-        console.log('Manager onLoad called, render started.');
-    }
-    loadingManager.onProgress = function(item, loaded, total) {
-        console.log('Manager onProgress: loading of', item, 'finished: ', loaded, ' of ', total, 'objects loaded.');
-    }
-    const loader = new THREE.GLTFLoader(loadingManager);
+    
+    const loader = new THREE.GLTFLoader(manager);
     loader.load(
 
         './glb/untitled.glb',
@@ -380,4 +385,8 @@ function animate() {
     prevTime = time;
 
     renderer.render(scene, camera);
+}
+
+function onTransitionEnd(transition) {
+    transition.target.remove();
 }

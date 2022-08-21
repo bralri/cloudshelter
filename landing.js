@@ -1,37 +1,28 @@
 let camera, scene, renderer, controls;
 
-const objects = [];
-
-let raycaster;
+const width = window.innerWidth;
+const height = window.innerHeight;
+const aspect = width / height;
 
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
-let canJump = false;
 
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
-const vertex = new THREE.Vector3();
 
 let video, videoTexture;
-let width = window.innerWidth;
-let height = window.innerHeight;
 
-let cloudModel, shelterModel;
+let cloudModel;
 let manager;
 
-const white = new THREE.Color(0xffffff);
-white.convertSRGBToLinear();
-const lightGrey = new THREE.Color(0xD3D3D3);
-lightGrey.convertSRGBToLinear();
-const midGrey = new THREE.Color(0x63666A);
-midGrey.convertSRGBToLinear();
-const lightBlue = new THREE.Color(0xADD8E6);
-lightBlue.convertSRGBToLinear();
-const black = new THREE.Color(0x000000);
-black.convertSRGBToLinear();
+const white = new THREE.Color(0xffffff).convertSRGBToLinear();
+const black = new THREE.Color(0x000000).convertSRGBToLinear();
+const lightGrey = new THREE.Color(0xD3D3D3).convertSRGBToLinear();
+const midGrey = new THREE.Color(0x63666A).convertSRGBToLinear();
+const lightBlue = new THREE.Color(0xADD8E6).convertSRGBToLinear();
 
 init();
 animate();
@@ -41,17 +32,40 @@ function init() {
     sceneSetup();
     controlsSetup();
 
+    renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    
+    window.addEventListener('resize', function() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const aspect = width / height;
+        renderer.setSize(width, height);
+        renderer.gammaFactor = 2.2;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.physicallyCorrectLights = true;
+        document.body.appendChild(renderer.domElement);
+        camera.aspect = aspect;
+        camera.updateProjectionMatrix();
+    });
+
     loadingManager();
 
     loadModels();
     videoScreen();
-    rendererSetup();
 }
 
 function cameraSetup() {
     camera = new THREE.PerspectiveCamera( 
         75, 
-        width / height, 
+        aspect, 
         1, 
         2000 
     );
@@ -104,14 +118,6 @@ function sceneSetup() {
     floor.receiveShadow = true;
     floor.position.z = -90;
     scene.add(floor);
-
-    let cubeGeometry = new THREE.BoxGeometry(1, 1);
-    let cubeMaterial = new THREE.MeshLambertMaterial({
-        color: black,
-    });
-    let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(0, 0, -90);
-    scene.add(cube);
 }
 
 function controlsSetup() {
@@ -194,9 +200,6 @@ function controlsSetup() {
 
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
-
-    
-    raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
 }
 
 function loadingManager() {
@@ -212,26 +215,6 @@ function loadModels() {
     const loader = new THREE.GLTFLoader(manager);
     loader.load(
 
-        './glb/untitled.glb',
-
-        function(gltf1) {
-            gltf1.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = false;
-                    node.receiveShadow = false;
-
-                    node.material.opacity = 0.5;
-                    node.material.transparent = true;
-                }
-            })
-            shelterModel = gltf1.scene;
-            shelterModel.position.set(0, 0, -50);
-            shelterModel.scale.set(0.6, 0.6, 0.6);
-            //scene.add(shelterModel);
-        }
-    )
-    loader.load(
-
         '../glb/5/cloud_group.glb',
 
         function(gltf2) {
@@ -240,10 +223,10 @@ function loadModels() {
                     node.castShadow = true;
                     node.receiveShadow = false;
                     node.material = new THREE.MeshPhongMaterial({
-                        color: lightGrey,
+                        color: midGrey,
                         side: THREE.BackSide,
                     })
-                    node.material.opacity = 0.7;
+                    node.material.opacity = 0.5;
                     node.material.transparent = true;
                 }
             })
@@ -302,30 +285,6 @@ function videoScreen() {
     //video.play();
 }
 
-function rendererSetup() {
-    renderer = new THREE.WebGLRenderer({ 
-        antialias: true,
-        alpha: true
-    });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(width, height);
-    renderer.gammaFactor = 2.2;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.physicallyCorrectLights = true;
-    document.body.appendChild(renderer.domElement);
-
-    window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-    camera.aspect = width / heigh;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(width, height);
-}
-
 function update() {
     if (cloudModel) {
         cloudModel.rotation.y += 0.002;
@@ -339,13 +298,6 @@ function animate() {
     const time = performance.now();
 
     if (controls.isLocked === true) {
-
-        raycaster.ray.origin.copy(controls.getObject().position);
-        raycaster.ray.origin.y -= 10;
-
-        const intersections = raycaster.intersectObjects(objects, false);
-
-        const onObject = intersections.length > 0;
 
         const delta = (time - prevTime) / 1000;
 
@@ -361,22 +313,9 @@ function animate() {
         if (moveForward || moveBackward) velocity.z -= direction.z * 200.0 * delta;
         if (moveLeft || moveRight) velocity.x -= direction.x * 200.0 * delta;
 
-        if (onObject === true) {
-            velocity.y = Math.max(0, velocity.y);
-            canJump = true;
-        }
 
         controls.moveRight(- velocity.x * delta);
         controls.moveForward(- velocity.z * delta);
-
-        controls.getObject().position.y += (velocity.y * delta); // new behavior
-
-        if (controls.getObject().position.y < 10) {
-            velocity.y = 0;
-            controls.getObject().position.y = 10;
-
-            canJump = true;
-        }
 
     }
 

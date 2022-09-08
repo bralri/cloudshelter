@@ -19,9 +19,9 @@ let video, videoTexture;
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let cloudModel, cloudModel2, cloudModel3;
+let cloudModel, cloudModel3;
 
-let underpass_1;
+let underpass_1, underpass_2;
 
 let manager;
 
@@ -70,44 +70,14 @@ function sceneSetup() {
     scene.background = black;
     scene.fog = new THREE.Fog(midGrey, 0, 1800);
 
-    const ambLight = new THREE.AmbientLight(0x404040);
+    const ambLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambLight);
 
     const light = new THREE.HemisphereLight(midGrey, black, 0.5);
     light.position.set(0, 10, 0);
-    //scene.add(light);
+    scene.add(light);
 
     //
-
-    const shadowLight1 = new THREE.DirectionalLight(white, 1);
-    shadowLight1.position.set(0, 30, 0);
-    shadowLight1.angle = Math.PI * 0.2;
-    shadowLight1.castShadow = true;
-    shadowLight1.shadow.mapSize.width = 2048;
-    shadowLight1.shadow.mapSize.height = 2048;
-    shadowLight1.shadow.camera.near = 0.1;
-    shadowLight1.shadow.camera.far = 1000;
-    shadowLight1.shadow.camera.left = -1000;
-    shadowLight1.shadow.camera.right = 1000;
-    shadowLight1.shadow.camera.top = 1000;
-    shadowLight1.shadow.camera.bottom = -1000;
-    //scene.add(shadowLight1);
-
-    //
-
-    const pLight = new THREE.PointLight(white, 1, 150, 2);
-    pLight.position.set(0, 30, -800);
-
-    const pLight2 = pLight.clone();
-    pLight2.position.set(800, 30, 0);
-
-    const pLight3 = pLight.clone();
-    pLight3.position.set(-800, 30, 0);
-
-    const pLight4 = pLight.clone();
-    pLight4.position.set(0, 30, 800);
-
-    //scene.add(pLight, pLight2, pLight3, pLight4);
 
     //
 
@@ -267,24 +237,21 @@ function loadModels() {
             })
 
             cloudModel = gltf2.scene;
-            cloudModel.position.set(0, 0, -800);
+            cloudModel.position.set(0, 0, 800);
             cloudModel.scale.set(15, 15, 15);
-
-            cloudModel2 = cloudModel.clone()
-            cloudModel2.position.set(800, 0, 0);
-            cloudModel2.scale.set(15, 15, 15);
 
             cloudModel3 = cloudModel.clone()
             cloudModel3.position.set(-800, 0, 0);
             cloudModel3.scale.set(15, 15, 15);
 
-            scene.add(cloudModel, cloudModel2, cloudModel3);
+            scene.add(cloudModel, cloudModel3);
         }
     )
 
+    //underpass_1
     loader.load(
 
-        './underpass_model_idk.glb',
+        './underpass_1.glb',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
@@ -301,10 +268,36 @@ function loadModels() {
             })
 
             underpass_1 = gltf2.scene;
-            underpass_1.position.set(10, -1, 10);
+            underpass_1.position.set(0, -2, -800);
             underpass_1.scale.set(1, 1, 1);
 
             scene.add(underpass_1);
+        }
+    )
+    //underpass_2
+    loader.load(
+
+        './underpass_2.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            underpass_2 = gltf2.scene;
+            underpass_2.position.set(800, -2, 0);
+            underpass_2.scale.set(1, 1, 1);
+
+            scene.add(underpass_2);
         }
     )
 }

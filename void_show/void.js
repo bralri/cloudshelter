@@ -281,9 +281,10 @@ function loadModels() {
             scene.add(cloudModel, cloudModel2, cloudModel3);
         }
     )
+
     loader.load(
 
-        '../../largemodels/underpass_model_2.glb',
+        './underpass_model_idk.glb',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {
@@ -301,7 +302,7 @@ function loadModels() {
 
             underpass_1 = gltf2.scene;
             underpass_1.position.set(10, -1, 10);
-            underpass_1.scale.set(60, 80, 60);
+            underpass_1.scale.set(1, 1, 1);
 
             scene.add(underpass_1);
         }
@@ -373,7 +374,7 @@ function rendererSetup() {
 }
 
 function onWindowResize() {
-    camera.aspect = width / heigh;
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
     renderer.setSize(width, height);

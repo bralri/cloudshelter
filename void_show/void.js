@@ -19,7 +19,10 @@ let video, videoTexture;
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let cloudModel, cloudModel2, cloudModel3, cloudModel4;
+let cloudModel, cloudModel2, cloudModel3;
+
+let underpass_1;
+
 let manager;
 
 const white = new THREE.Color(0xffffff);
@@ -275,11 +278,32 @@ function loadModels() {
             cloudModel3.position.set(-800, 0, 0);
             cloudModel3.scale.set(15, 15, 15);
 
-            cloudModel4 = cloudModel.clone()
-            cloudModel4.position.set(0, 0, 800);
-            cloudModel4.scale.set(15, 15, 15);
+            scene.add(cloudModel, cloudModel2, cloudModel3);
+        }
+    )
+    loader.load(
 
-            scene.add(cloudModel, cloudModel2, cloudModel3, cloudModel4);
+        '../../largemodels/underpass_model_2.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            underpass_1 = gltf2.scene;
+            underpass_1.position.set(10, -1, 10);
+            underpass_1.scale.set(60, 80, 60);
+
+            scene.add(underpass_1);
         }
     )
 }

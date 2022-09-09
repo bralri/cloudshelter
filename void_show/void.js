@@ -19,9 +19,9 @@ let video, videoTexture;
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let cloudModel, cloudModel3;
-
 let underpass_1, underpass_2;
+let forest_1;
+let lane_1, lane_2;
 
 let manager;
 
@@ -218,35 +218,6 @@ function loadingManager() {
 
 function loadModels() {
     const loader = new THREE.GLTFLoader(manager);
-    loader.load(
-
-        './ROOM_PHGRM_1.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            cloudModel = gltf2.scene;
-            cloudModel.position.set(0, 0, 800);
-            cloudModel.scale.set(15, 15, 15);
-
-            cloudModel3 = cloudModel.clone()
-            cloudModel3.position.set(-800, 0, 0);
-            cloudModel3.scale.set(15, 15, 15);
-
-            scene.add(cloudModel, cloudModel3);
-        }
-    )
 
     //underpass_1
     loader.load(
@@ -300,6 +271,84 @@ function loadModels() {
             scene.add(underpass_2);
         }
     )
+    //forest_1
+    loader.load(
+
+            './forest_1.glb',
+    
+            function(gltf2) {
+                gltf2.scene.traverse(function(node) {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = false;
+    
+                        node.material.emissive = white;
+                        node.material.emissiveMap = node.material;
+                        node.material.emissiveIntensity = 2;
+                        node.material.opacity = 1;
+                        node.material.transparent = false;
+                    }
+                })
+    
+                forest_1 = gltf2.scene;
+                forest_1.position.set(10, -1, 10);
+                forest_1.scale.set(1, 1, 1);
+    
+                scene.add(forest_1);
+            }
+        )
+        //lane_1
+        loader.load(
+
+            './lane_1.glb',
+    
+            function(gltf2) {
+                gltf2.scene.traverse(function(node) {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = false;
+    
+                        node.material.emissive = white;
+                        node.material.emissiveMap = node.material;
+                        node.material.emissiveIntensity = 2;
+                        node.material.opacity = 1;
+                        node.material.transparent = false;
+                    }
+                })
+    
+                lane_1 = gltf2.scene;
+                lane_1.position.set(-200, -2, -200);
+                lane_1.scale.set(1, 1, 1);
+    
+                scene.add(lane_1);
+            }
+        )
+        //lane_2
+        loader.load(
+
+            './lane_2.glb',
+    
+            function(gltf2) {
+                gltf2.scene.traverse(function(node) {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = false;
+    
+                        node.material.emissive = white;
+                        node.material.emissiveMap = node.material;
+                        node.material.emissiveIntensity = 2;
+                        node.material.opacity = 1;
+                        node.material.transparent = false;
+                    }
+                })
+    
+                lane_2 = gltf2.scene;
+                lane_2.position.set(0, -2, 1500);
+                lane_2.scale.set(1, 1, 1);
+    
+                scene.add(lane_2);
+            }
+        )
 }
 
 // function videoScreen() {

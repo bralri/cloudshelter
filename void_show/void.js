@@ -22,6 +22,7 @@ let height = window.innerHeight;
 let underpass_1, underpass_2;
 let forest_1;
 let lane_1, lane_2;
+let bin_1, bin_2;
 
 let manager;
 
@@ -274,81 +275,133 @@ function loadModels() {
     //forest_1
     loader.load(
 
-            './forest_1.glb',
-    
-            function(gltf2) {
-                gltf2.scene.traverse(function(node) {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = false;
-    
-                        node.material.emissive = white;
-                        node.material.emissiveMap = node.material;
-                        node.material.emissiveIntensity = 2;
-                        node.material.opacity = 1;
-                        node.material.transparent = false;
-                    }
-                })
-    
-                forest_1 = gltf2.scene;
-                forest_1.position.set(10, -1, 10);
-                forest_1.scale.set(1, 1, 1);
-    
-                scene.add(forest_1);
-            }
-        )
-        //lane_1
-        loader.load(
+        './forest_1.glb',
 
-            './lane_1.glb',
-    
-            function(gltf2) {
-                gltf2.scene.traverse(function(node) {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = false;
-    
-                        node.material.emissive = white;
-                        node.material.emissiveMap = node.material;
-                        node.material.emissiveIntensity = 2;
-                        node.material.opacity = 1;
-                        node.material.transparent = false;
-                    }
-                })
-    
-                lane_1 = gltf2.scene;
-                lane_1.position.set(-200, -2, -200);
-                lane_1.scale.set(1, 1, 1);
-    
-                scene.add(lane_1);
-            }
-        )
-        //lane_2
-        loader.load(
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
 
-            './lane_2.glb',
-    
-            function(gltf2) {
-                gltf2.scene.traverse(function(node) {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = false;
-    
-                        node.material.emissive = white;
-                        node.material.emissiveMap = node.material;
-                        node.material.emissiveIntensity = 2;
-                        node.material.opacity = 1;
-                        node.material.transparent = false;
-                    }
-                })
-    
-                lane_2 = gltf2.scene;
-                lane_2.position.set(0, -2, 1500);
-                lane_2.scale.set(1, 1, 1);
-    
-                scene.add(lane_2);
-            }
-        )
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            forest_1 = gltf2.scene;
+            forest_1.position.set(10, -2, 10);
+            forest_1.scale.set(0.5, 0.5, 0.5);
+
+            scene.add(forest_1);
+        }
+    )
+    //lane_1
+    loader.load(
+
+        './lane_1.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            lane_1 = gltf2.scene;
+            lane_1.position.set(-200, -2, -200);
+            lane_1.scale.set(0.5, 0.5, 0.5);
+
+            scene.add(lane_1);
+        }
+    )
+    //lane_2
+    loader.load(
+
+        './lane_2.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            lane_2 = gltf2.scene;
+            lane_2.position.set(0, -2, 1500);
+            lane_2.scale.set(0.5, 0.5, 0.5);
+
+            scene.add(lane_2);
+        }
+    )
+    //bin_1
+    loader.load(
+
+        './bin_1.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            bin_1 = gltf2.scene;
+            bin_1.position.set(250, -1, 250);
+            bin_1.scale.set(0.2, 0.2, 0.2);
+
+            scene.add(bin_1);
+        }
+    )
+    //bin_2
+    loader.load(
+
+        './bin_2.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            bin_2 = gltf2.scene;
+            bin_2.position.set(350, -1, 350);
+            bin_2.scale.set(0.2, 0.2, 0.2);
+
+            scene.add(bin_2);
+        }
+    )
 }
 
 // function videoScreen() {

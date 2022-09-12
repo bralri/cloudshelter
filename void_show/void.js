@@ -16,13 +16,15 @@ const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 
 let video, videoTexture;
-let width = window.innerWidth;
-let height = window.innerHeight;
 
 let underpass_1, underpass_2;
 let forest_1;
 let lane_1, lane_2;
 let bin_1, bin_2;
+
+let degreeX = 0;
+let degreeY = 0;
+let degreeZ = 0;
 
 let manager;
 
@@ -59,7 +61,7 @@ function init() {
 function cameraSetup() {
     camera = new THREE.PerspectiveCamera( 
         75, 
-        width / height, 
+        window.innerWidth / window.innerHeight, 
         1, 
         2000 
     );
@@ -77,50 +79,6 @@ function sceneSetup() {
     const light = new THREE.HemisphereLight(midGrey, black, 0.5);
     light.position.set(0, 10, 0);
     scene.add(light);
-
-    //
-
-    //
-
-    let floorGeometry = new THREE.PlaneGeometry(200, 200, 4, 4);
-    floorGeometry.rotateX(- Math.PI / 2);
-    let floorTexture = new THREE.TextureLoader(manager).load('../img/floor2.png');
-    floorTexture.wrapS = THREE.RepeatWrapping;
-    floorTexture.wrapT = THREE.RepeatWrapping;
-    floorTexture.repeat.set(2, 2);
-    floorTexture.offset.set(0.3, 0.5);
-    floorTexture.anisotropy = 0;
-    floorTexture.magFilter = THREE.NearestFilter;
-    floorTexture.minFilter = THREE.NearestFilter;
-    floorTexture.encoding = THREE.sRGBEncoding;
-    let floorMaterial = new THREE.MeshLambertMaterial({
-        map: floorTexture
-    });
-
-    let floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.receiveShadow = true;
-    floor.position.set(0, 0, -800);
-
-    let floor2 = floor.clone();
-    floor2.position.set(800, 0, 0);
-
-    let floor3 = floor.clone();
-    floor3.position.set(-800, 0, 0);
-
-    let floor4 = floor.clone();
-    floor4.position.set(0, 0, 800);
-
-    //scene.add(floor, floor2, floor3, floor4);
-
-    //
-
-    let cubeGeometry = new THREE.BoxGeometry(1, 1);
-    let cubeMaterial = new THREE.MeshLambertMaterial({
-        color: black,
-    });
-    let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(0, 0, -90);
-    scene.add(cube);
 }
 
 function controlsSetup() {
@@ -217,8 +175,40 @@ function loadingManager() {
 
 }
 
+function rotateObject(object, degreeX, degreeY, degreeZ) {
+    object.rotateX(THREE.Math.degToRad(degreeX));
+    object.rotateY(THREE.Math.degToRad(degreeY));
+    object.rotateZ(THREE.Math.degToRad(degreeZ));
+}
+
 function loadModels() {
     const loader = new THREE.GLTFLoader(manager);
+    //entrance_lane
+    loader.load(
+
+        './entrance_lane.glb',
+
+        function(gltf2) {
+            gltf2.scene.traverse(function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+
+                    node.material.emissive = white;
+                    node.material.emissiveMap = node.material;
+                    node.material.emissiveIntensity = 2;
+                    node.material.opacity = 1;
+                    node.material.transparent = false;
+                }
+            })
+
+            lane_2 = gltf2.scene;
+            lane_2.position.set(-32, -2, -740);
+            lane_2.scale.set(0.5, 0.5, 0.5);
+
+            scene.add(lane_2);
+        }
+    )
 
     //underpass_1
     loader.load(
@@ -240,8 +230,9 @@ function loadModels() {
             })
 
             underpass_1 = gltf2.scene;
-            underpass_1.position.set(0, -2, -800);
+            underpass_1.position.set(1000, -2.5, -2000);
             underpass_1.scale.set(1, 1, 1);
+            rotateObject(underpass_1, 0, 45, 2);
 
             scene.add(underpass_1);
         }
@@ -266,8 +257,9 @@ function loadModels() {
             })
 
             underpass_2 = gltf2.scene;
-            underpass_2.position.set(800, -2, 0);
-            underpass_2.scale.set(1, 1, 1);
+            underpass_2.position.set(-500, -2.5, -2000);
+            underpass_2.scale.set(1.5, 1.5, 1.5);
+            rotateObject(underpass_2, 0, 45, 0);
 
             scene.add(underpass_2);
         }
@@ -295,7 +287,7 @@ function loadModels() {
             forest_1.position.set(10, -2, 10);
             forest_1.scale.set(0.5, 0.5, 0.5);
 
-            scene.add(forest_1);
+            //scene.add(forest_1);
         }
     )
     //lane_1
@@ -321,33 +313,7 @@ function loadModels() {
             lane_1.position.set(-200, -2, -200);
             lane_1.scale.set(0.5, 0.5, 0.5);
 
-            scene.add(lane_1);
-        }
-    )
-    //lane_2
-    loader.load(
-
-        './lane_2.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            lane_2 = gltf2.scene;
-            lane_2.position.set(0, -2, 1500);
-            lane_2.scale.set(0.5, 0.5, 0.5);
-
-            scene.add(lane_2);
+            //scene.add(lane_1);
         }
     )
     //bin_1
@@ -373,10 +339,10 @@ function loadModels() {
             bin_1.position.set(250, -1, 250);
             bin_1.scale.set(0.2, 0.2, 0.2);
 
-            scene.add(bin_1);
+            //scene.add(bin_1);
         }
     )
-    //bin_2
+    //forest_structure
     loader.load(
 
         './bin_2.glb',
@@ -399,7 +365,7 @@ function loadModels() {
             bin_2.position.set(350, -1, 350);
             bin_2.scale.set(0.2, 0.2, 0.2);
 
-            scene.add(bin_2);
+            //scene.add(bin_2);
         }
     )
 }
@@ -457,7 +423,7 @@ function rendererSetup() {
         alpha: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(width, height);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.gammaFactor = 2.2;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.shadowMap.enabled = true;
@@ -469,10 +435,10 @@ function rendererSetup() {
 }
 
 function onWindowResize() {
-    camera.aspect = width / height;
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(width, height);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function update() {

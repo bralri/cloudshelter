@@ -284,10 +284,10 @@ function loadModels() {
             })
 
             forest_1 = gltf2.scene;
-            forest_1.position.set(10, -2, 10);
+            forest_1.position.set(0, -2, -2500);
             forest_1.scale.set(0.5, 0.5, 0.5);
 
-            //scene.add(forest_1);
+            scene.add(forest_1);
         }
     )
     //lane_1
@@ -310,10 +310,10 @@ function loadModels() {
             })
 
             lane_1 = gltf2.scene;
-            lane_1.position.set(-200, -2, -200);
+            lane_1.position.set(-100, -2, -2500);
             lane_1.scale.set(0.5, 0.5, 0.5);
 
-            //scene.add(lane_1);
+            scene.add(lane_1);
         }
     )
     //bin_1
@@ -336,10 +336,10 @@ function loadModels() {
             })
 
             bin_1 = gltf2.scene;
-            bin_1.position.set(250, -1, 250);
+            bin_1.position.set(250, -2, -2500);
             bin_1.scale.set(0.2, 0.2, 0.2);
 
-            //scene.add(bin_1);
+            scene.add(bin_1);
         }
     )
     //forest_structure
@@ -362,10 +362,10 @@ function loadModels() {
             })
 
             bin_2 = gltf2.scene;
-            bin_2.position.set(350, -1, 350);
+            bin_2.position.set(0, -2, -2300);
             bin_2.scale.set(0.2, 0.2, 0.2);
 
-            //scene.add(bin_2);
+            scene.add(bin_2);
         }
     )
 }

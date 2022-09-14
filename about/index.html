@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="Description" content="Cloud Shelter is an online gallery and project space.">
 
-    <link rel="stylesheet" href="../css/about.css">
-    <link rel="icon" type="image/png" href="../img/cloud_t.png">
+    <link rel="stylesheet" href="/css/about.css">
+    <link rel="stylesheet" href="/css/loader-alt.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="../css/loader.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/js/window-load.js"></script>
 
+    <link rel="icon" type="image/png" href="/img/cloud_t.png">
     <title>About | Cloud Shelter</title>
 </head>
 <body>
@@ -29,55 +31,40 @@
             </a>
         </div> -->
 
-        <div id="about-title">
-            <h2>
-                / about /
-            </h2>
-        </div>
-
         <div id="about-text">
             <h3>
-                <a href="https://gallery.cloudshelter.app">Cloud Shelter</a> is an online exhibition and project space
-                dedicated to <br> showcasing emerging artistic talent and experimental digital arts.
-                <br><br>
-                This project is coordinated and run by <a href="https://www.bralri.net" target="_blank">Bryan Ridpath</a>.
-                <br><br>
+                <a href="https://gallery.cloudshelter.app" title="home">Cloud Shelter</a> is an online exhibition and project space dedicated to showcasing emerging artists and experimental digital arts. 
+                <br>
+                <br>
+                This project is coordinated and run by <a href="https://www.bralri.net" title="bralri.net" target="_blank">Bryan Ridpath</a>.
             </h3>
+            <br><br>
             <h3>
-                Contact: <a href="mailto:cloudshelter1@gmail.com">cloudshelter1@gmail.com</a> <br>
-                Instagram: <a href="https://www.instagram.com/cloud.shelter" target="_blank">@cloud.shelter</a>
+                Contact: <a href="mailto:cloudshelter1@gmail.com" title="email">cloudshelter1@gmail.com</a> 
+                <br>
+                Instagram: <a href="https://www.instagram.com/cloud.shelter" title="instagram" target="_blank">@cloud.shelter</a>
             </h3>
         </div>
 
         <div id="about-links">
-            <h5>
-                <a 
-                    href="https://gallery.cloudshelter.app"
-                >
-                    home
-                </a>
-            </h5>
-            <h5>
-                &nbsp;/&nbsp;
-            </h5>
-            <h5>
-                <a 
-                    href="https://www.instagram.com/cloud.shelter" 
-                    target="_blank"
-                >
-                    instagram
-                </a>
-            </h5>
+            <a 
+                href="https://gallery.cloudshelter.app"
+                title="home"
+            >
+                <i style="font-size:32px" class="fa">&#xf0c2;</i>
+            </a>
+                &nbsp;
+                &nbsp;
+            <a 
+                href="https://www.instagram.com/cloud.shelter"
+                title="instagram" 
+                target="_blank"
+            >
+                <i style="font-size:32px" class="fa">&#xf16d;</i>
+            </a>
         </div>
 
     </div>
-
-    <script>
-        $(window).on('load',function(){
-            $(".loader").fadeOut(1500);
-            $(".content").fadeIn(1500);
-        });
-    </script>
 
 </body>
 </html>

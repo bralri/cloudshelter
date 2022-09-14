@@ -1,4 +1,4 @@
-/* page loader
+/* page loader */
 .content {
     display: none;
 }
@@ -7,7 +7,7 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background-color: whitesmoke;
+    background-color: black;
     position: absolute;
 }
 .loader>div {
@@ -28,8 +28,8 @@
     100% {
         transform: rotate(360deg);
     }
-} */
-
+}
+/* 
 #loading-screen {
 	position: absolute;
 	z-index: 2;
@@ -83,4 +83,4 @@
         -ms-transform: rotate(360deg);
         transform: rotate(360deg);
     }
-}
+} */

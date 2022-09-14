@@ -4,59 +4,41 @@
     box-sizing: border-box;
     font-family: 'Courier New', Courier, monospace;
     overflow: none;
+    color: whitesmoke;
 }
 
-h1, h2, h3, h4, h6 {
-    color: #242526;
-}
 a {
-    color: #242526;
+    color: whitesmoke;
+    transition: ease 0.3s;
 }
-h5 {
-    font-size: 18px;
+a:hover {
+    cursor: pointer;
+    opacity: 60%;
+    
+    transition: ease 0.3s;
 }
 
 body {
-    background-color: whitesmoke;
-}
-
-#logo {
-    position: absolute;
-    bottom: 0px;
-    left: 15px;
-    z-index: 100;
-    display: block;
-}
-#logo img {
-    width: 70px;
-    height: 70px;
-    opacity: 80%;
-}
-#logo img:hover {
-    cursor: pointer;
-    opacity: 60%;
-}
-
-#about-title {
-    position: absolute;
-    top: 250px;
-    left: 300px;
+    background-color: black;
 }
 
 #about-text {
+    margin: 0;
     position: absolute;
-    top: 350px;
-    left: 300px;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    
+    width: 600px;
 }
 
 #about-links {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 0px;
+    right: 0px;
     z-index: 100;
     display: flex;
-}
-#about-links a:hover {
-    cursor: pointer;
-    opacity: 60%;
+    
+    padding: 15px;
 }

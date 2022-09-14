@@ -183,6 +183,7 @@ function rotateObject(object, degreeX, degreeY, degreeZ) {
 
 function loadModels() {
     const loader = new THREE.GLTFLoader(manager);
+
     //entrance_lane
     loader.load(
 
@@ -237,6 +238,7 @@ function loadModels() {
             scene.add(underpass_1);
         }
     )
+
     //underpass_2
     loader.load(
 
@@ -264,6 +266,7 @@ function loadModels() {
             scene.add(underpass_2);
         }
     )
+
     //forest_1
     loader.load(
 
@@ -290,6 +293,7 @@ function loadModels() {
             scene.add(forest_1);
         }
     )
+
     //lane_1
     loader.load(
 
@@ -310,12 +314,13 @@ function loadModels() {
             })
 
             lane_1 = gltf2.scene;
-            lane_1.position.set(-100, -2, -2500);
+            lane_1.position.set(-200, -2, -2500);
             lane_1.scale.set(0.5, 0.5, 0.5);
 
             scene.add(lane_1);
         }
     )
+
     //bin_1
     loader.load(
 
@@ -336,12 +341,13 @@ function loadModels() {
             })
 
             bin_1 = gltf2.scene;
-            bin_1.position.set(250, -2, -2500);
+            bin_1.position.set(100, -2, -2500);
             bin_1.scale.set(0.2, 0.2, 0.2);
 
             scene.add(bin_1);
         }
     )
+
     //forest_structure
     loader.load(
 
@@ -362,7 +368,7 @@ function loadModels() {
             })
 
             bin_2 = gltf2.scene;
-            bin_2.position.set(0, -2, -2300);
+            bin_2.position.set(0, -14, -2300);
             bin_2.scale.set(0.2, 0.2, 0.2);
 
             scene.add(bin_2);

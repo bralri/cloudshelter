@@ -11,8 +11,8 @@
     position: absolute;
 }
 .loader>div {
-    height: 100px;
-    width: 100px;
+    height: 125px;
+    width: 125px;
     border: 15px solid white;
     border-top-color: lightgrey;
     position: absolute;

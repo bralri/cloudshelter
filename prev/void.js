@@ -113,8 +113,6 @@ function controlsSetup() {
         [-534, -2011]
     ]
 
-    camera.position.y = 10;
-
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
 
     controls.getObject().position.x = camera_location_array[camera_location_picker][0];

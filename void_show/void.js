@@ -2,8 +2,6 @@ let camera, scene, renderer, controls;
 
 const objects = [];
 
-let raycaster;
-
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -27,6 +25,8 @@ let degreeY = 0;
 let degreeZ = 0;
 
 let manager;
+
+//
 
 const white = new THREE.Color(0xffffff);
 white.convertSRGBToLinear();
@@ -65,6 +65,7 @@ function cameraSetup() {
         1, 
         2000 
     );
+
     camera.position.y = 10;
 }
 
@@ -100,6 +101,22 @@ function controlsSetup() {
         blocker.style.display = 'block';
         title.style.display = '';
     } );
+
+    const camera_location_array = [ //[x, z]
+        [0, 0],
+        [1002, -1959],
+        [-354, -1793],
+        [-68, -2203],
+        [-25, -370],
+        [-36, -717],
+        [-61, -981],
+        [-534, -2011]
+    ]
+
+    let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
+
+    controls.getObject().position.x = camera_location_array[camera_location_picker][0];
+    controls.getObject().position.z = camera_location_array[camera_location_picker][1];
 
     scene.add(controls.getObject());
 
@@ -162,8 +179,6 @@ function controlsSetup() {
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
 
-    
-    raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
 }
 
 function loadingManager() {
@@ -460,6 +475,9 @@ function update() {
     // if (cloudModel4) {
     //     cloudModel4.rotation.y += 0.002;
     // }
+
+    
+    console.log(camera.position);
 }
 
 function animate() {
@@ -470,44 +488,22 @@ function animate() {
 
     if (controls.isLocked === true) {
 
-        raycaster.ray.origin.copy(controls.getObject().position);
-        raycaster.ray.origin.y -= 10;
-
-        const intersections = raycaster.intersectObjects(objects, false);
-
-        const onObject = intersections.length > 0;
-
         const delta = (time - prevTime) / 1000;
 
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
 
-        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+        // velocity.y -= 9.8 * 100.0 * delta;
 
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
-        direction.normalize(); // this ensures consistent movements in all directions
+        direction.normalize();
 
         if (moveForward || moveBackward) velocity.z -= direction.z * 600.0 * delta;
         if (moveLeft || moveRight) velocity.x -= direction.x * 600.0 * delta;
 
-        if (onObject === true) {
-            velocity.y = Math.max(0, velocity.y);
-            canJump = true;
-        }
-
         controls.moveRight(- velocity.x * delta);
         controls.moveForward(- velocity.z * delta);
-
-        controls.getObject().position.y += (velocity.y * delta); // new behavior
-
-        if (controls.getObject().position.y < 10) {
-            velocity.y = 0;
-            controls.getObject().position.y = 10;
-
-            canJump = true;
-        }
-
     }
 
     // videoTexture.needsUpdate = true;

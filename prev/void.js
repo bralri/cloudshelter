@@ -67,6 +67,12 @@ function cameraSetup() {
     );
 
     camera.position.y = 10;
+
+    const vector = new THREE.Vector3(1, 10, -1);
+
+    vector.applyQuaternion(camera.quaternion);
+
+    camera.lookAt(vector);
 }
 
 function sceneSetup() {
@@ -103,14 +109,14 @@ function controlsSetup() {
     } );
 
     const camera_location_array = [ //[x, z]
-        [0, 0],
-        [1002, -1959],
-        [-354, -1793],
-        [-68, -2203],
-        [-25, -370],
-        [-36, -717],
-        [-61, -981],
-        [-534, -2011]
+        // [0, 0],
+        [932, -1893],
+        // [-354, -1793],
+        // [-68, -2203],
+        // [-25, -370],
+        // [-36, -717],
+        // [-61, -981],
+        // [-534, -2011]
     ]
 
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);

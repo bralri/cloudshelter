@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="../css/void.css">
+    <link rel="stylesheet" type="text/css" href="../css/loader-main.css">
+    <link rel="stylesheet" type="text/css" href="../css/modal.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="../js/info-modal.js" defer></script>
+
+    <link rel="icon" type="image/png" href="../img/cloud_t.png">
+    <meta name="Description" content="Cloud Shelter is an online gallery and project space.">
+    <title>Cloud Shelter</title>
+</head>
+<body>
+
+    <section id="loading-screen">
+
+        <div id="loader"></div>
+    
+    </section>
+
+    <div id="blocker">
+        <div id="title">
+        </div>
+
+        <div class="w3-container">
+            <div id="id01" class="w3-modal" style="padding: 400px 0px 0px;">
+                <div id="modal" class="w3-modal-content w3-center w3-animate-opacity" style="width: 375px; padding: 30px;">
+                    <div class="w3-container">
+                        <h5>[WASD] or [Arrows] to move</h5>
+                        <h5>[Mouse] to look around</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="controls">
+            <a 
+                href="#"
+                class="info_btn"
+                onclick="document.getElementById('id01').style.display='block'"
+                title="controls"
+                id="controls"
+            >
+                <i style="font-size:38px;" class="fa">&#xf11c;</i>
+            </a>
+        </div>
+    
+        <div id="links">
+            <a 
+                href="/about/"
+                title="about"
+            >
+                <i style="font-size:32px" class="fa">&#xf29c;</i>
+            </a>
+                &nbsp;
+                &nbsp;
+            <a 
+                href="https://www.instagram.com/cloud.shelter"
+                title="instagram"
+                target="_blank"
+            >
+                <i style="font-size:32px" class="fa">&#xf16d;</i>
+            </a>
+        </div>
+
+    </div>
+    
+    <script src="../js/three.min.js"></script>
+    <script src="../js/GLTFLoader.js"></script>
+    <script src="../js/PointerLockControls.js"></script>
+    <script type="module" src="./void.js"></script>
+
+</body>
+</html>

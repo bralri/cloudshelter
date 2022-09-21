@@ -28,12 +28,10 @@ let manager;
 
 //
 
-let angle_ = 0;
-let position_ = 0;
-const up_ = new THREE.Vector3(0, 1, 0);
-let path_;
-let point_;
-let cubeMesh;
+let position = 0;
+let path_1, path_2;
+let point_1, point_2;
+let cubeMesh_1, cubeMesh_2;
 //
 
 const white = new THREE.Color(0xffffff);
@@ -69,61 +67,93 @@ function init() {
         color: 0xff0000,
         flatShading: true,
     });
-    const cubeGeometry = new THREE.BoxBufferGeometry(1, 20, 10);
-    cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    scene.add(cubeMesh);
+    const cubeGeometry = new THREE.BoxBufferGeometry(10, 30, 10);
+    cubeMesh_1 = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cubeMesh_2 = cubeMesh_1.clone();
+    scene.add(cubeMesh_1, cubeMesh_2);
 
-    path_ = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, 6, 0),
-        new THREE.Vector3(-18, 6, -365),
-        new THREE.Vector3(-41, 6, -985),
-        new THREE.Vector3(12, 6, -1173),
-        new THREE.Vector3(290, 6, -1359),
-        new THREE.Vector3(393, 6, 187),
-        new THREE.Vector3(100, 6, 218),
-    ], true, "centripetal",);
+    path_1 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(-18, 0, -365),
+        new THREE.Vector3(-41, 0, -985),
+        new THREE.Vector3(12, 0, -1173),
+        new THREE.Vector3(290, 0, -1359),
+        new THREE.Vector3(393, 0, 187),
+        new THREE.Vector3(100, 0, 218),
+    ], true, "centripetal");
+
+    path_2 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-494, 5, -2001),
+        new THREE.Vector3(-536, 5, -2041),
+        new THREE.Vector3(-573, 5, -2058),
+        new THREE.Vector3(-633, 5, -2043),
+        new THREE.Vector3(-780, 5, -1970),
+        new THREE.Vector3(-898, 5, -2217),
+        new THREE.Vector3(-628, 20, -2397),
+        new THREE.Vector3(-578, 15, -2142),
+        new THREE.Vector3(-563, 5, -2074),
+        new THREE.Vector3(-537, 5, -2036),
+        new THREE.Vector3(-445, 5, -1943),
+        new THREE.Vector3(-371, 5, -1887),
+        new THREE.Vector3(-222, 5, -1977),
+        new THREE.Vector3(-66, 5, -1758),
+        new THREE.Vector3(-306, 5, -1551),
+        new THREE.Vector3(-357, 5, -1815),
+        new THREE.Vector3(-416, 5, -1919)
+    ], true, "centripetal");
 
     drawPath();
 }
 
 function drawPath() {
-    const vertices_ = path_.getSpacedPoints(100);
+    const vertices_1 = path_1.getSpacedPoints(100);
 
-    // for (let i = 0; i < vertices_.length; i++) {
-    //     point_ = vertices_[i]
-    //     vertices_[i] = new THREE.Vector3(point_.x, 0, point_.z);
-    // };
+    for (let i = 0; i < vertices_1.length; i++) {
+        point_1 = vertices_1[i]
+        vertices_1[i] = new THREE.Vector3(point_1.x, point_1.y, point_1.z);
+    };
 
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices_);
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices_1);
     const lineMaterial = new THREE.LineBasicMaterial({
         color: 0xffffff,
         visible: true,
     });
     const line = new THREE.Line(lineGeometry, lineMaterial);
     scene.add(line);
+
+    //
+
+    const vertices_2 = path_2.getSpacedPoints(100);
+
+    for (let i = 0; i < vertices_2.length; i++) {
+        point_2 = vertices_2[i]
+        vertices_2[i] = new THREE.Vector3(point_2.x, point_2.y, point_2.z);
+    };
+
+    const lineGeometry_2 = new THREE.BufferGeometry().setFromPoints(vertices_2);
+    const lineMaterial_2 = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        visible: true,
+    });
+    const line_2 = new THREE.Line(lineGeometry_2, lineMaterial_2);
+    scene.add(line_2);
 }
 
-function cubeMove() {
+function rect_Move() {
     const amount = 1;
-    let pos = cubeMesh.geometry.attributes.position;
-    let time_ = .000002 * performance.now();
+    position += 0.0001;
 
     for (let i = 0; i < amount; i++) {
-        const p = path_.getPoint(time_ + 0.01 * i);
-        cubeMesh.position.x = p.x;
-        cubeMesh.position.y = p.y;
-        cubeMesh.position.z = p.z;
+        point_1 = path_1.getPoint(position + 0.01 * i);
+        cubeMesh_1.position.x = point_1.x;
+        cubeMesh_1.position.y = point_1.y;
+        cubeMesh_1.position.z = point_1.z;
+
+        point_2 = path_2.getPoint(position + 0.01 * i);
+        cubeMesh_2.position.x = point_2.x;
+        cubeMesh_2.position.y = point_2.y;
+        cubeMesh_2.position.z = point_2.z;
     }
-    pos.needsUpdate = true;
-
-    angle_ = getAngle(position_);
-    cubeMesh.quaternion.setFromAxisAngle(up_, angle_);
-}
-
-function getAngle(position_) {
-    const tangent = path_.getTangent(position_).normalize();
-    angle_ = - Math.atan(tangent.x / tangent.z);
-    return angle_;
 }
 
 function cameraSetup() {
@@ -177,14 +207,14 @@ function controlsSetup() {
     } );
 
     const camera_location_array = [ //[x, z]
-        [0, 0],
+        // [0, 0],
         // [932, -1893],
         // [-354, -1793],
         // [-68, -2203],
         // [-25, -370],
         // [-36, -717],
         // [-61, -981],
-        // [-534, -2011]
+        [-534, -2011]
     ]
 
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
@@ -541,7 +571,7 @@ function render() {
 }
 
 function animate() {
-    cubeMove();
+    rect_Move();
     requestAnimationFrame(animate);
     render();
 
@@ -569,6 +599,8 @@ function animate() {
 
     // videoTexture.needsUpdate = true;
     prevTime = time;
+
+    // console.log(camera.position);
 }
 
 function onTransitionEnd(transition) {

@@ -13,7 +13,8 @@ const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 
-let video, videoTexture;
+let picnicVideo, picnicTexture, picnicPlaneScreen, picnicSound;
+let elfVideo, elfTexture, elfPlaneScreen, elfSound;
 
 let underpass_1, underpass_2;
 let forest_1;
@@ -28,10 +29,12 @@ let manager;
 
 //
 
-let position = 0;
+const up = new THREE.Vector3(1, 0, 0);
+const axis = new THREE.Vector3();
+let fraction = 0;
 let path_1, path_2;
 let point_1, point_2;
-let cubeMesh_1, cubeMesh_2;
+
 //
 
 const white = new THREE.Color(0xffffff);
@@ -59,101 +62,15 @@ function init() {
 
     loadingManager();
 
+    drawPath();
     loadModels();
-    // videoScreen();
+    loadVideos();
+
+
     rendererSetup();
 
-    const cubeMaterial = new THREE.MeshPhongMaterial({
-        color: 0xff0000,
-        flatShading: true,
-    });
-    const cubeGeometry = new THREE.BoxBufferGeometry(10, 30, 10);
-    cubeMesh_1 = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cubeMesh_2 = cubeMesh_1.clone();
-    scene.add(cubeMesh_1, cubeMesh_2);
-
-    path_1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(-18, 0, -365),
-        new THREE.Vector3(-41, 0, -985),
-        new THREE.Vector3(12, 0, -1173),
-        new THREE.Vector3(290, 0, -1359),
-        new THREE.Vector3(393, 0, 187),
-        new THREE.Vector3(100, 0, 218),
-    ], true, "centripetal");
-
-    path_2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-494, 5, -2001),
-        new THREE.Vector3(-536, 5, -2041),
-        new THREE.Vector3(-573, 5, -2058),
-        new THREE.Vector3(-633, 5, -2043),
-        new THREE.Vector3(-780, 5, -1970),
-        new THREE.Vector3(-898, 5, -2217),
-        new THREE.Vector3(-628, 20, -2397),
-        new THREE.Vector3(-578, 15, -2142),
-        new THREE.Vector3(-563, 5, -2074),
-        new THREE.Vector3(-537, 5, -2036),
-        new THREE.Vector3(-445, 5, -1943),
-        new THREE.Vector3(-371, 5, -1887),
-        new THREE.Vector3(-222, 5, -1977),
-        new THREE.Vector3(-66, 5, -1758),
-        new THREE.Vector3(-306, 5, -1551),
-        new THREE.Vector3(-357, 5, -1815),
-        new THREE.Vector3(-416, 5, -1919)
-    ], true, "centripetal");
-
-    drawPath();
-}
-
-function drawPath() {
-    const vertices_1 = path_1.getSpacedPoints(100);
-
-    for (let i = 0; i < vertices_1.length; i++) {
-        point_1 = vertices_1[i]
-        vertices_1[i] = new THREE.Vector3(point_1.x, point_1.y, point_1.z);
-    };
-
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices_1);
-    const lineMaterial = new THREE.LineBasicMaterial({
-        color: 0xffffff,
-        visible: true,
-    });
-    const line = new THREE.Line(lineGeometry, lineMaterial);
-    scene.add(line);
-
-    //
-
-    const vertices_2 = path_2.getSpacedPoints(100);
-
-    for (let i = 0; i < vertices_2.length; i++) {
-        point_2 = vertices_2[i]
-        vertices_2[i] = new THREE.Vector3(point_2.x, point_2.y, point_2.z);
-    };
-
-    const lineGeometry_2 = new THREE.BufferGeometry().setFromPoints(vertices_2);
-    const lineMaterial_2 = new THREE.LineBasicMaterial({
-        color: 0xffffff,
-        visible: true,
-    });
-    const line_2 = new THREE.Line(lineGeometry_2, lineMaterial_2);
-    scene.add(line_2);
-}
-
-function rect_Move() {
-    const amount = 1;
-    position += 0.0001;
-
-    for (let i = 0; i < amount; i++) {
-        point_1 = path_1.getPoint(position + 0.01 * i);
-        cubeMesh_1.position.x = point_1.x;
-        cubeMesh_1.position.y = point_1.y;
-        cubeMesh_1.position.z = point_1.z;
-
-        point_2 = path_2.getPoint(position + 0.01 * i);
-        cubeMesh_2.position.x = point_2.x;
-        cubeMesh_2.position.y = point_2.y;
-        cubeMesh_2.position.z = point_2.z;
-    }
+    picnicVideo.play();
+    elfVideo.play();
 }
 
 function cameraSetup() {
@@ -167,9 +84,7 @@ function cameraSetup() {
     camera.position.y = 10;
 
     // const vector = new THREE.Vector3(1, 10, -1);
-
     // vector.applyQuaternion(camera.quaternion);
-
     // camera.lookAt(vector);
 }
 
@@ -206,7 +121,7 @@ function controlsSetup() {
         title.style.display = '';
     } );
 
-    const camera_location_array = [ //[x, z]
+    const camera_location_array = [
         // [0, 0],
         // [932, -1893],
         // [-354, -1793],
@@ -291,13 +206,67 @@ function loadingManager() {
         loadingScreen.classList.add( 'fade-out' );
         loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
     });
-
 }
 
 function rotateObject(object, degreeX, degreeY, degreeZ) {
     object.rotateX(THREE.Math.degToRad(degreeX));
     object.rotateY(THREE.Math.degToRad(degreeY));
     object.rotateZ(THREE.Math.degToRad(degreeZ));
+}
+
+function drawPath() {
+
+    path_1 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 8, 0),
+        new THREE.Vector3(-18, 8, -365),
+        new THREE.Vector3(-41, 8, -985),
+        new THREE.Vector3(12, 8, -1173),
+        new THREE.Vector3(290, 8, -1359),
+        new THREE.Vector3(393, 8, 187),
+        new THREE.Vector3(100, 8, 218),
+    ], true, "centripetal");
+
+    const vertices_1 = path_1.getSpacedPoints(100);
+
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices_1);
+    const lineMaterial = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        visible: false,
+    });
+    const line_1 = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(line_1);
+
+    //
+
+    path_2 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-494, 8, -2001),
+        new THREE.Vector3(-536, 8, -2041),
+        new THREE.Vector3(-573, 8, -2058),
+        new THREE.Vector3(-633, 8, -2043),
+        new THREE.Vector3(-780, 8, -1970),
+        new THREE.Vector3(-898, 15, -2217),
+        new THREE.Vector3(-628, 25, -2397),
+        new THREE.Vector3(-578, 15, -2142),
+        new THREE.Vector3(-563, 8, -2074),
+        new THREE.Vector3(-537, 8, -2036),
+        new THREE.Vector3(-445, 8, -1943),
+        new THREE.Vector3(-371, 8, -1887),
+        new THREE.Vector3(-222, 8, -1977),
+        new THREE.Vector3(-66, 8, -1758),
+        new THREE.Vector3(-306, 8, -1551),
+        new THREE.Vector3(-357, 8, -1815),
+        new THREE.Vector3(-416, 8, -1919)
+    ], true, "centripetal");
+
+    const vertices_2 = path_2.getSpacedPoints(100);
+
+    const lineGeometry_2 = new THREE.BufferGeometry().setFromPoints(vertices_2);
+    const lineMaterial_2 = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        visible: false,
+    });
+    const line_2 = new THREE.Line(lineGeometry_2, lineMaterial_2);
+    scene.add(line_2);
 }
 
 function loadModels() {
@@ -495,52 +464,105 @@ function loadModels() {
     )
 }
 
-// function videoScreen() {
-//     video = document.getElementById("video");
-//     videoTexture = new THREE.VideoTexture(video);
-//     videoTexture.encoding = THREE.sRGBEncoding;
-//     videoTexture.minFilter = THREE.LinearFilter;
-//     videoTexture.magFilter = THREE.LinearFilter;
-//     let videoGeometry = new THREE.BoxGeometry(50, 50, 1);
-//     const videoMaterials = [
-//         new THREE.MeshBasicMaterial({
-//             color: lightGrey, 
-//             side: THREE.DoubleSide //RIGHT
-//         }),
-//         new THREE.MeshBasicMaterial({
-//             color: lightGrey, 
-//             side: THREE.DoubleSide //LEFT
-//         }),
-//         new THREE.MeshBasicMaterial({
-//             color: lightGrey, 
-//             side: THREE.DoubleSide //TOP
-//         }),
-//         new THREE.MeshBasicMaterial({
-//             color: lightGrey, 
-//             side: THREE.DoubleSide //BOTTOM
-//         }),
-//         new THREE.MeshPhongMaterial({
-//             map: videoTexture, 
-//             side: THREE.FrontSide, //FRONT
-//             emissive: white,
-//             emissiveMap: videoTexture,
-//             emissiveIntensity: 1,
-//             transparent: false,
-//             opacity: 0.5
-//         }),
-//         new THREE.MeshBasicMaterial({
-//             color: lightGrey, 
-//             side: THREE.DoubleSide //BACK
-//         })
-//     ]
-//     let videoMaterial = new THREE.MeshFaceMaterial(videoMaterials);
-//     let videoPlaneScreen= new THREE.Mesh(videoGeometry, videoMaterial);
-//     videoPlaneScreen.position.set(0, 30, -50);
-//     videoPlaneScreen.receiveShadow = false;
-//     videoPlaneScreen.castShadow = false;
-//     //scene.add(videoPlaneScreen);
-//     //video.play();
-// }
+function loadVideos() {
+    const audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
+
+    //Picnic.mov
+    picnicVideo = document.getElementById("Picnic");
+    picnicTexture = new THREE.VideoTexture(picnicVideo);
+    picnicTexture.encoding = THREE.sRGBEncoding;
+    picnicTexture.minFilter = THREE.LinearFilter;
+    picnicTexture.magFilter = THREE.LinearFilter;
+    picnicTexture.format = THREE.RGBAFormat;
+    let picnicGeometry = new THREE.PlaneBufferGeometry(10, 20);
+    picnicGeometry.rotateY(Math.PI / 2);
+    const picnicMaterials = new THREE.MeshBasicMaterial({
+        map: picnicTexture,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: picnicTexture,
+        emissiveIntensity: 1,
+        transparent: false,
+        opacity: 1
+    });
+    let picnicMaterial = new THREE.MeshFaceMaterial(picnicMaterials);
+    picnicPlaneScreen = new THREE.Mesh(picnicGeometry, picnicMaterial);
+    picnicPlaneScreen.receiveShadow = false;
+    picnicPlaneScreen.castShadow = false;
+    scene.add(picnicPlaneScreen);
+    //Picnic.mp3
+    picnicSound = new THREE.PositionalAudio(audioListener);
+    const picnicAudioLoader = new THREE.AudioLoader(manager);
+    picnicAudioLoader.load('../sound/Alex/Picnic.mp3', function(buffer) {
+        picnicSound.setBuffer(buffer);
+        picnicSound.setLoop(true);
+        picnicSound.setRefDistance(20);
+        picnicSound.setVolume(1);
+        picnicSound.setDirectionalCone(360, 360, 0.1);
+        picnicSound.play();
+    })
+    picnicPlaneScreen.add(picnicSound);
+
+    //Elf.mov
+    elfVideo = document.getElementById("Elf");
+    elfTexture = new THREE.VideoTexture(elfVideo);
+    elfTexture.encoding = THREE.sRGBEncoding;
+    elfTexture.minFilter = THREE.LinearFilter;
+    elfTexture.magFilter = THREE.LinearFilter;
+    elfTexture.format = THREE.RGBAFormat;
+    let elfGeometry = new THREE.PlaneBufferGeometry(10, 20);
+    elfGeometry.rotateY(Math.PI / 2);
+    const elfMaterials = new THREE.MeshBasicMaterial({
+        map: elfTexture,
+        side: THREE.DoubleSide,
+        emissive: white,
+        emissiveMap: elfTexture,
+        emissiveIntensity: 1,
+        transparent: false,
+        opacity: 1
+    });
+    let elfMaterial = new THREE.MeshFaceMaterial(elfMaterials);
+    elfPlaneScreen = new THREE.Mesh(elfGeometry, elfMaterial);
+    elfPlaneScreen.receiveShadow = false;
+    elfPlaneScreen.castShadow = false;
+    scene.add(elfPlaneScreen);
+    //Elf.mp3
+    elfSound = new THREE.PositionalAudio(audioListener);
+    const elfAudioLoader = new THREE.AudioLoader(manager);
+    elfAudioLoader.load('../sound/Alex/Elf.mp3', function(buffer) {
+        elfSound.setBuffer(buffer);
+        elfSound.setLoop(true);
+        elfSound.setRefDistance(20);
+        elfSound.setVolume(0.1);
+        elfSound.setDirectionalCone(360, 360, 0.1)
+        elfSound.play();
+    })
+    elfPlaneScreen.add(elfSound);
+}
+
+function videoPlaneMove() {
+    //picnicPlaneScreen
+    const picnicPosition = path_2.getPoint(fraction);
+    const picnicTangent = path_2.getTangent(fraction);
+    picnicPlaneScreen.position.copy(picnicPosition);
+    axis.crossVectors(up, picnicTangent).normalize();
+    const picnicRadians = Math.acos(up.dot(picnicTangent));
+    picnicPlaneScreen.quaternion.setFromAxisAngle(axis, picnicRadians);
+
+    //elfPlaneScreen
+    const elfPosition = path_1.getPoint(fraction);
+    const elfTangent = path_1.getTangent(fraction);
+    elfPlaneScreen.position.copy(elfPosition);
+    axis.crossVectors(up, elfTangent).normalize();
+    const elfRadians = Math.acos(up.dot(elfTangent));
+    elfPlaneScreen.quaternion.setFromAxisAngle(axis, elfRadians);
+
+    fraction += 0.0001;
+    if (fraction > 1) {
+        fraction = 0;
+    }
+}
 
 function rendererSetup() {
     renderer = new THREE.WebGLRenderer({ 
@@ -568,10 +590,13 @@ function onWindowResize() {
 
 function render() {
     renderer.render(scene, camera);
+
+    picnicTexture.needsUpdate = true;
+    elfTexture.needsUpdate = true;
 }
 
 function animate() {
-    rect_Move();
+    videoPlaneMove();
     requestAnimationFrame(animate);
     render();
 
@@ -596,8 +621,6 @@ function animate() {
         controls.moveRight(- velocity.x * delta);
         controls.moveForward(- velocity.z * delta);
     }
-
-    // videoTexture.needsUpdate = true;
     prevTime = time;
 
     // console.log(camera.position);

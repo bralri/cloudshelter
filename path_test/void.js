@@ -64,13 +64,10 @@ function init() {
 
     drawPath();
     loadModels();
-    loadVideos();
+    load_Sounds_Videos();
 
 
     rendererSetup();
-
-    picnicVideo.play();
-    elfVideo.play();
 }
 
 function cameraSetup() {
@@ -109,20 +106,17 @@ function controlsSetup() {
 
     title.addEventListener('click', function () {
         controls.lock();
+        play_Sounds_Videos();
     } );
 
     controls.addEventListener( 'lock', function () {
         title.style.display = 'none';
         blocker.style.display = 'none';
-        picnicSound.setVolume(0.4);
-        elfSound.setVolume(0.1);
     } );
 
     controls.addEventListener( 'unlock', function () {
         blocker.style.display = 'block';
         title.style.display = '';
-        picnicSound.setVolume(0);
-        elfSound.setVolume(0);
     } );
 
     const camera_location_array = [
@@ -468,7 +462,7 @@ function loadModels() {
     )
 }
 
-function loadVideos() {
+function load_Sounds_Videos() {
     const audioListener = new THREE.AudioListener();
     camera.add(audioListener);
 
@@ -497,10 +491,9 @@ function loadVideos() {
     picnicAudioLoader.load('../sound/Alex/Picnic.mp3', function(buffer) {
         picnicSound.setBuffer(buffer);
         picnicSound.setLoop(true);
-        picnicSound.setRefDistance(20);
-        picnicSound.setVolume(0);
+        picnicSound.setRefDistance(10);
+        picnicSound.setVolume(0.5);
         picnicSound.setDirectionalCone(360, 360, 0.1);
-        picnicSound.play();
     })
     picnicPlaneScreen.add(picnicSound);
 
@@ -529,10 +522,9 @@ function loadVideos() {
     elfAudioLoader.load('../sound/Alex/Elf.mp3', function(buffer) {
         elfSound.setBuffer(buffer);
         elfSound.setLoop(true);
-        elfSound.setRefDistance(20);
-        elfSound.setVolume(0);
+        elfSound.setRefDistance(10);
+        elfSound.setVolume(0.1);
         elfSound.setDirectionalCone(360, 360, 0.1)
-        elfSound.play();
     })
     elfPlaneScreen.add(elfSound);
 }
@@ -558,6 +550,16 @@ function videoPlaneMove() {
     if (fraction > 1) {
         fraction = 0;
     }
+}
+
+function play_Sounds_Videos() {
+    //Picnic
+    picnicVideo.play();
+    picnicSound.play();
+
+    //Elf
+    elfVideo.play();
+    elfSound.play();
 }
 
 function rendererSetup() {

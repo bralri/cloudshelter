@@ -114,11 +114,15 @@ function controlsSetup() {
     controls.addEventListener( 'lock', function () {
         title.style.display = 'none';
         blocker.style.display = 'none';
+        picnicSound.setVolume(0.4);
+        elfSound.setVolume(0.1);
     } );
 
     controls.addEventListener( 'unlock', function () {
         blocker.style.display = 'block';
         title.style.display = '';
+        picnicSound.setVolume(0);
+        elfSound.setVolume(0);
     } );
 
     const camera_location_array = [
@@ -480,14 +484,10 @@ function loadVideos() {
     const picnicMaterials = new THREE.MeshBasicMaterial({
         map: picnicTexture,
         side: THREE.DoubleSide,
-        emissive: white,
-        emissiveMap: picnicTexture,
-        emissiveIntensity: 1,
         transparent: false,
         opacity: 1
     });
-    let picnicMaterial = new THREE.MeshFaceMaterial(picnicMaterials);
-    picnicPlaneScreen = new THREE.Mesh(picnicGeometry, picnicMaterial);
+    picnicPlaneScreen = new THREE.Mesh(picnicGeometry, picnicMaterials);
     picnicPlaneScreen.receiveShadow = false;
     picnicPlaneScreen.castShadow = false;
     scene.add(picnicPlaneScreen);
@@ -498,7 +498,7 @@ function loadVideos() {
         picnicSound.setBuffer(buffer);
         picnicSound.setLoop(true);
         picnicSound.setRefDistance(20);
-        picnicSound.setVolume(1);
+        picnicSound.setVolume(0);
         picnicSound.setDirectionalCone(360, 360, 0.1);
         picnicSound.play();
     })
@@ -516,14 +516,10 @@ function loadVideos() {
     const elfMaterials = new THREE.MeshBasicMaterial({
         map: elfTexture,
         side: THREE.DoubleSide,
-        emissive: white,
-        emissiveMap: elfTexture,
-        emissiveIntensity: 1,
         transparent: false,
         opacity: 1
     });
-    let elfMaterial = new THREE.MeshFaceMaterial(elfMaterials);
-    elfPlaneScreen = new THREE.Mesh(elfGeometry, elfMaterial);
+    elfPlaneScreen = new THREE.Mesh(elfGeometry, elfMaterials);
     elfPlaneScreen.receiveShadow = false;
     elfPlaneScreen.castShadow = false;
     scene.add(elfPlaneScreen);
@@ -534,7 +530,7 @@ function loadVideos() {
         elfSound.setBuffer(buffer);
         elfSound.setLoop(true);
         elfSound.setRefDistance(20);
-        elfSound.setVolume(0.1);
+        elfSound.setVolume(0);
         elfSound.setDirectionalCone(360, 360, 0.1)
         elfSound.play();
     })

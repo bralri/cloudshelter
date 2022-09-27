@@ -1,0 +1,73 @@
+HTML {
+    cursor: pointer;
+}
+
+body {
+    cursor: default;
+}
+
+header {
+    height: 100px;
+    align-content: center;
+    justify-content: center;
+    margin: auto;
+}
+.title {
+    position: absolute;
+    top: 20px;
+    left: 45px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 450px));
+    grid-template-rows: 1fr;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+
+    align-content: center;
+    justify-content: center;
+
+    padding-bottom: 20px;
+}
+img {
+    width: 100%;
+}
+p {
+    text-align: justify;
+}
+
+footer {
+    height: 60px;
+    justify-content: center;
+    align-content: center;
+    margin: auto;
+}
+.links {
+    display: flex;
+    position: absolute;
+    right: 45px;
+}
+.links a {
+    text-decoration: none;
+    padding: 10px;
+}
+
+/*scrollbar*/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}    
+/* Track */
+::-webkit-scrollbar-track {
+    background: black;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: white;
+    cursor: pointer !important;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}

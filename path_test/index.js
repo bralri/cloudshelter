@@ -80,7 +80,7 @@ function cameraSetup() {
 function sceneSetup() {
     scene = new THREE.Scene();
     scene.background = black;
-    scene.fog = new THREE.Fog(midGrey, 0, 1800);
+    scene.fog = new THREE.Fog(black, 0, 1800);
 
     const ambLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambLight);
@@ -112,14 +112,14 @@ function controlsSetup() {
     } );
 
     const camera_location_array = [
-        [0, 0],
-        [932, -1893],
+        // [0, 0],
+        // [932, -1893],
         [-354, -1793],
-        [-68, -2203],
-        [-25, -370],
-        [-36, -717],
-        [-61, -981],
-        [-534, -2011]
+        // [-68, -2203],
+        // [-25, -370],
+        // [-36, -717],
+        // [-61, -981],
+        // [-534, -2011]
     ]
 
     camera_location_picker = Math.floor(Math.random() * camera_location_array.length);

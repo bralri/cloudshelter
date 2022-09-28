@@ -1,8 +1,6 @@
 let camera, scene, renderer, controls;
 let camera_location_picker;
 
-const objects = [];
-
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -52,7 +50,6 @@ animate();
 //
 
 function init() {
-    cameraSetup();
     sceneSetup();
     controlsSetup();
 
@@ -62,12 +59,13 @@ function init() {
     loadModels();
     load_Sounds_Videos();
     load_Stills();
-
-
-    rendererSetup();
 }
 
-function cameraSetup() {
+function sceneSetup() {
+    scene = new THREE.Scene();
+    scene.background = black;
+    scene.fog = new THREE.Fog(black, 0, 1800);
+
     camera = new THREE.PerspectiveCamera( 
         75, 
         window.innerWidth / window.innerHeight, 
@@ -76,12 +74,6 @@ function cameraSetup() {
     );
 
     camera.position.y = 10;
-}
-
-function sceneSetup() {
-    scene = new THREE.Scene();
-    scene.background = black;
-    scene.fog = new THREE.Fog(black, 0, 1800);
 
     const ambLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambLight);
@@ -89,6 +81,21 @@ function sceneSetup() {
     const light = new THREE.HemisphereLight(midGrey, black, 0.5);
     light.position.set(0, 10, 0);
     scene.add(light);
+
+    renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        alpha: true
+    });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.gammaFactor = 2.2;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.physicallyCorrectLights = true;
+    document.body.appendChild(renderer.domElement);
+
+    window.addEventListener('resize', onWindowResize);
 }
 
 function controlsSetup() {
@@ -623,23 +630,6 @@ function play_Sounds_Videos() {
     //Elf
     elfVideo.play();
     elfSound.play();
-}
-
-function rendererSetup() {
-    renderer = new THREE.WebGLRenderer({ 
-        antialias: true,
-        alpha: true
-    });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.gammaFactor = 2.2;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.physicallyCorrectLights = true;
-    document.body.appendChild(renderer.domElement);
-
-    window.addEventListener('resize', onWindowResize);
 }
 
 function onWindowResize() {

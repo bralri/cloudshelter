@@ -61,6 +61,7 @@ function init() {
     drawPath();
     loadModels();
     load_Sounds_Videos();
+    load_Stills();
 
 
     rendererSetup();
@@ -111,15 +112,15 @@ function controlsSetup() {
         title.style.display = '';
     } );
 
-    const camera_location_array = [
-        // [0, 0],
-        // [932, -1893],
+    const camera_location_array = [ //Lane Entrance, Lane Mid, Lane End, Lane End 2, Underpass_1 Entrance, Underpass_2 Entrance, Underpass_2 Interior, Misc
+        [0, 0],
+        [-25, -370],
+        [-36, -717],
+        [-61, -981],
+        [932, -1893],
         [-354, -1793],
-        // [-68, -2203],
-        // [-25, -370],
-        // [-36, -717],
-        // [-61, -981],
-        // [-534, -2011]
+        [-534, -2011],
+        [-68, -2203]
     ]
 
     camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
@@ -519,6 +520,76 @@ function load_Sounds_Videos() {
         elfSound.setDirectionalCone(360, 360, 0.1)
     })
     elfPlaneScreen.add(elfSound);
+
+    //Christoph
+    const christophGeometry = new THREE.BoxGeometry(1, 35, 60);
+    const christopMaterial = new THREE.MeshPhongMaterial({
+        color: 0x00ff00
+    });
+    const christophCube = new THREE.Mesh(christophGeometry, christopMaterial);
+    christophCube.position.set(1093, 30, -2110);
+    rotateObject(christophCube, 0, 28.5, 0);
+    scene.add(christophCube);
+}
+
+function load_Stills() {
+    //Brian
+    const brianGeometry = new THREE.BoxGeometry(2, 20, 20);
+    const brianMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff
+    });
+    const brianCube_1 = new THREE.Mesh(brianGeometry, brianMaterial);
+
+    const brianCube_2 = new THREE.Mesh(
+        brianCube_1.geometry.clone(),
+        new THREE.MeshPhongMaterial({
+            color: 0x000000
+        })
+    )
+    const brianCube_3 = new THREE.Mesh(
+        brianCube_1.geometry.clone(),
+        new THREE.MeshPhongMaterial({
+            color: 0x0000ff
+        })
+    )
+    const brianCube_4 = new THREE.Mesh(
+        brianCube_1.geometry.clone(),
+        new THREE.MeshPhongMaterial({
+            color: 0x00ff00
+        })
+    )
+    const brianCube_5 = new THREE.Mesh(
+        brianCube_1.geometry.clone(),
+        new THREE.MeshPhongMaterial({
+            color: 0xff0000
+        })
+    )
+    const brianCube_6 = new THREE.Mesh(
+        brianCube_1.geometry.clone(),
+        new THREE.MeshPhongMaterial({
+            color: 0xffff00
+        })
+    )
+
+    //Left Set: Position
+    brianCube_1.position.set(961, 10, -2021);
+    brianCube_2.position.set(980, 10, -2055);
+    brianCube_3.position.set(999, 10, -2088);
+    //Right Set: Poisiton
+    brianCube_4.position.set(1008, 10, -1935);
+    brianCube_5.position.set(1031, 10, -1976);
+    brianCube_6.position.set(1049, 10, -2009);
+    //Left Set: Rotation
+    rotateObject(brianCube_1, 0, -30, 0);
+    rotateObject(brianCube_2, 0, -30, 0);
+    rotateObject(brianCube_3, 0, -30, 0);
+    //Right Set: Rotation
+    rotateObject(brianCube_4, 0, -30, 0);
+    rotateObject(brianCube_5, 0, -30, 0);
+    rotateObject(brianCube_6, 0, -30, 0);
+
+
+    scene.add(brianCube_1, brianCube_2, brianCube_3, brianCube_4, brianCube_5, brianCube_6);
 }
 
 function videoPlaneMove() {

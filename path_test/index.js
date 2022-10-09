@@ -13,6 +13,7 @@ const direction = new THREE.Vector3();
 
 let picnicVideo, picnicTexture, picnicPlaneScreen, picnicSound;
 let elfVideo, elfTexture, elfPlaneScreen, elfSound;
+let christophVideo, christophTexture, christophScreen, christophSound;
 
 let underpass_1, underpass_2;
 let forest_1;
@@ -466,8 +467,13 @@ function load_Sounds_Videos() {
     const audioListener = new THREE.AudioListener();
     camera.add(audioListener);
 
+    const picnic = {
+        ID: "Picnic",
+        Sound: "../sound/voidshow/Alex/Picnic.mp3",
+    };
+
     //Picnic.mov
-    picnicVideo = document.getElementById("Picnic");
+    picnicVideo = document.getElementById(picnic.ID);
     picnicTexture = new THREE.VideoTexture(picnicVideo);
     picnicTexture.encoding = THREE.sRGBEncoding;
     picnicTexture.minFilter = THREE.LinearFilter;
@@ -488,12 +494,12 @@ function load_Sounds_Videos() {
     //Picnic.mp3
     picnicSound = new THREE.PositionalAudio(audioListener);
     const picnicAudioLoader = new THREE.AudioLoader(manager);
-    picnicAudioLoader.load('../sound/voidshow/Alex/Picnic.mp3', function(buffer) {
+    picnicAudioLoader.load(picnic.Sound, function(buffer) {
         picnicSound.setBuffer(buffer);
         picnicSound.setLoop(true);
-        picnicSound.setRefDistance(10);
+        picnicSound.setRefDistance(2);
         picnicSound.setVolume(0.5);
-        picnicSound.setDirectionalCone(360, 360, 0.1);
+        picnicSound.setDirectionalCone(360, 360, 0);
     })
     picnicPlaneScreen.add(picnicSound);
 
@@ -522,21 +528,58 @@ function load_Sounds_Videos() {
     elfAudioLoader.load('../sound/voidshow/Alex/Elf.mp3', function(buffer) {
         elfSound.setBuffer(buffer);
         elfSound.setLoop(true);
-        elfSound.setRefDistance(10);
+        elfSound.setRefDistance(2);
         elfSound.setVolume(0.1);
-        elfSound.setDirectionalCone(360, 360, 0.1)
+        elfSound.setDirectionalCone(360, 360, 0)
     })
     elfPlaneScreen.add(elfSound);
 
-    //Christoph
-    const christophGeometry = new THREE.BoxGeometry(1, 35, 60);
-    const christopMaterial = new THREE.MeshPhongMaterial({
-        color: 0x00ff00
-    });
-    const christophCube = new THREE.Mesh(christophGeometry, christopMaterial);
-    christophCube.position.set(1093, 30, -2110);
-    rotateObject(christophCube, 0, 28.5, 0);
-    scene.add(christophCube);
+    //Christoph.mp4
+    christophVideo = document.getElementById("Christoph");
+    christophTexture = new THREE.VideoTexture(christophVideo);
+    christophTexture.encoding = THREE.sRGBEncoding;
+    christophTexture.minFilter = THREE.LinearFilter;
+    christophTexture.magFilter = THREE.LinearFilter;
+    let christophGeometry = new THREE.BoxGeometry(70, 45, 1);
+    let christopMaterials = [
+        new THREE.MeshBasicMaterial({
+            color: black
+        }),
+        new THREE.MeshBasicMaterial({
+            color: black
+        }),
+        new THREE.MeshBasicMaterial({
+            color: black
+        }),
+        new THREE.MeshBasicMaterial({
+            color: black
+        }),
+        new THREE.MeshBasicMaterial({
+            map: christophTexture,
+            side: THREE.DoubleSide,
+            transparent: false,
+            opacity: 1
+        }),
+        new THREE.MeshBasicMaterial({
+            color: black,
+            side: THREE.BackSide
+        })
+    ];
+    christophScreen = new THREE.Mesh(christophGeometry, christopMaterials);
+    christophScreen.position.set(1093, 30, -2110);
+    rotateObject(christophScreen, 0, -62, 0);
+    scene.add(christophScreen);
+    //christoph.mp3
+    christophSound = new THREE.PositionalAudio(audioListener);
+    const christophAudioLoader = new THREE.AudioLoader(manager);
+    christophAudioLoader.load('../sound/voidshow/Christoph/christoph.mp3', function(buffer) {
+        christophSound.setBuffer(buffer);
+        christophSound.setLoop(true);
+        christophSound.setRefDistance(2);
+        christophSound.setVolume(0.5);
+        christophSound.setDirectionalCone(180, 230, 0.1)
+    })
+    christophScreen.add(christophSound);
 }
 
 function load_Stills() {
@@ -630,6 +673,10 @@ function play_Sounds_Videos() {
     //Elf
     elfVideo.play();
     elfSound.play();
+
+    //Christoph
+    christophVideo.play();
+    christophSound.play();
 }
 
 function onWindowResize() {
@@ -644,6 +691,7 @@ function render() {
 
     picnicTexture.needsUpdate = true;
     elfTexture.needsUpdate = true;
+    christophTexture.needsUpdate = true;
 }
 
 function animate() {

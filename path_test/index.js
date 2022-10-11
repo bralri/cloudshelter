@@ -120,7 +120,7 @@ function controlsSetup() {
         title.style.display = '';
     } );
 
-    const camera_location_array = [ //Lane Entrance, Lane Mid, Lane End, Lane End 2, Underpass_1 Entrance, Underpass_2 Entrance, Underpass_2 Interior, Misc
+    const camera_location_array = [
         [0, 0],
         [-25, -370],
         [-36, -717],
@@ -269,198 +269,112 @@ function drawPath() {
 }
 
 function loadModels() {
+    const models = [
+        [
+            {
+                name: "entrance lane",
+                URL: '../models/voidshow/mainlane.glb',
+                px: -32,
+                py: -2,
+                pz: -740,
+                scale: 0.5,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            },
+            {
+                name: "underpass blue",               
+                URL: '../models/voidshow/underpassblue.glb',
+                px: 1000,
+                py: -2.5,
+                pz: -2000,
+                scale: 1,
+                rx: 0,
+                ry: 45,
+                rz: 2
+            },
+            {
+                name: "underpass grey",              
+                URL: '../models/voidshow/underpassgrey.glb',
+                px: -500,
+                py: -2.5,
+                pz: -2000,
+                scale: 1.5,
+                rx: 0,
+                ry: 45,
+                rz: 0
+            },
+            {
+                name: "tree",             
+                URL: '../models/voidshow/tree.glb',
+                px: 0,
+                py: -2,
+                pz: -2500,
+                scale: 0.5,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            },
+            {
+                name: "path",             
+                URL: '../models/voidshow/path.glb',
+                px: -200,
+                py: -2,
+                pz: -2500,
+                scale: 0.5,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            },
+            {
+                name: "bin 1",             
+                URL: '../models/voidshow/bin.glb',
+                px: 100,
+                py: -2,
+                pz: -2500,
+                scale: 0.2,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            },
+            {
+                name: "forest structure",            
+                URL: '../models/voidshow/foreststructure.glb',
+                px: 0,
+                py: -14,
+                pz: -2300,
+                scale: 0.2,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            },
+        ]
+    ]
+    
     const loader = new THREE.GLTFLoader(manager);
-
-    //entrance_lane
-    loader.load(
-
-        '../models/voidshow/entrance_lane.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            lane_2 = gltf2.scene;
-            lane_2.position.set(-32, -2, -740);
-            lane_2.scale.set(0.5, 0.5, 0.5);
-
-            scene.add(lane_2);
-        }
-    )
-
-    //underpass_1
-    loader.load(
-
-        '../models/voidshow/underpass_1.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            underpass_1 = gltf2.scene;
-            underpass_1.position.set(1000, -2.5, -2000);
-            underpass_1.scale.set(1, 1, 1);
-            rotateObject(underpass_1, 0, 45, 2);
-
-            scene.add(underpass_1);
-        }
-    )
-
-    //underpass_2
-    loader.load(
-
-        '../models/voidshow/underpass_2.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            underpass_2 = gltf2.scene;
-            underpass_2.position.set(-500, -2.5, -2000);
-            underpass_2.scale.set(1.5, 1.5, 1.5);
-            rotateObject(underpass_2, 0, 45, 0);
-
-            scene.add(underpass_2);
-        }
-    )
-
-    //forest_1
-    loader.load(
-
-        '../models/voidshow/forest_1.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            forest_1 = gltf2.scene;
-            forest_1.position.set(0, -2, -2500);
-            forest_1.scale.set(0.5, 0.5, 0.5);
-
-            scene.add(forest_1);
-        }
-    )
-
-    //lane_1
-    loader.load(
-
-        '../models/voidshow/lane_1.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            lane_1 = gltf2.scene;
-            lane_1.position.set(-200, -2, -2500);
-            lane_1.scale.set(0.5, 0.5, 0.5);
-
-            scene.add(lane_1);
-        }
-    )
-
-    //bin_1
-    loader.load(
-
-        '../models/voidshow/bin_1.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            bin_1 = gltf2.scene;
-            bin_1.position.set(100, -2, -2500);
-            bin_1.scale.set(0.2, 0.2, 0.2);
-
-            scene.add(bin_1);
-        }
-    )
-
-    //forest_structure
-    loader.load(
-
-        '../models/voidshow/bin_2.glb',
-
-        function(gltf2) {
-            gltf2.scene.traverse(function(node) {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-
-                    node.material.emissive = white;
-                    node.material.emissiveMap = node.material;
-                    node.material.emissiveIntensity = 2;
-                    node.material.opacity = 1;
-                    node.material.transparent = false;
-                }
-            })
-
-            bin_2 = gltf2.scene;
-            bin_2.position.set(0, -14, -2300);
-            bin_2.scale.set(0.2, 0.2, 0.2);
-
-            scene.add(bin_2);
-        }
-    )
+    for (let i = 0; i < models[0].length; i++) {
+        const object = models[0][i];
+        loader.load(
+    
+            object.URL,
+    
+            function(glb) {
+                glb.scene.traverse(function(node) {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = true;
+                    }
+                })
+    
+                let model = glb.scene;
+                model.position.set(object.px, object.py, object.pz);
+                model.scale.set(object.scale, object.scale, object.scale);
+                rotateObject(model, object.rx, object.ry, object.rz);
+    
+                scene.add(model);
+            }
+        )
+    }
 }
 
 function load_Sounds_Videos() {

@@ -18,6 +18,8 @@
     cursor: pointer;
 
     backdrop-filter: blur(7px);
+
+    z-index: 998;
 }
 
 #title {
@@ -87,4 +89,15 @@
     opacity: 60%;
 
     transition: ease 0.3s;
+}
+
+.coordinates {
+    position: absolute;
+    z-index: 99;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    box-sizing: border-box;
+    font-weight: 300;
+    font-size: 0.75rem;
 }

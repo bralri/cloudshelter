@@ -18,11 +18,8 @@
     <title>Cloud Shelter</title>
 </head>
 <body>
-
     <section id="loading-screen">
-
         <div id="loader"></div>
-    
     </section>
 
     <div id="blocker">
@@ -43,80 +40,64 @@
         </div>
         
         <div id="controls">
-            <a 
-                href="#"
-                class="info_btn"
-                onclick="document.getElementById('id01').style.display='block'"
-                title="controls"
-                id="controls"
-            >
-                <i style="font-size:38px;" class="fa">&#xf11c;</i>
-            </a>
+            <a href="#" class="info_btn" onclick="document.getElementById('id01').style.display='block'" title="controls" id="controls"><i style="font-size:38px;" class="fa">&#xf11c;</i></a>
         </div>
     
         <div id="links">
-            <a 
-                href="/about/"
-                title="about"
-            >
-                <i style="font-size:32px" class="fa">&#xf29c;</i>
-            </a>
-                &nbsp;
-                &nbsp;
-            <a 
-                href="https://www.instagram.com/cloud.shelter"
-                title="instagram"
-                target="_blank"
-            >
-                <i style="font-size:32px" class="fa">&#xf16d;</i>
-            </a>
+            <a href="/about/" title="about"><i style="font-size:32px" class="fa">&#xf29c;</i></a>
+            &nbsp;&nbsp;
+            <a href="https://www.instagram.com/cloud.shelter" title="instagram" target="_blank"><i style="font-size:32px" class="fa">&#xf16d;</i></a>
         </div>
     </div>
 
-    <video
-        id="Picnic"
-        playsinLine
-        webkit-playsinLine
-        loop
-        autoplay
-        muted
-        width="1080"
-        height="1620" 
-        src="../video/voidshow/Alex/webm/Picnic.webm"
-        style="display: none;"
-    ></video>
+    <div class="coordinates">
+        <p></p>
+    </div>
 
-    <video
-        id="Elf"
-        playsinLine
-        webkit-playsinLine
-        loop
-        autoplay
-        muted
-        width="1080"
-        height="1620" 
-        src="../video/voidshow/Alex/webm/Elf.webm"
-        style="display: none;"
-    ></video>
+    <div class="videos">
+        <video
+            id="Picnic"
+            playsinLine
+            webkit-playsinLine
+            loop
+            autoplay
+            muted
+            width="1080"
+            height="1620" 
+            src="../video/voidshow/Alex/webm/Picnic.webm"
+            style="display: none;"
+        ></video>
 
-    <video
-        id="Christoph"
-        playsinLine
-        webkit-playsinLine
-        loop
-        autoplay
-        muted
-        width="1080"
-        height="1620" 
-        src="../video/voidshow/Christoph/christoph.mp4"
-        style="display: none;"
-    ></video>
+        <video
+            id="Elf"
+            playsinLine
+            webkit-playsinLine
+            loop
+            autoplay
+            muted
+            width="1080"
+            height="1620" 
+            src="../video/voidshow/Alex/webm/Elf.webm"
+            style="display: none;"
+        ></video>
+
+        <video
+            id="Christoph"
+            playsinLine
+            webkit-playsinLine
+            loop
+            autoplay
+            muted
+            width="1080"
+            height="1620" 
+            src="../video/voidshow/Christoph/christoph.mp4"
+            style="display: none;"
+        ></video>
+    </div>
     
     <script src="../js/three.min.js"></script>
     <script src="../js/GLTFLoader.js"></script>
     <script src="../js/PointerLockControls.js"></script>
-    <script src="../js/PositionalAudioHelper.js"></script>
     <script type="module" src="./index.js"></script>
-
 </body>
 </html>

@@ -100,24 +100,6 @@ function controlsSetup() {
         title.style.display = '';
     } );
 
-    const camera_location_array = [
-        [0, 0],
-        [-25, -370],
-        [-36, -717],
-        [-61, -981],
-        [932, -1893],
-        [-354, -1793],
-        [-534, -2011],
-        [-68, -2203]
-    ]
-
-    let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
-
-    controls.getObject().position.x = camera_location_array[camera_location_picker][0];
-    controls.getObject().position.z = camera_location_array[camera_location_picker][1];
-
-    scene.add(controls.getObject());
-
     const onKeyDown = function (event) {
 
         switch (event.code) {
@@ -177,6 +159,23 @@ function controlsSetup() {
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
 
+    const camera_location_array = [
+        [0, 0],
+        [-25, -370],
+        [-36, -717],
+        [-61, -981],
+        [932, -1893],
+        [-354, -1793],
+        [-534, -2011],
+        [-68, -2203]
+    ]
+
+    let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
+
+    controls.getObject().position.x = camera_location_array[camera_location_picker][0];
+    controls.getObject().position.z = camera_location_array[camera_location_picker][1];
+
+    scene.add(controls.getObject());
 }
 
 function loadingManager() {
@@ -577,6 +576,8 @@ function animate() {
         controls.moveForward(- velocity.z * delta);
     }
     prevTime = time;
+
+    document.querySelector('.coordinates p').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
 }
 
 function onTransitionEnd(transition) {

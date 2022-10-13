@@ -144,14 +144,14 @@ function init() {
     document.addEventListener('keyup', onKeyUp);
 
     const camera_location_array = [
-        [0, 0],
-        [-25, -370],
-        [-36, -717],
-        [-61, -981],
+        // [0, 0],
+        // [-25, -370],
+        // [-36, -717],
+        // [-61, -981],
         [932, -1893],
-        [-354, -1793],
-        [-534, -2011],
-        [-68, -2203]
+        // [-354, -1793],
+        // [-534, -2011],
+        // [-68, -2203]
     ]
 
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);

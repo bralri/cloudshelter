@@ -1,6 +1,9 @@
 const models = [
     {
-        name: "entrance lane",
+        artist: "Bryan Ridpath",
+        title: "entrance lane",
+        date: "2022",
+        info: "photogrammetry model",
         URL: '../models/voidshow/mainlane.glb',
         px: -32,
         py: -2,
@@ -11,8 +14,11 @@ const models = [
         rz: 0
     },
     {
-        name: "underpass blue",               
-        URL: '../models/voidshow/underpassblue.glb',
+        artist: "Bryan Ridpath",
+        title: "underpassblue",
+        date: "2022",
+        info: "photogrammetry model",            
+        URL: '../models/voidshow/underpassblue_1.glb',
         px: 1000,
         py: -2.5,
         pz: -2000,
@@ -22,7 +28,10 @@ const models = [
         rz: 2
     },
     {
-        name: "underpass grey",              
+        artist: "Bryan Ridpath",
+        title: "underpassgrey",
+        date: "2022",
+        info: "photogrammetry model",          
         URL: '../models/voidshow/underpassgrey.glb',
         px: -500,
         py: -2.5,
@@ -33,7 +42,10 @@ const models = [
         rz: 0
     },
     {
-        name: "tree",             
+        artist: "Bryan Ridpath",
+        title: "tree",
+        date: "2022",
+        info: "photogrammetry model",            
         URL: '../models/voidshow/tree.glb',
         px: 0,
         py: -2,
@@ -44,7 +56,10 @@ const models = [
         rz: 0
     },
     {
-        name: "path",             
+        artist: "Bryan Ridpath",
+        title: "path",
+        date: "2022",
+        info: "photogrammetry model",           
         URL: '../models/voidshow/path.glb',
         px: -200,
         py: -2,
@@ -55,7 +70,10 @@ const models = [
         rz: 0
     },
     {
-        name: "bin 1",             
+        artist: "Bryan Ridpath",
+        title: "bin",
+        date: "2022",
+        info: "photogrammetry model",           
         URL: '../models/voidshow/bin.glb',
         px: 100,
         py: -2,
@@ -66,7 +84,10 @@ const models = [
         rz: 0
     },
     {
-        name: "forest structure",            
+        artist: "Bryan Ridpath",
+        title: "foreststructure",
+        date: "2022",
+        info: "photogrammetry model",            
         URL: '../models/voidshow/foreststructure.glb',
         px: 0,
         py: -14,
@@ -78,7 +99,7 @@ const models = [
     }
 ]
 
-const pointsArray = [
+const points = [
     {
         line: new THREE.CatmullRomCurve3([
                 new THREE.Vector3(0, 8, 0),
@@ -119,7 +140,7 @@ const videos = [
         artist: "Alex Pearl",
         title: "Corpse",
         date: "2022",
-        info: "",
+        info: "Video",
         MP3: "../sound/voidshow/Alex/Elf.mp3",
         geometry: new THREE.PlaneBufferGeometry(10, 20),
         transparency: true,
@@ -134,7 +155,7 @@ const videos = [
         artist: "Alex Pearl",
         title: "Corpse",
         date: "2022",
-        info: "",
+        info: "Video",
         MP3: "../sound/voidshow/Alex/Picnic.mp3",
         geometry: new THREE.PlaneBufferGeometry(10, 20),
         transparency: true,
@@ -149,7 +170,7 @@ const videos = [
         artist: "Christoph Jones",
         title: "The Void, Suicide and The Sorrowing of Man",
         date: "2022",
-        info: "11 minute loop",
+        info: "11 minute video loop",
         MP3: "../sound/voidshow/Christoph/christoph.mp3",
         geometry: new THREE.BoxBufferGeometry(70, 45, 2),
         transparency: false,
@@ -166,39 +187,76 @@ const videos = [
 
 const imgs = [
     {
+        artist: "Template: Artist",
+        title: "Template: Title",
+        date: "Template: Date",
+        info: "Template: Info",
         img: "../img/voidshow/about/Alex.png",
         px: 961,
         py: 10,
         pz: -2021
     },
     {
+        artist: "Template: Artist",
+        title: "Template: Title",
+        date: "Template: Date",
+        info: "Template: Info",
         img: "../img/voidshow/about/Brian.png",
         px: 980,
         py: 10,
         pz: -2055
     },
     {
+        artist: "Template: Artist",
+        title: "Template: Title",
+        date: "Template: Date",
+        info: "Template: Info",
         img: "../img/voidshow/about/Bryan.png",
         px: 999,
         py: 10,
         pz: -2088
     },
     {
+        artist: "Template: Artist",
+        title: "Template: Title",
+        date: "Template: Date",
+        info: "Template: Info",
         img: "../img/voidshow/about/Christoph.png",
         px: 1008,
         py: 10,
         pz: -1935
     },
     {
+        artist: "Template: Artist",
+        title: "Template: Title",
+        date: "Template: Date",
+        info: "Template: Info",
         img: "../img/voidshow/about/Gwen.png",
         px: 1031,
         py: 10,
         pz: -1976
     },
     {
+        artist: "Template: Artist",
+        title: "Template: Title",
+        date: "Template: Date",
+        info: "Template: Info",
         img: "../img/voidshow/about/Molly.png",
         px: 1049,
         py: 10,
         pz: -2009
     }
 ]
+
+const promiseLoader = (loader, onProgress) => {
+    const promiseLoader = (url) => {
+        return new Promise((resolve, reject) => {
+            loader.load(url, resolve, onProgress, reject);
+        });
+    }
+
+    return {
+        originalLoader: loader,
+        load: promiseLoader,
+    };
+}

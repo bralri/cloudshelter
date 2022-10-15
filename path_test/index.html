@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <script src="../js/info-modal.js" defer></script>
 
     <link rel="icon" type="image/png" href="../img/cloud_t.png">
@@ -53,13 +55,16 @@
         <p></p>
     </div>
 
+    <div id="cap">
+        <p></p>
+    </div>
+
     <div class="videos">
         <video
             id="Picnic"
             playsinLine
             webkit-playsinLine
             loop
-            autoplay
             muted
             width="1080"
             height="1620" 
@@ -72,7 +77,6 @@
             playsinLine
             webkit-playsinLine
             loop
-            autoplay
             muted
             width="1080"
             height="1620" 
@@ -85,15 +89,18 @@
             playsinLine
             webkit-playsinLine
             loop
-            autoplay
             muted
-            width="1080"
-            height="1620" 
+            width="256"
+            height="144" 
             src="../video/voidshow/Christoph/christoph_144.mp4"
             style="display: none;"
         ></video>
     </div>
-    
+
+    <script>
+        (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+    </script>
+
     <script src="../js/three.min.js"></script>
     <script src="../js/GLTFLoader.js"></script>
     <script src="../js/PointerLockControls.js"></script>

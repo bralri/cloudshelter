@@ -1,5 +1,9 @@
 let camera, scene, renderer, controls;
 
+const gltfLoader = promiseLoader(new THREE.GLTFLoader());
+const textureLoader = promiseLoader(new THREE.TextureLoader());
+
+
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -20,7 +24,11 @@ let degreeX = 0;
 let degreeY = 0; 
 let degreeZ = 0;
 
-let objIntersects = [];
+let artworkID = [];
+let artworkInfo = [];
+let clickLink = false;
+let clickLinkUrl;
+
 let videoScreens = [];
 let playVideos = [];
 let playSounds = [];
@@ -29,17 +37,17 @@ let playing = false;
 init();
 animate();
 
-function init() {
+async function init() {
     // SCENE SETUP
     scene = new THREE.Scene();
     scene.background = 0x000000;
-    scene.fog = new THREE.Fog(0x000000, 0, 2000);
+    scene.fog = new THREE.Fog(scene.background, 0, 1500);
 
     camera = new THREE.PerspectiveCamera( 
         75, 
         window.innerWidth / window.innerHeight, 
         1, 
-        2000 
+        1500 
     );
 
     camera.position.y = 10;
@@ -62,6 +70,8 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize);
+
+    console.log(renderer.info.render);
 
     // CONTROLS
     controls = new THREE.PointerLockControls(camera, document.body);
@@ -148,8 +158,8 @@ function init() {
         // [-25, -370],
         // [-36, -717],
         // [-61, -981],
-        [932, -1893],
-        // [-354, -1793],
+        // [932, -1893],
+        [-354, -1793],
         // [-534, -2011],
         // [-68, -2203]
     ]
@@ -169,54 +179,58 @@ function init() {
     });
 
     // DRAW PATHS
-    for (let i = 0; i < pointsArray.length; i++) {
-        let points = pointsArray[i].line;
-        let vertices = points.getSpacedPoints(100);
-
+    for (let i = 0; i < points.length; i++) {
+        let path = points[i].line;
+        let vertices = path.getSpacedPoints(20);
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices);
         const lineMaterial = new THREE.LineBasicMaterial({
             color: 0xffffff,
-            visible: false,
+            visible: true,
         });
         const line = new THREE.Line(lineGeometry, lineMaterial);
         scene.add(line);
     };
 
     // LOAD MODELS
-    const loader = new THREE.GLTFLoader(manager);
+    const loader = await new THREE.GLTFLoader(manager);
     for (let i = 0; i < models.length; i++) {
-        const object = models[i];
-        loader.load(
+        const obj = models[i];
+        loader.load(  
     
-            object.URL,
+            obj.URL,
     
             function(glb) {
-                glb.scene.traverse(async function(node) {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = true;
-                    }
-                })
-    
-                let model = glb.scene;
-                model.position.set(object.px, object.py, object.pz);
-                model.scale.set(object.scale, object.scale, object.scale);
-                rotateObject(model, object.rx, object.ry, object.rz);
-    
-                scene.add(model);
+                let object = glb.scene;
+                object.position.set(obj.px, obj.py, obj.pz);
+                object.scale.set(obj.scale, obj.scale, obj.scale);
+                rotateObject(object, obj.rx, obj.ry, obj.rz);
+
+                for(var i in object.children){
+                    artworkID.push(object.children[i].id)
+                    artworkInfo.push(
+                      [
+                        object.children[i].id,
+                        `
+                          <span class="artist">${obj.artist}</span><br>
+                          ${obj.title}, ${obj.date}<br>
+                          <span class="info">${obj.info}</span>
+                          `,
+                          obj.link
+                      ]
+                    )
+                }
+                scene.add(object);
             }
-        )
-    };
+    )};
 
     // LOAD VIDEOS
     const audioLoader = new THREE.AudioLoader(manager);
     const audioListener = new THREE.AudioListener();
     camera.add(audioListener);
-
     for (let i = 0; i < videos.length; i++) {
         const obj = videos[i];
         let video = document.getElementById(obj.ID);
-        videoTexture = new THREE.VideoTexture(video);
+        videoTexture = await new THREE.VideoTexture(video);
         videoTexture.encoding = THREE.sRGBEncoding;
         videoTexture.minFilter = THREE.LinearFilter;
         videoTexture.magFilter = THREE.LinearFilter;
@@ -239,28 +253,51 @@ function init() {
             sound.setVolume(obj.volume);
             sound.setDirectionalCone(obj.innercone, obj.outercone, 0);
         });
+
+        artworkID.push(videoScreen.id);
+        artworkInfo.push(
+            [
+                videoScreen.id,
+                `
+                <span class="artist">${obj.artist}</span><br>
+                ${obj.title}, ${obj.date}<br>
+                <span class="info">${obj.info}</span>
+                `,
+                obj.link
+            ]
+        );
+
         playSounds.push(sound);
         videoScreen.add(sound);
         scene.add(videoScreen);
-
         playVideos.push(video);
         videoScreens.push(videoScreen);
-
-        objIntersects.push(videoScreen);
     };
 
     // LOAD STILLS
     for (let i = 0; i < imgs.length; i++) {
         const obj = imgs[i];
         const geometry = new THREE.BoxBufferGeometry(2, 20, 20);
-        let texture = new THREE.TextureLoader(manager).load(obj.img);
+        let texture = await new THREE.TextureLoader(manager).load(obj.img);
         const material = new THREE.MeshLambertMaterial({map: texture, side: THREE.DoubleSide});
         const cube = new THREE.Mesh(geometry, material);
         cube.position.set(obj.px, obj.py, obj.pz);
         rotateObject(cube, 0, -30, 0);
-        scene.add(cube);
 
-        objIntersects.push(cube);
+        artworkID.push(cube.id);
+        artworkInfo.push(
+            [
+                cube.id,
+                `
+                <span class="artist">${obj.artist}</span><br>
+                ${obj.title}, ${obj.date}<br>
+                <span class="info">${obj.info}</span>
+                `,
+                obj.link
+            ]
+        );
+
+        scene.add(cube);
     };
 }
 
@@ -272,7 +309,7 @@ function rotateObject(object, degreeX, degreeY, degreeZ) {
 
 function videoPlaneMove() {
     for (let i = 0; i < 2; i++) {
-        const path = pointsArray[i].line;
+        const path = points[i].line;
         const position = path.getPoint(fraction);
         const tangent = path.getTangent(fraction);
         const alexVideo = videoScreens[i];
@@ -303,12 +340,13 @@ function playSoundsVideos() {
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function render() {
     renderer.render(scene, camera);
+
+    videoPlaneMove();
 
     if (videoTexture) {
         videoTexture.needsUpdate = true;
@@ -318,24 +356,45 @@ function render() {
 function animate() {
     requestAnimationFrame(animate);
     render();
-    videoPlaneMove();
 
     const time = performance.now();
 
     if (controls.isLocked === true) {
+        // // ARTWORK INFO DISPLAY
+        let intersections = (new THREE.Raycaster(
+            camera.position,
+            camera.getWorldDirection(new THREE.Vector3())
+        )).intersectObjects(
+            scene.children,
+            true
+        );
+
+        if (intersections[0] && artworkID.indexOf(intersections[0].object.id) !== -1) {
+            for (let i = 0; i < artworkInfo.length; i++) {
+                if (intersections[0].object.id === artworkInfo[i][0]) {
+                document.querySelector('#cap p').innerHTML = artworkInfo[i][1];
+                    if (artworkInfo[i][2]) {
+                        clickLinkUrl = artworkInfo[i][2];
+                        clickLink = true;
+                        setTimeout(() => {
+                        clickLink = false;
+                        }, 1000)
+                    }
+                }
+            }
+            document.getElementById('cap').style.display = 'block';
+        } else {
+            document.getElementById('cap').style.display = 'none';
+        }
 
         const delta = (time - prevTime) / 1000;
-
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
-
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize();
-
         if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
         if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
-
         controls.moveRight(- velocity.x * delta);
         controls.moveForward(- velocity.z * delta);
     }

@@ -3,7 +3,6 @@ let camera, scene, renderer, controls;
 const gltfLoader = promiseLoader(new THREE.GLTFLoader());
 const textureLoader = promiseLoader(new THREE.TextureLoader());
 
-
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -41,13 +40,13 @@ async function init() {
     // SCENE SETUP
     scene = new THREE.Scene();
     scene.background = 0x000000;
-    scene.fog = new THREE.Fog(scene.background, 0, 1500);
+    scene.fog = new THREE.Fog(scene.background, 0, 2000);
 
     camera = new THREE.PerspectiveCamera( 
         75, 
         window.innerWidth / window.innerHeight, 
         1, 
-        1500 
+        2000 
     );
 
     camera.position.y = 10;
@@ -70,8 +69,6 @@ async function init() {
     document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize);
-
-    console.log(renderer.info.render);
 
     // CONTROLS
     controls = new THREE.PointerLockControls(camera, document.body);
@@ -154,14 +151,14 @@ async function init() {
     document.addEventListener('keyup', onKeyUp);
 
     const camera_location_array = [
-        // [0, 0],
-        // [-25, -370],
-        // [-36, -717],
-        // [-61, -981],
-        // [932, -1893],
+        [0, 0],
+        [-25, -370],
+        [-36, -717],
+        [-61, -981],
+        [932, -1893],
         [-354, -1793],
-        // [-534, -2011],
-        // [-68, -2203]
+        [-534, -2011],
+        [-68, -2203]
     ]
 
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
@@ -181,11 +178,11 @@ async function init() {
     // DRAW PATHS
     for (let i = 0; i < points.length; i++) {
         let path = points[i].line;
-        let vertices = path.getSpacedPoints(20);
+        let vertices = path.getSpacedPoints(60);
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices);
         const lineMaterial = new THREE.LineBasicMaterial({
             color: 0xffffff,
-            visible: true,
+            visible: false
         });
         const line = new THREE.Line(lineGeometry, lineMaterial);
         scene.add(line);
@@ -271,7 +268,9 @@ async function init() {
         videoScreen.add(sound);
         scene.add(videoScreen);
         playVideos.push(video);
-        videoScreens.push(videoScreen);
+        if (obj.artist === "Alex Pearl") {
+            videoScreens.push(videoScreen);
+        }
     };
 
     // LOAD STILLS
@@ -308,11 +307,11 @@ function rotateObject(object, degreeX, degreeY, degreeZ) {
 }
 
 function videoPlaneMove() {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < videoScreens.length; i++) {
         const path = points[i].line;
         const position = path.getPoint(fraction);
         const tangent = path.getTangent(fraction);
-        const alexVideo = videoScreens[i];
+        const alexVideo = videoScreens[i]
         alexVideo.position.copy(position);
         axis.crossVectors(up, tangent).normalize();
         const radians = Math.acos(up.dot(tangent));
@@ -363,7 +362,9 @@ function animate() {
         // // ARTWORK INFO DISPLAY
         let intersections = (new THREE.Raycaster(
             camera.position,
-            camera.getWorldDirection(new THREE.Vector3())
+            camera.getWorldDirection(new THREE.Vector3()),
+            0,
+            100
         )).intersectObjects(
             scene.children,
             true
@@ -373,8 +374,10 @@ function animate() {
             for (let i = 0; i < artworkInfo.length; i++) {
                 if (intersections[0].object.id === artworkInfo[i][0]) {
                 document.querySelector('#cap p').innerHTML = artworkInfo[i][1];
+                
                     if (artworkInfo[i][2]) {
                         clickLinkUrl = artworkInfo[i][2];
+                        console.log(clickLinkUrl);
                         clickLink = true;
                         setTimeout(() => {
                         clickLink = false;

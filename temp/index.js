@@ -15,7 +15,7 @@ const direction = new THREE.Vector3();
 
 let videoScreen, videoTexture;
 
-const up = new THREE.Vector3(1, 0, 0);
+const up = new THREE.Vector3(0, 0, 1);
 const axis = new THREE.Vector3();
 let fraction = 0;
 
@@ -152,13 +152,13 @@ async function init() {
 
     const camera_location_array = [
         [0, 0],
-        [-25, -370],
-        [-36, -717],
-        [-61, -981],
-        [932, -1893],
-        [-354, -1793],
-        [-534, -2011],
-        [-68, -2203]
+        // [-25, -370],
+        // [-36, -717],
+        // [-61, -981],
+        // [932, -1893],
+        // [-354, -1793],
+        // [-534, -2011],
+        // [-68, -2203]
     ]
 
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);

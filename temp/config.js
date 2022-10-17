@@ -139,7 +139,7 @@ export const points = [
 export const videos = [
     {
         ID: "Elf",
-        artist: "Alex Pearl",
+        artist: "Dr Alex Pearl",
         title: "Corpse",
         date: "2022",
         info: "'Elf', Video Collage",
@@ -154,7 +154,7 @@ export const videos = [
     },
     {
         ID: "Picnic",
-        artist: "Alex Pearl",
+        artist: "Dr Alex Pearl",
         title: "Corpse",
         date: "2022",
         info: "'Picnic', Video Collage",
@@ -194,6 +194,7 @@ export const imgs = [
         date: "2022",
         info: "'Picnic', Video Collage",
         img: "/img/show/Alex.png",
+        geometry: new THREE.BoxBufferGeometry(2, 20, 20),
         px: 961,
         py: 10,
         pz: -2021
@@ -204,6 +205,7 @@ export const imgs = [
         date: "2020-2022",
         info: "Digital Collage",
         img: "/img/show/Brian.png",
+        geometry: new THREE.BoxBufferGeometry(2, 20, 20),
         px: 980,
         py: 10,
         pz: -2055
@@ -214,6 +216,7 @@ export const imgs = [
         date: "2022",
         info: "Photogrammetry Model",
         img: "/img/show/Bryan.png",
+        geometry: new THREE.BoxBufferGeometry(2, 20, 20),
         px: 999,
         py: 10,
         pz: -2088
@@ -224,6 +227,7 @@ export const imgs = [
         date: "2022",
         info: "11 minute video essay",
         img: "/img/show/Christoph.png",
+        geometry: new THREE.BoxBufferGeometry(2, 20, 20),
         px: 1008,
         py: 10,
         pz: -1935
@@ -234,6 +238,7 @@ export const imgs = [
         date: "2022",
         info: "info",
         img: "/img/show/Gwen.png",
+        geometry: new THREE.BoxBufferGeometry(2, 20, 20),
         px: 1031,
         py: 10,
         pz: -1976
@@ -244,6 +249,7 @@ export const imgs = [
         date: "2022",
         info: "3D Model",
         img: "/img/show/Molly.png",
+        geometry: new THREE.BoxBufferGeometry(2, 20, 20),
         px: 1049,
         py: 10,
         pz: -2009

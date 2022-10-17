@@ -25,20 +25,12 @@ let fraction = 0;
 
 let objID = [];
 let objInfo = [];
-let videoScreens = [];
+let screensToPath = [];
 let playVideos = [];
 let playSounds = [];
 let playing = false;
 
-window.onload = async function() {
-    await init()
-    animate();
-}
-
-// init();
-// animate();
-
-async function init() {
+function init() {
     // SCENE SETUP
     scene = new THREE.Scene();
     scene.background = 0x000000;
@@ -200,7 +192,7 @@ async function init() {
                         object.children[i].id,
                         `
                           <span class="artist">${obj.artist}</span><br>
-                          ${obj.title}, ${obj.date}<br>
+                          <i>${obj.title}</i>, ${obj.date}<br>
                           <span class="info">${obj.info}</span>
                           `
                       ]
@@ -214,21 +206,21 @@ async function init() {
     const audioLoader = new THREE.AudioLoader(manager);
     const audioListener = new THREE.AudioListener();
     camera.add(audioListener);
+
     for (let i = 0; i < videos.length; i++) {
         const obj = videos[i];
-        let video = document.getElementById(obj.ID);
-        videoTexture = await new THREE.VideoTexture(video);
+        const video = document.getElementById(obj.ID);
+        videoTexture = new THREE.VideoTexture(video);
         videoTexture.encoding = THREE.sRGBEncoding;
         videoTexture.minFilter = THREE.LinearFilter;
         videoTexture.magFilter = THREE.LinearFilter;
-        let videoGeometry = obj.geometry;
-        let videoMaterial = new THREE.MeshLambertMaterial({
+        const videoMaterial = new THREE.MeshLambertMaterial({
             map: videoTexture,
             side: THREE.DoubleSide,
             transparent: obj.transparency,
             opacity: 1
         });
-        videoScreen = new THREE.Mesh(videoGeometry, videoMaterial);
+        videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
         videoScreen.position.set(obj.px, obj.py, obj.pz);
         rotateObject(videoScreen, 0, obj.rotation, 0);
 
@@ -247,7 +239,7 @@ async function init() {
                 videoScreen.id,
                 `
                 <span class="artist">${obj.artist}</span><br>
-                ${obj.title}, ${obj.date}<br>
+                <i>${obj.title}</i>, ${obj.date}<br>
                 <span class="info">${obj.info}</span>
                 `
             ]
@@ -257,18 +249,17 @@ async function init() {
         videoScreen.add(sound);
         scene.add(videoScreen);
         playVideos.push(video);
-        if (obj.artist === "Alex Pearl") {
-            videoScreens.push(videoScreen);
+        if (obj.title === "Corpse") {
+            screensToPath.push(videoScreen);
         }
     };
 
     // LOAD STILLS
     for (let i = 0; i < imgs.length; i++) {
         const obj = imgs[i];
-        const geometry = new THREE.BoxBufferGeometry(2, 20, 20);
-        let texture = await new THREE.TextureLoader(manager).load(obj.img);
-        const material = new THREE.MeshLambertMaterial({map: texture, side: THREE.DoubleSide});
-        const cube = new THREE.Mesh(geometry, material);
+        let texture = new THREE.TextureLoader(manager).load(obj.img);
+        const material = new THREE.MeshLambertMaterial({map: texture, side: THREE.FrontSide});
+        const cube = new THREE.Mesh(obj.geometry, material);
         cube.position.set(obj.px, obj.py, obj.pz);
         rotateObject(cube, 0, -30, 0);
 
@@ -278,7 +269,7 @@ async function init() {
                 cube.id,
                 `
                 <span class="artist">${obj.artist}</span><br>
-                ${obj.title}, ${obj.date}<br>
+                <i>${obj.title}</i>, ${obj.date}<br>
                 <span class="info">${obj.info}</span>
                 `
             ]
@@ -315,11 +306,11 @@ function onWindowResize() {
 function render() {
     renderer.render(scene, camera);
 
-    for (let i = 0; i < videoScreens.length; i++) {
+    for (let i = 0; i < screensToPath.length; i++) {
         const path = points[i].line;
         const position = path.getPoint(fraction);
         const tangent = path.getTangent(fraction);
-        const alexVideo = videoScreens[i]
+        const alexVideo = screensToPath[i]
         alexVideo.position.copy(position);
         axis.crossVectors(up, tangent).normalize();
         const radians = Math.acos(up.dot(tangent));
@@ -385,3 +376,6 @@ function animate() {
 function onTransitionEnd(transition) {
     transition.target.remove();
 }
+
+init();
+animate();

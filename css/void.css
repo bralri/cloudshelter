@@ -98,7 +98,7 @@
     right: 0;
     padding: 16px;
     font-weight: 300;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 #artwork-caption {
@@ -121,5 +121,5 @@
 }
 #artwork-caption p .info {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 12px;
 }

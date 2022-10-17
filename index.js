@@ -1,3 +1,7 @@
+import * as THREE from 'three';
+import {GLTFLoader} from '../js/jsm/GLTFLoader.js';
+import {PointerLockControls} from '../js/jsm/PointerLockControls.js';
+
 let camera, scene, renderer, controls;
 
 const width = window.innerWidth;
@@ -17,10 +21,8 @@ let cloudModel;
 let manager;
 
 const white = new THREE.Color(0xffffff).convertSRGBToLinear();
-const black = new THREE.Color(0x000000).convertSRGBToLinear();
 const lightGrey = new THREE.Color(0xD3D3D3).convertSRGBToLinear();
 const midGrey = new THREE.Color(0x63666A).convertSRGBToLinear();
-const lightBlue = new THREE.Color(0xADD8E6).convertSRGBToLinear();
 
 init();
 animate();
@@ -118,7 +120,7 @@ function sceneSetup() {
 }
 
 function controlsSetup() {
-    controls = new THREE.PointerLockControls(camera, document.body);
+    controls = new PointerLockControls(camera, document.body);
 
     const blocker = document.getElementById('blocker');
     const title = document.getElementById( 'title');
@@ -209,7 +211,7 @@ function loadingManager() {
 
 function loadModels() {
     
-    const loader = new THREE.GLTFLoader(manager);
+    const loader = new GLTFLoader(manager);
     loader.load(
 
         '../models/landing/cloud_group.glb',

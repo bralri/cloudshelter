@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {GLTFLoader} from '../js/jsm/GLTFLoader.js';
-import {PointerLockControls} from '../js/jsm/PointerLockControls.js';
+import {GLTFLoader} from '/js/jsm/GLTFLoader.js';
+import {PointerLockControls} from '/js/jsm/PointerLockControls.js';
 
 let camera, scene, renderer, controls;
 
@@ -100,7 +100,7 @@ function sceneSetup() {
 
     let floorGeometry = new THREE.PlaneGeometry(200, 200, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
-    let floorTexture = new THREE.TextureLoader(manager).load('../img/floor2.png');
+    let floorTexture = new THREE.TextureLoader(manager).load('/img/index/floor2.png');
     floorTexture.wrapS = THREE.RepeatWrapping;
     floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(2, 2);
@@ -214,7 +214,7 @@ function loadModels() {
     const loader = new GLTFLoader(manager);
     loader.load(
 
-        '../models/landing/cloud_group.glb',
+        '/models/landing/cloud_group.glb',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {

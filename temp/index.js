@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {GLTFLoader} from '../js/jsm/GLTFLoader.js';
-import {PointerLockControls} from '../js/jsm/PointerLockControls.js';
+import {GLTFLoader} from '/js/jsm/GLTFLoader.js';
+import {PointerLockControls} from '/js/jsm/PointerLockControls.js';
 import {models, points, videos, imgs, promiseLoader} from './config.js'
 
 let camera, scene, renderer, controls;
@@ -25,7 +25,6 @@ let fraction = 0;
 
 let objID = [];
 let objInfo = [];
-
 let videoScreens = [];
 let playVideos = [];
 let playSounds = [];

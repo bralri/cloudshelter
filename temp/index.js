@@ -23,10 +23,6 @@ const up = new THREE.Vector3(0, 0, 1);
 const axis = new THREE.Vector3();
 let fraction = 0;
 
-let degreeX = 0;
-let degreeY = 0; 
-let degreeZ = 0;
-
 let objID = [];
 let objInfo = [];
 
@@ -171,7 +167,7 @@ async function init() {
         loadingScreen.addEventListener('transitionend', onTransitionEnd);
     });
 
-    // DRAW PATHS
+    // DRAW PATH FROM POINTS
     for (let i = 0; i < points.length; i++) {
         let path = points[i].line;
         let vertices = path.getSpacedPoints(60);

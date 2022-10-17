@@ -259,6 +259,6 @@ export const promiseLoader = (loader, onProgress) => {
 
     return {
         originalLoader: loader,
-        load: promiseLoader,
+        load: promiseLoader
     };
 }

@@ -1,4 +1,6 @@
-const models = [
+import * as THREE from 'three';
+
+export const models = [
     {
         artist: "Bryan Ridpath",
         title: "entrance lane",
@@ -99,7 +101,7 @@ const models = [
     // }
 ]
 
-const points = [
+export const points = [
     {
         line: new THREE.CatmullRomCurve3([
                 new THREE.Vector3(0, 2, 0),
@@ -134,7 +136,7 @@ const points = [
     }
 ]
 
-const videos = [
+export const videos = [
     {
         ID: "Elf",
         artist: "Alex Pearl",
@@ -185,7 +187,7 @@ const videos = [
     }
 ]
 
-const imgs = [
+export const imgs = [
     {
         artist: "Alex Pearl",
         title: "Corpse",
@@ -248,7 +250,7 @@ const imgs = [
     }
 ]
 
-const promiseLoader = (loader, onProgress) => {
+export const promiseLoader = (loader, onProgress) => {
     const promiseLoader = (url) => {
         return new Promise((resolve, reject) => {
             loader.load(url, resolve, onProgress, reject);

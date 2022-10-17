@@ -1,13 +1,17 @@
+import * as THREE from 'three';
+import {GLTFLoader} from '../js/jsm/GLTFLoader.js';
+import {PointerLockControls} from '../js/jsm/PointerLockControls.js';
+import {models, points, videos, imgs, promiseLoader} from './config.js'
+
 let camera, scene, renderer, controls;
 
-const gltfLoader = promiseLoader(new THREE.GLTFLoader());
+const gltfLoader = promiseLoader(new GLTFLoader());
 const textureLoader = promiseLoader(new THREE.TextureLoader());
 
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
-let canJump = false;
 
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
@@ -19,14 +23,12 @@ const up = new THREE.Vector3(0, 0, 1);
 const axis = new THREE.Vector3();
 let fraction = 0;
 
-let degreeX = 0; 
+let degreeX = 0;
 let degreeY = 0; 
 let degreeZ = 0;
 
 let objID = [];
 let objInfo = [];
-let clickLink = false;
-let clickLinkUrl;
 
 let videoScreens = [];
 let playVideos = [];
@@ -37,6 +39,9 @@ window.onload = async function() {
     await init()
     animate();
 }
+
+// init();
+// animate();
 
 async function init() {
     // SCENE SETUP
@@ -67,7 +72,7 @@ async function init() {
     window.addEventListener('resize', onWindowResize);
 
     // CONTROLS
-    controls = new THREE.PointerLockControls(camera, document.body);
+    controls = new PointerLockControls(camera, document.body);
 
     const blocker = document.getElementById('blocker');
     const title = document.getElementById( 'title');
@@ -180,7 +185,7 @@ async function init() {
     };
 
     // LOAD MODELS
-    const loader = await new THREE.GLTFLoader(manager);
+    const loader = new GLTFLoader(manager);
     for (let i = 0; i < models.length; i++) {
         const obj = models[i];
         loader.load(  

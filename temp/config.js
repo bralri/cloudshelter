@@ -20,7 +20,7 @@ const models = [
         info: "photogrammetry model",            
         URL: '../models/voidshow/underpassblue_1.glb',
         px: 1000,
-        py: -2.5,
+        py: -6,
         pz: -2000,
         scale: 1,
         rx: 0,
@@ -180,7 +180,7 @@ const videos = [
         outercone: 230,
         rotation: -62,
         px: 1093,
-        py: 30,
+        py: 25,
         pz: -2110
     }
 ]

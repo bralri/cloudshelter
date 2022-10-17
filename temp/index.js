@@ -23,8 +23,8 @@ let degreeX = 0;
 let degreeY = 0; 
 let degreeZ = 0;
 
-let artworkID = [];
-let artworkInfo = [];
+let objID = [];
+let objInfo = [];
 let clickLink = false;
 let clickLinkUrl;
 
@@ -33,8 +33,10 @@ let playVideos = [];
 let playSounds = [];
 let playing = false;
 
-init();
-animate();
+window.onload = async function() {
+    await init()
+    animate();
+}
 
 async function init() {
     // SCENE SETUP
@@ -49,14 +51,8 @@ async function init() {
         2000 
     );
 
-    camera.position.y = 10;
-
     const ambLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambLight);
-
-    const light = new THREE.HemisphereLight(0x63666A, 0x000000, 0.5);
-    light.position.set(0, 10, 0);
-    scene.add(light);
 
     renderer = new THREE.WebGLRenderer({ 
         antialias: true,
@@ -152,20 +148,15 @@ async function init() {
 
     const camera_location_array = [
         [0, 0],
-        // [-25, -370],
-        // [-36, -717],
-        // [-61, -981],
-        // [932, -1893],
-        // [-354, -1793],
-        // [-534, -2011],
-        // [-68, -2203]
+        [-61, -981],
+        [932, -1893],
+        [-354, -1793]
     ]
 
     let camera_location_picker = Math.floor(Math.random() * camera_location_array.length);
-
     controls.getObject().position.x = camera_location_array[camera_location_picker][0];
     controls.getObject().position.z = camera_location_array[camera_location_picker][1];
-
+    controls.getObject().position.y = 10;
     scene.add(controls.getObject());
 
     // LOADING MANAGER
@@ -203,16 +194,15 @@ async function init() {
                 rotateObject(object, obj.rx, obj.ry, obj.rz);
 
                 for(var i in object.children){
-                    artworkID.push(object.children[i].id)
-                    artworkInfo.push(
+                    objID.push(object.children[i].id)
+                    objInfo.push(
                       [
                         object.children[i].id,
                         `
                           <span class="artist">${obj.artist}</span><br>
                           ${obj.title}, ${obj.date}<br>
                           <span class="info">${obj.info}</span>
-                          `,
-                          obj.link
+                          `
                       ]
                     )
                 }
@@ -251,16 +241,15 @@ async function init() {
             sound.setDirectionalCone(obj.innercone, obj.outercone, 0);
         });
 
-        artworkID.push(videoScreen.id);
-        artworkInfo.push(
+        objID.push(videoScreen.id);
+        objInfo.push(
             [
                 videoScreen.id,
                 `
                 <span class="artist">${obj.artist}</span><br>
                 ${obj.title}, ${obj.date}<br>
                 <span class="info">${obj.info}</span>
-                `,
-                obj.link
+                `
             ]
         );
 
@@ -283,16 +272,15 @@ async function init() {
         cube.position.set(obj.px, obj.py, obj.pz);
         rotateObject(cube, 0, -30, 0);
 
-        artworkID.push(cube.id);
-        artworkInfo.push(
+        objID.push(cube.id);
+        objInfo.push(
             [
                 cube.id,
                 `
                 <span class="artist">${obj.artist}</span><br>
                 ${obj.title}, ${obj.date}<br>
                 <span class="info">${obj.info}</span>
-                `,
-                obj.link
+                `
             ]
         );
 
@@ -304,24 +292,6 @@ function rotateObject(object, degreeX, degreeY, degreeZ) {
     object.rotateX(THREE.Math.degToRad(degreeX));
     object.rotateY(THREE.Math.degToRad(degreeY));
     object.rotateZ(THREE.Math.degToRad(degreeZ));
-}
-
-function videoPlaneMove() {
-    for (let i = 0; i < videoScreens.length; i++) {
-        const path = points[i].line;
-        const position = path.getPoint(fraction);
-        const tangent = path.getTangent(fraction);
-        const alexVideo = videoScreens[i]
-        alexVideo.position.copy(position);
-        axis.crossVectors(up, tangent).normalize();
-        const radians = Math.acos(up.dot(tangent));
-        alexVideo.quaternion.setFromAxisAngle(axis, radians);
-    }
-
-    fraction += 0.00001;
-    if (fraction > 1) {
-        fraction = 0;
-    }
 }
 
 function playSoundsVideos() {
@@ -345,7 +315,21 @@ function onWindowResize() {
 function render() {
     renderer.render(scene, camera);
 
-    videoPlaneMove();
+    for (let i = 0; i < videoScreens.length; i++) {
+        const path = points[i].line;
+        const position = path.getPoint(fraction);
+        const tangent = path.getTangent(fraction);
+        const alexVideo = videoScreens[i]
+        alexVideo.position.copy(position);
+        axis.crossVectors(up, tangent).normalize();
+        const radians = Math.acos(up.dot(tangent));
+        alexVideo.quaternion.setFromAxisAngle(axis, radians);
+    }
+
+    fraction += 0.00001;
+    if (fraction > 1) {
+        fraction = 0;
+    }
 
     if (videoTexture) {
         videoTexture.needsUpdate = true;
@@ -360,7 +344,7 @@ function animate() {
 
     if (controls.isLocked === true) {
         // // ARTWORK INFO DISPLAY
-        let intersections = (new THREE.Raycaster(
+        let objIntersections = (new THREE.Raycaster(
             camera.position,
             camera.getWorldDirection(new THREE.Vector3()),
             0,
@@ -370,24 +354,15 @@ function animate() {
             true
         );
 
-        if (intersections[0] && artworkID.indexOf(intersections[0].object.id) !== -1) {
-            for (let i = 0; i < artworkInfo.length; i++) {
-                if (intersections[0].object.id === artworkInfo[i][0]) {
-                document.querySelector('#cap p').innerHTML = artworkInfo[i][1];
-                
-                    if (artworkInfo[i][2]) {
-                        clickLinkUrl = artworkInfo[i][2];
-                        console.log(clickLinkUrl);
-                        clickLink = true;
-                        setTimeout(() => {
-                        clickLink = false;
-                        }, 1000)
-                    }
+        if (objIntersections[0] && objID.indexOf(objIntersections[0].object.id) !== -1) {
+            for (let i = 0; i < objInfo.length; i++) {
+                if (objIntersections[0].object.id === objInfo[i][0]) {
+                    document.querySelector('#artwork-caption p').innerHTML = objInfo[i][1];
                 }
             }
-            document.getElementById('cap').style.display = 'block';
+            document.getElementById('artwork-caption').style.display = 'block';
         } else {
-            document.getElementById('cap').style.display = 'none';
+            document.getElementById('artwork-caption').style.display = 'none';
         }
 
         const delta = (time - prevTime) / 1000;
@@ -403,7 +378,8 @@ function animate() {
     }
     prevTime = time;
 
-    document.querySelector('.coordinates p').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
+    document.querySelector('.co-x').innerHTML = "x: " + Math.round(controls.getObject().position.x);
+    document.querySelector('.co-z').innerHTML = "y: " + Math.round(controls.getObject().position.z);
 }
 
 function onTransitionEnd(transition) {

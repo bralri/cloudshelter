@@ -96,32 +96,30 @@
     z-index: 99;
     top: 0;
     right: 0;
-    padding: 1rem;
-    box-sizing: border-box;
+    padding: 16px;
     font-weight: 300;
-    font-size: 0.75rem;
+    font-size: 16px;
 }
 
-#cap {
+#artwork-caption {
     position: absolute;
     z-index: 99;
     bottom: 0;
     left: 0;
-    padding: 1rem;
+    padding: 16px;
     display: none;
-    width: 600px;
-    box-sizing: border-box;
+    width: 700px;
 }
-#cap p {
+#artwork-caption p {
     color: white;
-    font-size: 1.25rem;
+    font-size: 20px;
 }
-#cap p .artist {
+#artwork-caption p .artist {
     font-weight: 600;
     display: inline-block;
-    padding-bottom: 0.25rem;
+    padding-bottom: 4px;
 }
-#cap p .info {
+#artwork-caption p .info {
     font-weight: 400;
-    font-size: 0.75rem;
+    font-size: 16px;
 }

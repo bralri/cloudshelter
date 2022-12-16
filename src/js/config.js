@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { Vector3 } from 'three';
 
 export const models = [
     // Environment
@@ -9,7 +8,7 @@ export const models = [
         x: 0, y: 0, z: 0
     },
     //
-    // Molly
+    // Molly Erin McCarthy
     {
         ID: "Molly",
         URL: '../assets/models/molly/Dock.glb',
@@ -104,16 +103,8 @@ export const models = [
     }
 ]
 
-export const pointLights = [
-    // {
-    //     x: -60,
-    //     y: 4,
-    //     z: -715,
-    //     color: white
-    // }
-]
-
 export const videos = [
+    // Alex Pearl
     {
         ID: "Elf",
         artist: "Alex Pearl",
@@ -143,7 +134,9 @@ export const videos = [
         MP3: "../assets/sounds/alex/Heat.mp3",
         geometry: new THREE.PlaneGeometry(10, 20),
         transparency: true
-    }, 
+    },
+    //
+    // Christoph Jones
     {
         ID: "Christoph",
         artist: "Christoph Jones",
@@ -153,9 +146,7 @@ export const videos = [
         MP3: "../assets/sounds/christoph/christoph.mp3",
         geometry: new THREE.BoxGeometry(2, 35, 60),
         transparency: false,
-        x: 1253,
-        y: 20,
-        z: -5
+        x: 1253, y: 20, z: -5
     }
 ]
 

@@ -5,8 +5,7 @@ import {Water} from 'three/Water2.js';
 import {
     models, 
     points, 
-    videos,
-    pointLights
+    videos
 } from './config.js';
 
 let camera, scene, renderer, controls, water, object;
@@ -55,7 +54,7 @@ function init() {
     scene.background = darkGrey;
     scene.fog = new THREE.FogExp2(scene.background, 0.002);
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,1, 10000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
     renderer.compile(scene, camera);
@@ -155,27 +154,13 @@ function init() {
     const hemLight = new THREE.HemisphereLight(white, darkGrey);
     scene.add(hemLight);
 
-    const flashlight = new THREE.SpotLight(white, 4, 100);
+    const flashlight = new THREE.SpotLight(white, 2, 100);
     camera.add(flashlight);
     flashlight.position.set(0,0,1);
     flashlight.target = camera;
 
-    for (let i = 0; i < pointLights.length; i++) {
-        const obj = pointLights[i];
-        const pointLight = new THREE.PointLight(obj.color, 2, 150);
-        const sphereGeometry = new THREE.SphereGeometry(1, 16, 8);
-        const sphere = new THREE.Mesh(
-            sphereGeometry,
-            new THREE.MeshBasicMaterial({color: obj.color})
-        );
-        pointLight.add(sphere);
-        sphere.visible = false;
-        pointLight.position.set(obj.x, obj.y, obj.z);
-        // scene.add(pointLight);
-    }
-
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+    const waterGeometry = new THREE.PlaneGeometry(5000, 5000);
     water = new Water(waterGeometry, {
         color: waterColour,
         scale: 10,
@@ -255,7 +240,7 @@ function init() {
         let path = points[i].line;
         let vertices = path.getSpacedPoints(40);
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices);
-        const lineMaterial = new THREE.LineBasicMaterial({color: 0xECFF00, visible: true});
+        const lineMaterial = new THREE.LineBasicMaterial({color: 0xECFF00, visible: false});
         const line = new THREE.Line(lineGeometry, lineMaterial);
         scene.add(line);
     };

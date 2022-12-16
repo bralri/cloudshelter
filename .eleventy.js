@@ -18,7 +18,7 @@ module.exports = (eleventyConfig) => {
     eleventyConfig.addPassthroughCopy('./src/assets/fonts');
 
     eleventyConfig.addPassthroughCopy('./src/assets/models/cloud.glb');
-    eleventyConfig.addPassthroughCopy('./src/assets/favicon.ico')
+    eleventyConfig.addPassthroughCopy('./src/favicon.ico')
     
 
     eleventyConfig.addWatchTarget('./src/scss');

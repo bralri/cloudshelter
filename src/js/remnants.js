@@ -235,7 +235,7 @@ function init() {
                 }
                 for (i = 0; i < 5; i++) {
                     const sound = new THREE.PositionalAudio(audioListener);
-                    audioLoader.load(`assets/sounds/leifang/${i + 1}.mp3`, function (buffer) {
+                    audioLoader.load(`../assets/sounds/leifang/${i + 1}.mp3`, function (buffer) {
                         sound.setBuffer(buffer);
                         sound.setLoop(false);
                         sound.setRefDistance(3);
@@ -316,7 +316,7 @@ function init() {
 
     // Load Images
     for (let i = 0; i < 3; i++) {
-        let texture = new THREE.TextureLoader(manager).load(`assets/images/${i + 1}.jpg`);
+        let texture = new THREE.TextureLoader(manager).load(`../assets/images/${i + 1}.jpg`);
         texture.encoding = THREE.sRGBEncoding;
         const geometry = new THREE.BoxGeometry(20, 35, 1);
         const material = new THREE.MeshBasicMaterial({map: texture});

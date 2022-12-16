@@ -5,14 +5,14 @@ export const models = [
     // Environment
     {
         ID: "Environment",
-        URL: 'assets/models/environment/scene.gltf',
+        URL: '../assets/models/environment/scene.gltf',
         x: 0, y: 0, z: 0
     },
     //
     // Molly
     {
         ID: "Molly",
-        URL: 'assets/models/molly/Dock.glb',
+        URL: '../assets/models/molly/Dock.glb',
         artist: "Molly Erin McCarthy",
         title: "Dock",
         info: "3D Model",
@@ -20,7 +20,7 @@ export const models = [
     },
     {
         ID: "Molly",
-        URL: 'assets/models/molly/Door.glb',
+        URL: '../assets/models/molly/Door.glb',
         artist: "Molly Erin McCarthy",
         title: "Door",
         info: "3D Model",
@@ -28,7 +28,7 @@ export const models = [
     },
     {
         ID: "Molly",
-        URL: 'assets/models/molly/Grave.glb',
+        URL: '../assets/models/molly/Grave.glb',
         artist: "Molly Erin McCarthy",
         title: "Grave",
         info: "3D Model",
@@ -36,7 +36,7 @@ export const models = [
     },
     {
         ID: "Molly",
-        URL: 'assets/models/molly/Pennywort.glb',
+        URL: '../assets/models/molly/Pennywort.glb',
         artist: "Molly Erin McCarthy",
         title: "Pennywort",
         info: "3D Model",
@@ -44,7 +44,7 @@ export const models = [
     },
     {
         ID: "Molly",
-        URL: 'assets/models/molly/Trinity.glb',
+        URL: '../assets/models/molly/Trinity.glb',
         artist: "Molly Erin McCarthy",
         title: "Trinity",
         info: "3D Model",
@@ -54,7 +54,7 @@ export const models = [
     // Speculative Geologies
     {
         ID: "SpeculativeGeologies",
-        URL: 'assets/models/speculative_geologies/57.glb',
+        URL: '../assets/models/speculative_geologies/57.glb',
         artist: "Speculative Geologies by Jason Urban & Leslie Mutchler",
         title: "A rock or mineral that translates languages",
         info: "3D Model",
@@ -62,7 +62,7 @@ export const models = [
     },
     {
         ID: "SpeculativeGeologies",
-        URL: 'assets/models/speculative_geologies/57f.glb',
+        URL: '../assets/models/speculative_geologies/57f.glb',
         artist: "Speculative Geologies by Jason Urban & Leslie Mutchler",
         title: "A rock or mineral that generates images",
         info: "3D Model",
@@ -70,7 +70,7 @@ export const models = [
     },
     {
         ID: "SpeculativeGeologies",
-        URL: 'assets/models/speculative_geologies/63cc.glb',
+        URL: '../assets/models/speculative_geologies/63cc.glb',
         artist: "Speculative Geologies by Jason Urban & Leslie Mutchler",
         title: "A rock or mineral that accumulates oils, smudges, and fingerprints",
         info: "3D Model",
@@ -78,7 +78,7 @@ export const models = [
     },
     {
         ID: "SpeculativeGeologies",
-        URL: 'assets/models/speculative_geologies/51.glb',
+        URL: '../assets/models/speculative_geologies/51.glb',
         artist: "Speculative Geologies by Jason Urban & Leslie Mutchler",
         title: "A rock or mineral triangulates locations",
         info: "3D Model",
@@ -86,7 +86,7 @@ export const models = [
     },
     {
         ID: "SpeculativeGeologies",
-        URL: 'assets/models/speculative_geologies/60aa.glb',
+        URL: '../assets/models/speculative_geologies/60aa.glb',
         artist: "Speculative Geologies by Jason Urban & Leslie Mutchler",
         title: "A rock or mineral that generates images",
         info: "3D Model",
@@ -96,7 +96,7 @@ export const models = [
     // Leifang
     {
         ID: "Lęïfańg",
-        URL: 'assets/models/leifang/pearls.glb',
+        URL: '../assets/models/leifang/pearls.glb',
         artist: "Katherine Platts & Phoebe Bray",
         title: "Lęïfańg",
         info: "Click to listen to the Lęïfańg",
@@ -120,7 +120,7 @@ export const videos = [
         title: "Corpse",
         date: "2022",
         info: "'Elf', Video Collage",
-        MP3: "assets/sounds/alex/Elf.mp3",
+        MP3: "../assets/sounds/alex/Elf.mp3",
         geometry: new THREE.PlaneGeometry(20, 40),
         transparency: true
     },
@@ -130,7 +130,7 @@ export const videos = [
         title: "Corpse",
         date: "2022",
         info: "'Picnic', Video Collage",
-        MP3: "assets/sounds/alex/Picnic.mp3",
+        MP3: "../assets/sounds/alex/Picnic.mp3",
         geometry: new THREE.PlaneGeometry(10, 20),
         transparency: true
     },
@@ -140,7 +140,7 @@ export const videos = [
         title: "Corpse",
         date: "2022",
         info: "'Heat', Video Collage",
-        MP3: "assets/sounds/alex/Heat.mp3",
+        MP3: "../assets/sounds/alex/Heat.mp3",
         geometry: new THREE.PlaneGeometry(10, 20),
         transparency: true
     }, 
@@ -150,7 +150,7 @@ export const videos = [
         title: "The Void, Suicide and The Sorrowing of Man",
         date: "2022",
         info: "Contains discussions of suicide, death and depression",
-        MP3: "assets/sounds/christoph/christoph.mp3",
+        MP3: "../assets/sounds/christoph/christoph.mp3",
         geometry: new THREE.BoxGeometry(2, 35, 60),
         transparency: false,
         x: 1253,

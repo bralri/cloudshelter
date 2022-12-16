@@ -1,0 +1,22 @@
+// About
+
+#about-text {
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    
+    width: 600px;
+}
+
+#about-links {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    z-index: 100;
+    display: flex;
+    
+    padding: 15px;
+}

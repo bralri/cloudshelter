@@ -1,0 +1,24 @@
+// Captions
+
+#artwork-caption {
+    position: absolute;
+    z-index: 99;
+    bottom: 0;
+    left: 0;
+    padding: 16px;
+    display: none;
+    width: 1000px;
+}
+#artwork-caption p {
+    color: #ffffff;
+    font-size: 20px;
+}
+#artwork-caption p .artist {
+    font-weight: 600;
+    display: inline-block;
+    padding-bottom: 4px;
+}
+#artwork-caption p .info {
+    font-weight: 400;
+    font-size: 18px;
+}

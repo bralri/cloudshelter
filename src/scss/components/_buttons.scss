@@ -1,0 +1,44 @@
+// Buttons
+
+#links {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    z-index: 100;
+    display: flex;
+
+    padding: 12px 15px;
+}
+#links a {
+    color: $white;
+    
+    transition: ease 0.3s;
+}
+#links a:hover {
+    cursor: pointer;
+    opacity: 60%;
+    
+    transition: ease 0.3s;
+}
+
+#controls {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    z-index: 100;
+    display: flex;
+
+    padding: 10px 15px;
+}
+#controls a {
+    color: $white;
+    text-decoration: none;
+
+    transition: ease 0.3s;
+}
+#controls a:hover {
+    cursor: pointer;
+    opacity: 60%;
+
+    transition: ease 0.3s;
+}

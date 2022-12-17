@@ -1,26 +1,5 @@
 // Typography
 
-@font-face {
-    font-family: fontRegular;
-    src: url(/assets/fonts/Atkinson-Hyperlegible-Regular-102.ttf);
-}
-@font-face {
-    font-family: fontItalic;
-    src: url(/assets/fonts/Atkinson-Hyperlegible-Italic-102.ttf);
-    font-style: italic;
-}
-@font-face {
-    font-family: fontBold;
-    src: url(/assets/fonts/Atkinson-Hyperlegible-Bold-102.ttf);
-    font-weight: bold;
-}
-@font-face {
-    font-family: fontBoldItalic;
-    src: url(/assets/fonts/Atkinson-Hyperlegible-BoldItalic-102.ttf);
-    font-style: italic;
-    font-weight: bold;
-}
-
 h1, h2, h3, h4, h5, h6, p {
     font-family: fontRegular;
     color: $white;

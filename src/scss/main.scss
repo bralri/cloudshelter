@@ -1,4 +1,6 @@
-@import './abstracts/colours';
+@import './abstracts/colours',
+        './abstracts/fonts',
+        './abstracts/imports';
 
 @import './base/base',
         './base/typography';

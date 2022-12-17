@@ -6,7 +6,7 @@ import {
     models, 
     points, 
     videos
-} from './config.js';
+} from './variables.js';
 
 let camera, scene, renderer, controls, water, object;
 let videoScreen, videoTexture;
@@ -144,7 +144,7 @@ function init() {
     document.addEventListener('keyup', onKeyUp);
 
     controls.getObject().position.x = 0;
-    controls.getObject().position.z = 1850;
+    controls.getObject().position.z = 1840;
     controls.getObject().position.y = userHeight;
 
     // Lights
@@ -154,7 +154,7 @@ function init() {
     const hemLight = new THREE.HemisphereLight(white, darkGrey);
     scene.add(hemLight);
 
-    const flashlight = new THREE.SpotLight(white, 2, 100);
+    const flashlight = new THREE.SpotLight(white, 1, 100);
     camera.add(flashlight);
     flashlight.position.set(0,0,1);
     flashlight.target = camera;
@@ -196,7 +196,7 @@ function init() {
             object.position.set(obj.x, obj.y, obj.z);
             scene.add(object);
             
-            if (obj.ID !== "Environment") {
+            if (obj.ID !== "scene") {
                 for (var i in object.children) {
                     objID.push(object.children[i].id);
                     objInfo.push([
@@ -220,7 +220,7 @@ function init() {
                 }
                 for (i = 0; i < 5; i++) {
                     const sound = new THREE.PositionalAudio(audioListener);
-                    audioLoader.load(`../assets/sounds/leifang/${i + 1}.mp3`, function (buffer) {
+                    audioLoader.load(`assets/sounds/leifang/${i + 1}.mp3`, function (buffer) {
                         sound.setBuffer(buffer);
                         sound.setLoop(false);
                         sound.setRefDistance(3);
@@ -238,9 +238,10 @@ function init() {
     // Draw Paths
     for (let i = 0; i < points.length; i++) {
         let path = points[i].line;
-        let vertices = path.getSpacedPoints(40);
+        let c = points[i].color;
+        let vertices = path.getSpacedPoints(80);
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(vertices);
-        const lineMaterial = new THREE.LineBasicMaterial({color: 0xECFF00, visible: false});
+        const lineMaterial = new THREE.LineBasicMaterial({color: c, visible: false});
         const line = new THREE.Line(lineGeometry, lineMaterial);
         scene.add(line);
     };
@@ -288,7 +289,7 @@ function init() {
             [videoScreen.id, 
                 `
                 <span class="artist">${obj.artist}</span><br>
-                <i>${obj.title}</i>, ${obj.date}<br>
+                <i>${obj.title}</i>, 2022<br>
                 <span class="info">${obj.info}</span>
                 `
             ]
@@ -301,7 +302,7 @@ function init() {
 
     // Load Images
     for (let i = 0; i < 3; i++) {
-        let texture = new THREE.TextureLoader(manager).load(`../assets/images/${i + 1}.jpg`);
+        let texture = new THREE.TextureLoader(manager).load(`assets/images/${i + 1}.jpg`);
         texture.encoding = THREE.sRGBEncoding;
         const geometry = new THREE.BoxGeometry(20, 35, 1);
         const material = new THREE.MeshBasicMaterial({map: texture});
@@ -315,8 +316,7 @@ function init() {
             [cube.id, 
                 `
                 <span class="artist">Katharine Platts & Phoebe Bray</span><br>
-                <i>Lęïfańg</i>, 2022<br>
-                <span class="info">Text / Image</span>
+                <i>Lęïfańg</i>, 2022
                 `
             ]
         )
@@ -362,6 +362,7 @@ function render() {
         screensToPath[i].quaternion.setFromAxisAngle(axis, radians);
     }
 
+    // Corpse video movement speed
     fraction += 0.00001;
     if (fraction > 1) {
         fraction = 0;
@@ -382,11 +383,7 @@ function animate() {
     render();
 
     if (controls.isLocked === true) {
-        let objIntersections = (
-            new THREE.Raycaster(
-                camera.position, 
-                camera.getWorldDirection(new THREE.Vector3()), 0, 750)
-        ).intersectObjects(scene.children, true);
+        let objIntersections = (new THREE.Raycaster(camera.position, camera.getWorldDirection(new THREE.Vector3()))).intersectObjects(scene.children, true);
 
         if (objIntersections[0] && objID.indexOf(objIntersections[0].object.id) !== -1) {
             for (let i = 0; i < objInfo.length; i++) {

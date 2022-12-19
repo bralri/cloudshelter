@@ -63,7 +63,7 @@ export const models = [
         ID: "SpeculativeGeologies",
         URL: 'assets/models/speculative_geologies/57f.glb',
         artist: "Speculative Geologies by Jason Urban & Leslie Mutchler",
-        title: "A rock or mineral that generates images",
+        title: "A rock or mineral that can highlight relevant texts",
         info: "",
         x: -20, y: 8, z: 940
     },

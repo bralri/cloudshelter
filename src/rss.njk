@@ -1,0 +1,48 @@
+---
+{
+  "permalink": "rss.xml",
+  "eleventyExcludeFromCollections": true,
+  "metadata": {
+    "title": "www.cloudshelter.space/updates",
+    "description": "www.cloudshelter.space/updates",
+    "language": "en-gb",
+    "url": "https://www.cloudshelter.space",
+    "author": {
+      "name": "Cloud Shelter",
+      "email": "cloudshelter1@gmail.com"
+    }
+  }
+}
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns="http://www.w3.org/2005/Atom" xml:base="{{ metadata.url }}" version="2.0">
+    <channel>
+        <title>{{ metadata.title }}</title>
+        <link>{{ metadata.url }}</link>
+        <description>{{ metadata.description }}</description>
+        <language>{{ metadata.language }}</language>
+        <image>
+          <title>{{ metadata.title }}</title>
+          <link>{{ metadata.url }}</link>
+          <url>http://wwww.bralri.net/assets/images/og-meta.png</url>
+          <width>1080</width>
+          <height>1080</height>
+        </image>
+        <lastBuildDate>{{ collections.posts | getNewestCollectionItemDate | dateToRfc822 }}</lastBuildDate>
+        <link href="{{ permalink | absoluteUrl(metadata.url) }}" rel="self" type="application/rss+xml"/>
+        <author>
+          <name>{{ metadata.author.name }}</name>
+          <email>{{ metadata.author.email }}</email>
+        </author>
+        {%- for post in collections.post | reverse %}
+          {%- set absolutePostUrl = post.url | absoluteUrl(metadata.url) %}
+            <item>
+              <title>{{ post.data.title }}</title>
+              <link>{{ absolutePostUrl }}</link>
+              <pubDate>{{ post.date | dateToRfc822 }}</pubDate>
+              <guid>{{ absolutePostUrl }}</guid>
+              <description>{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}</description>
+            </item>
+        {%- endfor %}
+    </channel>
+</rss>

@@ -1,28 +1,22 @@
+const { DateTime } = require("luxon");
+const pluginRSS = require("@11ty/eleventy-plugin-rss");
+
 module.exports = (eleventyConfig) => {
 
+    eleventyConfig.addPlugin(pluginRSS);
+    eleventyConfig.addLiquidFilter("dateToRfc822", pluginRSS.dateToRfc822);
+
     eleventyConfig.addPassthroughCopy('./src/js');
-
-    eleventyConfig.addPassthroughCopy('./src/assets/videos/alex');
-    eleventyConfig.addPassthroughCopy('./src/assets/videos/christoph/Christoph.m4v');
-
-    eleventyConfig.addPassthroughCopy('./src/assets/sounds/alex');
-    eleventyConfig.addPassthroughCopy('./src/assets/sounds/christoph/christoph.mp3');
-    eleventyConfig.addPassthroughCopy('./src/assets/sounds/leifang');
-
-    eleventyConfig.addPassthroughCopy('./src/assets/models/environment');
-    eleventyConfig.addPassthroughCopy('./src/assets/models/leifang');
-    eleventyConfig.addPassthroughCopy('./src/assets/models/molly');
-    eleventyConfig.addPassthroughCopy('./src/assets/models/speculative_geologies');
-    
-    eleventyConfig.addPassthroughCopy('./src/assets/images');
-    eleventyConfig.addPassthroughCopy('./src/assets/fonts');
-
-    eleventyConfig.addPassthroughCopy('./src/assets/models/cloud.glb');
+    eleventyConfig.addPassthroughCopy('./src/assets');
     eleventyConfig.addPassthroughCopy('./src/favicon.ico')
     
 
     eleventyConfig.addWatchTarget('./src/scss');
     eleventyConfig.addPassthroughCopy('./src/css');
+
+    eleventyConfig.addFilter("postDate", (dateObj) => {
+        return DateTime.fromJSDate(dateObj).toLocaleString(DateTime.DATE_MED);
+    })
 
     return {
         dir: {

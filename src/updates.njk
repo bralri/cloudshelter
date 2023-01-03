@@ -1,0 +1,12 @@
+---
+layout: 'base.njk'
+---
+
+<div class="container container--narrow flow">
+    <h2 class="section-title">Updates</h2>
+    <ul role="list" class="articles__list flow">
+        {%- for post in collections.featured | reverse -%}
+            {% include 'post-snippet.njk' %}
+        {%- endfor -%}
+    </ul>
+</div>

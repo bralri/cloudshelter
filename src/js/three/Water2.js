@@ -21,7 +21,7 @@ import { Refractor } from './Refractor.js';
  *
  */
 
-class Water extends Mesh {
+class Water2 extends Mesh {
 
 	constructor( geometry, options = {} ) {
 
@@ -41,7 +41,7 @@ class Water extends Mesh {
 		const flowSpeed = options.flowSpeed || 0.03;
 		const reflectivity = options.reflectivity || 0.02;
 		const scale = options.scale || 1;
-		const shader = options.shader || Water.WaterShader;
+		const shader = options.shader || Water2.WaterShader;
 
 		const textureLoader = new TextureLoader();
 
@@ -203,7 +203,7 @@ class Water extends Mesh {
 
 }
 
-Water.WaterShader = {
+Water2.WaterShader = {
 
 	uniforms: {
 
@@ -355,4 +355,4 @@ Water.WaterShader = {
 
 };
 
-export { Water };
+export { Water2 };

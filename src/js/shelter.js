@@ -1,14 +1,11 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
-import {ImprovedNoise} from 'three/ImprovedNoise.js';
 import {Water} from 'three/Water.js';
+import {Water2} from 'three/Water2.js';
 import {models} from './shelter-config.js';
 
 let camera, scene, renderer, controls, water, object, sound;
-
-// Terrain
-const worldWidth = 256, worldDepth = 256;
 
 let moveForward = false;
 let moveBackward = false;
@@ -33,7 +30,7 @@ let audioPlaying = true;
 
 const darkGrey = new THREE.Color(0x1A1A1A);
 darkGrey.convertSRGBToLinear();
-const medGrey = new THREE.Color(0x404040);
+const medGrey = new THREE.Color(0x63666A);
 medGrey.convertSRGBToLinear();
 const white = new THREE.Color(0xFAF9F6);
 white.convertSRGBToLinear();
@@ -45,7 +42,7 @@ function init() {
     // Scene
     scene = new THREE.Scene();
     scene.background = white;
-    // scene.fog = new THREE.FogExp2(scene.background, 0.01);
+    scene.fog = new THREE.FogExp2(scene.background, 0.01);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
     camera.lookAt(0, 0, 0);
@@ -164,31 +161,13 @@ function init() {
         });
     }
 
-    // Terrain
-    const data = generateHeight(worldWidth, worldDepth);
-    const terrainGeometry = new THREE.PlaneGeometry(750, 750, worldWidth - 1, worldDepth -1);
-    terrainGeometry.rotateX(- Math.PI / 2);
-    const terrainVertices = terrainGeometry.attributes.position.array;
-
-    for (let i = 0, j = 0, l = terrainVertices.length; i < l; i ++, j += 3) {
-        terrainVertices[j + 1] = data[i] * 10;
-    }
-
-    const terrainTexture = new THREE.CanvasTexture(generateTexture(data, worldWidth, worldDepth));
-    terrainTexture.wrapS = THREE.ClampToEdgeWrapping;
-    terrainTexture.wrapT = THREE.ClampToEdgeWrapping;
-
-    const terrainMesh = new THREE.Mesh(terrainGeometry, new THREE.MeshBasicMaterial({map: terrainTexture}));
-    terrainMesh.position.y = -900;
-    scene.add(terrainMesh);
-
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(750, 750, 4, 4);
+    const waterGeometry = new THREE.PlaneGeometry(200, 200);
     water = new Water(
         waterGeometry,
         {
-            textureWidth: 512,
-            textureHeight: 512,
+            textureWidth: 1024,
+            textureHeight: 1024,
             waterNormals: new THREE.TextureLoader(manager).load( 
 
                 '../assets/images/waternormals.jpg', 
@@ -201,12 +180,24 @@ function init() {
             sunDirection: new THREE.Vector3(),
             sunColor: 0xffffff,
             waterColor: 0xADD8E6,
-            distortionScale: 2.7,
+            distortionScale: 3.4,
             fog: scene.fog !== undefined
         }
     )
     water.rotation.x = - Math.PI / 2;
+    water.position.y = 0;
     scene.add(water);
+
+    const water2 = new Water2( waterGeometry, {
+        color: scene.background,
+        scale: 10,
+        flowDirection: new THREE.Vector2( 1, 1 ),
+        textureWidth: 1024,
+        textureHeight: 1024
+    } );
+    water2.rotation.x = - Math.PI / 2;
+    water2.position.y = 1;
+    scene.add( water2 );
 
     // Audio Loader
     const audioLoader = new THREE.AudioLoader(manager);
@@ -240,8 +231,9 @@ function init() {
                 object = glb.scene;
                 object.traverse(function(node) {
                     if (node.isMesh) {
-                        node.material = new THREE.MeshStandardMaterial({
-                            color: white
+                        node.material = new THREE.MeshPhongMaterial({
+                            color: medGrey,
+                            side: THREE.DoubleSide
                         })
                         node.material.opacity = 0.5;
                         node.material.transparent = true;
@@ -286,104 +278,6 @@ function init() {
             }
         }
     }
-}
-
-function generateHeight(width, height) {
-
-    let seed = Math.PI / 4;
-    window.Math.random = function () {
-
-        const x = Math.sin(seed ++) * 10000;
-        return x - Math.floor(x);
-
-    };
-
-    const size = width * height, data = new Uint8Array(size);
-    const perlin = new ImprovedNoise(), z = Math.random() * 100;
-
-    let quality = 1;
-
-    for (let j = 0; j < 4; j ++) {
-
-        for (let i = 0; i < size; i ++) {
-
-            const x = i % width, y = ~ ~ (i / width);
-            data[i] += Math.abs(perlin.noise( x / quality, y / quality, z ) * quality * 1.75);
-
-        }
-
-        quality *= 5;
-
-    }
-
-    return data;
-
-}
-
-function generateTexture(data, width, height) {
-
-    let context, image, imageData, shade;
-
-    const vector3 = new THREE.Vector3(0, 0, 0);
-
-    const sun = new THREE.Vector3(1, 1, 1);
-    sun.normalize();
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-
-    context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0, 0, width, height);
-
-    image = context.getImageData(0, 0, canvas.width, canvas.height);
-    imageData = image.data;
-
-    for (let i = 0, j = 0, l = imageData.length; i < l; i += 4, j ++) {
-
-        vector3.x = data[j - 2] - data[j + 2];
-        vector3.y = 2;
-        vector3.z = data[j - width * 2] - data[j + width * 2];
-        vector3.normalize();
-
-        shade = vector3.dot(sun);
-
-        imageData[i] = (96 + shade * 128) * (0.5 + data[j] * 0.007);
-        imageData[i + 1] = (32 + shade * 96) * (0.5 + data[j] * 0.007);
-        imageData[i + 2] = (shade * 96) * (0.5 + data[j] * 0.007);
-
-    }
-
-    context.putImageData(image, 0, 0);
-
-    // Scaled 4x
-
-    const canvasScaled = document.createElement('canvas');
-    canvasScaled.width = width * 4;
-    canvasScaled.height = height * 4;
-
-    context = canvasScaled.getContext('2d');
-    context.scale(4, 4);
-    context.drawImage(canvas, 0, 0);
-
-    image = context.getImageData(0, 0, canvasScaled.width, canvasScaled.height);
-    imageData = image.data;
-
-    for (let i = 0, l = imageData.length; i < l; i += 4) {
-
-        const v = ~ ~ (Math.random() * 5);
-
-        imageData[i] += v;
-        imageData[i + 1] += v;
-        imageData[i + 2] += v;
-
-    }
-
-    context.putImageData(image, 0, 0);
-
-    return canvasScaled;
-
 }
 
 function SIT__DOWN() {
@@ -436,7 +330,7 @@ function onWindowResize() {
 function render() {
     renderer.render(scene, camera);
 
-    water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+    water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
 }
 
 function animate() {

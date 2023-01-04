@@ -100,7 +100,7 @@ function sceneSetup() {
 
     let floorGeometry = new THREE.PlaneGeometry(200, 200, 4, 4);
     floorGeometry.rotateX(- Math.PI / 2);
-    let floorTexture = new THREE.TextureLoader(manager).load('assets/images/floor2.png');
+    let floorTexture = new THREE.TextureLoader(manager).load('../assets/images/floor2.png');
     floorTexture.wrapS = THREE.RepeatWrapping;
     floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(2, 2);
@@ -214,7 +214,7 @@ function loadModels() {
     const loader = new GLTFLoader(manager);
     loader.load(
 
-        'assets/models/cloud.glb',
+        '../assets/models/cloud.glb',
 
         function(gltf2) {
             gltf2.scene.traverse(function(node) {

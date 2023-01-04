@@ -2,7 +2,7 @@
 title: Cloud Shelter
 date: 2022-09-24
 tags: ['post', 'featured']
-image: /assets/images/og-meta.png
+image: /assets/images/cloud.gif
 imageAlt: Screenshot image of an arching geometric shape with a pixelated grass texture on a black background with green water rippling at its base.
 description: Cloud Shelter launched!
 ---

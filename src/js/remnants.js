@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
-import {Water} from 'three/Water2.js';
+import {Water2} from 'three/Water2.js';
 import {
     models, 
     points, 
@@ -161,7 +161,7 @@ function init() {
 
     // Water
     const waterGeometry = new THREE.PlaneGeometry(5000, 5000);
-    water = new Water(waterGeometry, {
+    water = new Water2(waterGeometry, {
         color: waterColour,
         scale: 10,
         flowDirection: new THREE.Vector2(1, 1),

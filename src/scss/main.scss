@@ -3,7 +3,11 @@
         './abstracts/imports';
 
 @import './base/base',
-        './base/typography';
+        './base/typography',
+        './base/updates';
+
+@import './layout/featured-post',
+        './layout/post';
 
 @import './components/buttons',
         './components/coords',

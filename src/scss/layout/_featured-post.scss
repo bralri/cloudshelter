@@ -1,0 +1,54 @@
+// Featured Articles - Home Page
+.articles__list {
+    --flow-spacer: 48px;
+    // margin: 96px 0;
+}
+
+.flow > *:where(:not(:first-child)) {
+    margin-top: var(--flow-spacer, 16px);
+}
+
+.section-title {
+    text-align: left;
+}
+
+.featured-articles {
+    background-color: none;
+}
+
+.articles__list {
+    --flow-spacer: 48px;
+    // margin: 96px 0;
+}
+
+li {
+    list-style: none;
+}
+
+.snippet {
+    display: grid;
+    gap: 16px;
+    grid-template-areas: "image" "title" "meta" "body" "button";
+}
+
+.snippet__image {
+    grid-area: image;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+.snippet__title {
+    grid-area: title;
+}
+.snippet__meta {
+    grid-area: meta;
+}
+
+@media (min-width: 720px) {
+    .snippet {
+        grid-template-areas: "title image" "meta image" "body image" "button image";
+        grid-column-gap: 64px;
+        grid-template-columns: 1fr 40%;
+        grid-template-rows: min-content min-content min-content 1fr;
+    }
+}

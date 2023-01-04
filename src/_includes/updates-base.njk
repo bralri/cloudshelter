@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GZ2VESCDLL"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-GZ2VESCDLL');
+        </script>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta property="og:title" content="Cloud Shelter">
+        <meta property="og:description" content="Cloud Shelter is an online project space dedicated to showcasing experimental digital arts.">
+        <meta property="og:image" content="/assets/images/og-meta.png"> <!-- change this to change depending on what page it is, e.g. update post or home pages -->
+        <meta property="og:url" content="https://cloudshelter.space">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="og:site_name" content="Cloud Shelter">
+        <meta name="twitter:image:alt" content="Cloud Shelter">
+
+        <link rel="stylesheet" href="{{ '/css/main.css' | url }}">
+
+        <script src="/js/jquery/jquery-3.6.2.min.js"></script>
+        <script src="/js/info-modal.js" defer></script>
+        <script src="/js/window-load.js" defer></script>
+
+        <meta name="Description" content="Cloud Shelter is an online project space dedicated to showcasing experimental digital arts.">
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <title>Cloud Shelter</title>
+    </head>
+    <body>
+        <header>
+            <a href="/"><i class="fa-solid fa-cloud" style="font-size: 32px;" title="home"></i></a>
+            <a href="/updates" title="updates">updates</a>
+            <a href="/about" title="about">about</a>
+        </header>
+        {{ content | safe }}
+        <footer>
+            <a href="/rss.xml" target="_blank" rel="noopener" title="rss feed">rss <i class="fa-solid fa-rss"></i></a>
+            <a href="https://instagram.com/cloud.shelter" target="_blank" rel="noopener" title="instagram"><i class="fa-brands fa-instagram"></i></a>
+        </footer>
+    </body>
+</html>

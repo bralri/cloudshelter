@@ -9,6 +9,4 @@ description: Cloud Shelter launched!
 
 <p>Cloud Shelter has launched! Cloud Shelter, at first, will be an online platform and exhibition space which will be dedicated in showcasing experimental digital arts.</p>
 
-<figure class="main-article__figure">
-    <img src="{{ image  }}" alt="{{ imageAlt }}" title="{{ imageAlt }}">
-</figure>
+<img src="{{ image  }}" alt="{{ imageAlt }}" title="{{ imageAlt }}" class="main-article__figure">

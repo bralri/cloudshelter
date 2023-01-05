@@ -3,7 +3,7 @@ title: Remnants
 date: 2022-12-17
 tags: ['post', 'featured', 'exhibition']
 image: /assets/images/remnants.gif
-imageAlt: Screenshot image of an arching geometric shape with a pixelated grass texture on a black background with green water rippling at its base.
+imageAlt: GIF - Image of a concrete aquaduct with grass and foliage surrounding it with green rippling water reflecting the landscape on a black background
 description: Online from 17.12.2022 - 01.04.2023
 ---
 <p>17 December 2022 - 1 April 2023</p>

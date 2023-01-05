@@ -9,7 +9,6 @@
     font-weight: 300;
     font-size: 12px;
 
-        p {
-            color: $white;
-        }
+    color: $white; //change this based on environment backgrounds etc
+    // mix-blend-mode: difference;
 }

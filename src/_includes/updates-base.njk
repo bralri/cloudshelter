@@ -34,14 +34,15 @@
     </head>
     <body>
         <header>
-            <a href="/"><i class="fa-solid fa-cloud" style="font-size: 32px;" title="home"></i></a>
-            <a href="/updates" title="updates">updates</a>
-            <a href="/about" title="about">about</a>
+            {% include 'header.njk' %}
         </header>
-        {{ content | safe }}
+
+        <main>
+            {{ content | safe }}
+        </main>
+
         <footer>
-            <a href="/rss.xml" target="_blank" rel="noopener" title="rss feed">rss <i class="fa-solid fa-rss"></i></a>
-            <a href="https://instagram.com/cloud.shelter" target="_blank" rel="noopener" title="instagram"><i class="fa-brands fa-instagram"></i></a>
+            {% include 'footer.njk' %}
         </footer>
     </body>
 </html>

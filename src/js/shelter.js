@@ -3,7 +3,6 @@ import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water} from 'three/Water.js';
 import {Water2} from 'three/Water2.js';
-import {models} from './shelter-config.js';
 
 let camera, scene, renderer, controls, water, object, sound;
 
@@ -219,6 +218,22 @@ function init() {
     scene.add(sound)
 
     // Load Models
+    // models config
+    const models = [
+        {
+            id: 'shelter',
+            URL: '../assets/models/shelter.glb',
+            x: 0, y: 0, z: 0,
+            caption: ''
+        },
+        {
+            id: 'seat',
+            URL: '../assets/models/seat.glb',
+            x: 0, y: 0, z: 0,
+            caption: `'Click' to sit down`
+        }
+    ]
+
     const loader = new GLTFLoader(manager);
     for (let i = 0; i < models.length; i++) {
         const obj = models[i];
@@ -232,11 +247,8 @@ function init() {
                 object.traverse(function(node) {
                     if (node.isMesh) {
                         node.material = new THREE.MeshPhongMaterial({
-                            color: medGrey,
-                            side: THREE.DoubleSide
+                            color: white
                         })
-                        node.material.opacity = 0.5;
-                        node.material.transparent = true;
                     }
                 })
                 object.position.set(obj.x, obj.y, obj.z);
@@ -378,10 +390,10 @@ function animate() {
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize();
-        if (moveForward || moveBackward) 
-            velocity.z -= direction.z * _speed * delta;
-        if (moveLeft || moveRight) 
-            velocity.x -= direction.x * _speed * delta;
+
+        if (moveForward || moveBackward) velocity.z -= direction.z * _speed * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * _speed * delta;
+        
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
         prevTime = time;

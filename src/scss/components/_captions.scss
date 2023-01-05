@@ -8,9 +8,10 @@
     padding: 16px;
     display: none;
     width: 1000px;
+
+    color: $white;
 }
 #artwork-caption p {
-    color: $white;
     font-size: 20px;
 }
 #artwork-caption p .artist {
@@ -33,9 +34,10 @@
     padding: 16px;
     display: none;
     width: 1000px;
+
+    color: $white; //change this based on background colours
 }
 #instructions p {
-    color: blue;
     font-size: 20px;
 }
 #instructions p .artist {

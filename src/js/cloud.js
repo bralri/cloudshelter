@@ -267,12 +267,12 @@ function animate() {
         if (moveForward || moveBackward) velocity.z -= direction.z * 200.0 * delta;
         if (moveLeft || moveRight) velocity.x -= direction.x * 200.0 * delta;
 
-
         controls.moveRight(- velocity.x * delta);
         controls.moveForward(- velocity.z * delta);
-
+        prevTime = time;
     }
-    prevTime = time;
+
+    document.querySelector('.co-ord').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
 }
 
 function onTransitionEnd(transition) {

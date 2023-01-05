@@ -6,7 +6,10 @@ image: /assets/images/remnants.gif
 imageAlt: GIF - Image of a concrete aquaduct with grass and foliage surrounding it with green rippling water reflecting the landscape on a black background
 description: Online from 17.12.2022 - 01.04.2023
 ---
-<p>17 December 2022 - 1 April 2023</p>
+
+<p><strong>17 December 2022 - 1 April 2023</strong><br>
+<a href="https://www.artrabbit.com/events/remnants-2022" target="_blank" rel="noopener">Artrabbit event page</a></p>
+<br>
 
 <p><a href="/">Cloud Shelter</a> presents its first online exhibition, <i>Remnants</i>. Remnants is a group exhibition which explores a post-human landscape of disintergrating structures and landscapes embeded within the online webspace, in-between these decaying landmarks are artefacts from the once inhabitents of this strange hinter-land, scattered amongst the rubble; echoing into the rippling void.</p>
 <br>
@@ -20,8 +23,6 @@ description: Online from 17.12.2022 - 01.04.2023
 <a href="https://www.instagram.com/speculative_geologies/" target="_blank" rel="noopener">Speculative Geologies</a> by <a href="https://www.instagram.com/julmstudios/" target="_blank" rel="noopener">Jason Urban and Leslie Mutchler</a>, <br>
 <a href="https://www.instagram.com/leifang2022/" target="_blank" rel="noopener">Leifang</a> a collaboration between <a href="https://www.instagram.com/katharineplatts/" target="_blank" rel="noopener">Katharine Platts</a> and <a href="https://www.instagram.com/phoebebray_/" target="_blank" rel="noopener">Phoebe Bray</a></p>
 <br>
-
-<img src="{{ image  }}" alt="{{ imageAlt }}" title="{{ imageAlt }}" class="main-article__figure">
 <br>
 
-<p><a href="https://www.artrabbit.com/events/remnants-2022" target="_blank" rel="noopener">Artrabbit event page</a></p>
+<img src="{{ image  }}" alt="{{ imageAlt }}" title="{{ imageAlt }}" class="main-article__figure">

@@ -1,9 +1,12 @@
-@import './abstracts/colours',
+@import './abstracts/variables',
+        './abstracts/colours',
         './abstracts/fonts',
         './abstracts/imports';
 
 @import './base/base',
         './base/typography',
+        './base/header',
+        './base/footer',
         './base/updates';
 
 @import './layout/featured-post',

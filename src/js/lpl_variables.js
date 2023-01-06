@@ -54,7 +54,7 @@ export const models = [
         title: "bag",
         date: "2018",
         info: "",
-        x: 0, y: 0, z: 10
+        x: 0, y: 10, z: 30
     },
     {
         id: "cake",
@@ -62,7 +62,7 @@ export const models = [
         title: "cake",
         date: "2018",
         info: "",
-        x: -10, y: 0, z: 10
+        x: -20, y: 10, z: 30
     },
     {
         id: "fruit",
@@ -70,7 +70,7 @@ export const models = [
         title: "fruit",
         date: "2018",
         info: "",
-        x: -20, y: 0, z: 10
+        x: 20, y: 10, z: 30
     },
 ]
 
@@ -80,7 +80,7 @@ export const videos = [
         title: "AI-SHIP",
         date: "2018",
         info: "",
-        audio: "",
+        audio: "../assets/sounds/gwen/AI-SHIP.mp3",
         geometry: new BoxGeometry(60, 35, 1),
         transparent: false,
         x: 0, y: 25, z: -99.4
@@ -90,7 +90,7 @@ export const videos = [
         title: "Tanquery",
         date: "2018",
         info: "",
-        audio: "",
+        audio: "../assets/sounds/gwen/Tanqueray.mp3",
         geometry: new BoxGeometry(60, 35, 1),
         transparent: false,
         x: 0, y: 25, z: 99.4
@@ -110,7 +110,7 @@ export const videos = [
         title: "Bebe",
         date: "2018",
         info: "Click to talk with Bebe",
-        audio: "",
+        audio: "../assets/sounds/gwen/bebe.mp3",
         geometry: new PlaneGeometry(15, 30),
         transparent: true,
         x: 0, y: 13, z: -40

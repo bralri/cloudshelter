@@ -1,8 +1,6 @@
 import * as THREE from 'three';
-import { TetrahedronGeometry } from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
-
 import {models, videos, images, room} from './lpl_variables.js';
 
 let camera, scene, renderer, controls, object, sound;
@@ -23,6 +21,7 @@ let _speed = 300.0;
 
 let objID = [];
 let objInfo = [];
+let modelrotation = [];
 
 let playVideos = [];
 let playSounds = [];
@@ -157,9 +156,9 @@ function init() {
     }
 
     // Audio Loader
-    // const audioLoader = new THREE.AudioLoader(manager);
-    // const audioListener = new THREE.AudioListener();
-    // camera.add(audioListener);
+    const audioLoader = new THREE.AudioLoader(manager);
+    const audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
 
     // sound = new THREE.PositionalAudio(audioListener);
     // audioLoader.load(
@@ -223,7 +222,8 @@ function init() {
 
                 object = glb.scene;
                 object.position.set(obj.x, obj.y, obj.z);
-                // scene.add(object);
+                object.scale.set(4, 4, 4);
+                scene.add(object);
 
                 for (var i in object.children) {
                     objID.push(object.children[i].id);
@@ -236,6 +236,8 @@ function init() {
                         `
                     ])
                 }
+
+                modelrotation.push(object);
         })
     }
 
@@ -259,18 +261,17 @@ function init() {
         videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
         videoScreen.position.set(obj.x, obj.y, obj.z);
 
-            // const sound = new THREE.PositionalAudio(audioListener);
-            // audioLoader.load(obj.MP3, function (buffer) {
-            //     sound.setBuffer(buffer);
-            //     sound.setLoop(true);
-            //     sound.setRefDistance(1);
-            //     sound.setVolume(1);
-            //     sound.setDirectionalCone(360, 360, 0);
-            // });
+        const sound = new THREE.PositionalAudio(audioListener);
+        audioLoader.load(obj.audio, function (buffer) {
+            sound.setBuffer(buffer);
+            sound.setLoop(true);
+            sound.setRefDistance(1);
+            sound.setVolume(0.5);
+            sound.setDirectionalCone(360, 360, 0.1);
+        });
 
-            // playSounds.push(sound);
-            // videoScreen.add(sound);
-
+        playSounds.push(sound);
+        videoScreen.add(sound);
         scene.add(videoScreen);
         playVideos.push(video);
 
@@ -322,9 +323,9 @@ function playSoundsVideos() {
         for (let i = 0; i < playVideos.length; i++) {
             playVideos[i].play();
         }
-        // for (let i = 0; i < playSounds.length; i++) {
-        //     playSounds[i].play();
-        // }
+        for (let i = 0; i < playSounds.length; i++) {
+            playSounds[i].play();
+        }
     }
     playing = true;
 }
@@ -340,6 +341,10 @@ function render() {
 
     if (videoTexture) {
         videoTexture.needsUpdate = true;
+    }
+
+    for (let i = 0; i < modelrotation.length; i++) {
+        modelrotation[i].rotation.y += 0.001;
     }
 }
 

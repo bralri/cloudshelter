@@ -93,7 +93,8 @@ export const videos = [
         audio: "../assets/sounds/gwen/Tanqueray.mp3",
         geometry: new BoxGeometry(60, 35, 1),
         transparent: false,
-        x: 0, y: 25, z: 99.4
+        x: 0, y: 25, z: 99.4,
+        rotationY: Math.PI
     },
     {
         id: "TOD_AD",
@@ -154,8 +155,8 @@ export const images = [
         title: "AI-SHIP",
         date: "?",
         info: "",
-        geometry: new PlaneGeometry(15, 30),
-        x: -100, y: 0, z: 0,
+        geometry: new BoxGeometry(1, 30, 20),
+        x: 99.4, y: 20, z: 30,
         transparent: false
     },
     {
@@ -165,7 +166,7 @@ export const images = [
         date: "?",
         info: "",
         geometry: new PlaneGeometry(15, 30),
-        x: -200, y: 0, z: 0,
+        x: 30, y: 10, z: -40,
         transparent: true
     },
     {
@@ -175,7 +176,7 @@ export const images = [
         date: "?",
         info: "",
         geometry: new PlaneGeometry(15, 30),
-        x: -300, y: 0, z: 0,
+        x: 50, y: 20, z: -40,
         transparent: true
     },
     {
@@ -185,7 +186,7 @@ export const images = [
         date: "?",
         info: "",
         geometry: new PlaneGeometry(15, 30),
-        x: -400, y: 0, z: 0,
+        x: 70, y: 10, z: -40,
         transparent: true
     },
     {
@@ -194,8 +195,8 @@ export const images = [
         title: "",
         date: "",
         info: "click to read",
-        geometry: new PlaneGeometry(15, 30),
-        x: -500, y: 0, z: 0,
+        geometry: new BoxGeometry(0.1, 10, 7.5),
+        x: 99.4, y: 10, z: -20,
         transparent: false
     },
     {
@@ -204,8 +205,8 @@ export const images = [
         title: "DwlaJXhU",
         date: "?",
         info: "",
-        geometry: new PlaneGeometry(15, 30),
-        x: -600, y: 0, z: 0,
+        geometry: new BoxGeometry(1, 30, 20),
+        x: 99.4, y: 20, z: -40,
         transparent: false
     },
     {
@@ -214,8 +215,8 @@ export const images = [
         title: "ppt1609",
         date: "?",
         info: "",
-        geometry: new PlaneGeometry(15, 30),
-        x: -700, y: 0, z: 0,
+        geometry: new BoxGeometry(0.1, 10, 10),
+        x: 100, y: 10, z: 50,
         transparent: false
     },
     {
@@ -224,8 +225,8 @@ export const images = [
         title: "tod",
         date: "?",
         info: "",
-        geometry: new PlaneGeometry(15, 30),
-        x: -800, y: 0, z: 0,
+        geometry: new BoxGeometry(1, 30, 20),
+        x: 99.4, y: 20, z: 70,
         transparent: false
     },
     {
@@ -234,8 +235,8 @@ export const images = [
         title: "xw11PtEw",
         date: "?",
         info: "",
-        geometry: new PlaneGeometry(15, 30),
-        x: -900, y: 0, z: 0,
+        geometry: new BoxGeometry(1, 30, 20),
+        x: 99.4, y: 20, z: -70,
         transparent: false
     },
 ]

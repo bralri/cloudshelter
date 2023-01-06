@@ -25,7 +25,10 @@ let modelrotation = [];
 
 let playVideos = [];
 let playSounds = [];
+let bebeAudio = [];
+let bebeID = [];
 let playing = false;
+let bebeSpeaking = false;
 
 const darkGrey = new THREE.Color(0x1A1A1A);
 darkGrey.convertSRGBToLinear();
@@ -222,7 +225,6 @@ function init() {
 
                 object = glb.scene;
                 object.position.set(obj.x, obj.y, obj.z);
-                object.scale.set(4, 4, 4);
                 scene.add(object);
 
                 for (var i in object.children) {
@@ -230,7 +232,7 @@ function init() {
                     objInfo.push([
                         object.children[i].id,
                         `
-                            <span class="artist">Gwen SenHui Chen</span><br>
+                            <span class="artist"></span><br>
                             <i>${obj.title}</i><br>
                             <span class="info">${obj.info}</span>
                         `
@@ -260,26 +262,37 @@ function init() {
         });
         videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
         videoScreen.position.set(obj.x, obj.y, obj.z);
+        videoScreen.rotateY(obj.rotationY ? obj.rotationY : 0);
 
         const sound = new THREE.PositionalAudio(audioListener);
         audioLoader.load(obj.audio, function (buffer) {
             sound.setBuffer(buffer);
             sound.setLoop(true);
             sound.setRefDistance(1);
-            sound.setVolume(0.5);
-            sound.setDirectionalCone(360, 360, 0.1);
+            sound.setVolume(1);
+            if (obj.id === "bebe") {
+                sound.setDirectionalCone(360, 360, 0.1);
+            } else {
+                sound.setDirectionalCone(180, 230, 0.1);
+            }
         });
 
-        playSounds.push(sound);
+
         videoScreen.add(sound);
         scene.add(videoScreen);
+        if (obj.id === "bebe") {
+            bebeID.push(26);
+            bebeAudio.push(sound);
+        } else {
+            playSounds.push(sound);
+        }
         playVideos.push(video);
 
         objID.push(videoScreen.id);
         objInfo.push(
             [videoScreen.id, 
                 `
-                <span class="artist">Gwen Senhui Chen</span><br>
+                <span class="artist"></span><br>
                 <i>${obj.title}</i><br>
                 <span class="info">${obj.info}</span>
                 `
@@ -302,13 +315,13 @@ function init() {
         const image = new THREE.Mesh(geometry, material);
         image.position.set(obj.x, obj.y, obj.z);
 
-        // scene.add(image);
+        scene.add(image);
 
         objID.push(image.id);
         objInfo.push(
             [image.id, 
                 `
-                <span class="artist">Gwen Senhui Chen</span><br>
+                <span class="artist"></span><br>
                 <i>${obj.title}</i><br>
                 <span class="info">${obj.info}</span>
                 `
@@ -316,6 +329,13 @@ function init() {
         )
     }
 
+    for (let i = 0; i < bebeAudio.length; i++) {
+        bebeAudio[i].onEnded = () => {
+            playVideos[3].currentTime = 0.0;
+            bebeAudio[i].stop();
+            console.log('bebe stopped speaking,', 'current time:', playVideos[3].currentTime);
+        };
+    }
 }
 
 function playSoundsVideos() {
@@ -329,6 +349,17 @@ function playSoundsVideos() {
     }
     playing = true;
 }
+
+function playBebeAudio() {
+    if (bebeSpeaking === false) {
+        for (let i = 0; i < bebeAudio.length; i++) {
+            playVideos[3].currentTime = 68.0;
+            bebeAudio[i].loop = false;
+            bebeAudio[i].play();
+            console.log('bebe speaking,', 'current time:', playVideos[3].currentTime);
+        }
+    }
+} 
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -366,6 +397,12 @@ function animate() {
             document.getElementById('artwork-caption').style.display = 'block';
         } else {
             document.getElementById('artwork-caption').style.display = 'none';
+        }
+
+        if (objIntersections[0] && bebeID.indexOf(objIntersections[0].object.id) !== -1) {
+            document.addEventListener('click', playBebeAudio);
+        } else {
+            document.removeEventListener('click', playBebeAudio);
         }
 
         const time = performance.now();

@@ -83,7 +83,9 @@ export const videos = [
         audio: "../assets/sounds/gwen/AI-SHIP.mp3",
         geometry: new BoxGeometry(60, 35, 1),
         transparent: false,
-        x: 0, y: 25, z: -99.4
+        x: -99.4, y: 25, z: -200,
+        rotationY: Math.PI / 2,
+        volume: 1
     },
     {
         id: "Tanqueray",
@@ -93,8 +95,9 @@ export const videos = [
         audio: "../assets/sounds/gwen/Tanqueray.mp3",
         geometry: new BoxGeometry(60, 35, 1),
         transparent: false,
-        x: 0, y: 25, z: 99.4,
-        rotationY: Math.PI
+        x: 99.4, y: 25, z: -450,
+        rotationY: - Math.PI / 2,
+        volume: 0.3
     },
     {
         id: "TOD_AD",
@@ -108,13 +111,13 @@ export const videos = [
     },
     {
         id: "bebe",
-        title: "Bebe",
+        title: "",
         date: "2018",
         info: "Click to talk with Bebe",
         audio: "../assets/sounds/gwen/bebe.mp3",
         geometry: new PlaneGeometry(15, 30),
         transparent: true,
-        x: 0, y: 13, z: -40
+        x: 0, y: 13, z: -200
     },
     {
         id: "morph",
@@ -124,7 +127,7 @@ export const videos = [
         audio: "",
         geometry: new PlaneGeometry(10, 15),
         transparent: true,
-        x: -20, y: 10, z: -40
+        x: -20, y: 10, z: -200
     },
     {
         id: "PPT1609_1",

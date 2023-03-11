@@ -145,8 +145,8 @@ function init() {
     // Webcam test
     video = document.getElementById('video');
     const texture = new THREE.VideoTexture(video);
-    const geometry = new THREE.PlaneGeometry(160, 90);
-    geometry.scale(0.5, 0.5, 0.5);
+    const geometry = new THREE.CircleGeometry( 50, 64 );
+    // new THREE.PlaneGeometry(80, 45);
     const material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.DoubleSide
@@ -158,8 +158,8 @@ function init() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const constraints = {
             video: {
-                width: 1280,
-                height: 720,
+                width: 1920,
+                height: 1080,
                 facingMode: 'user'
             }
         };

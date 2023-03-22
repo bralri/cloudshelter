@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
+import {Water2} from 'three/Water2.js';
+
 import {models} from './_variables.js';
 
-let camera, scene, renderer, controls, object;
+let camera, scene, renderer, controls, object, water;
 
 let moveForward = false;
 let moveBackward = false;
@@ -21,23 +23,25 @@ let _speed = 400.0;
 let objID = [];
 let objInfo = [];
 
-const darkGrey = new THREE.Color(0x1A1A1A);
-darkGrey.convertSRGBToLinear();
-const medGrey = new THREE.Color(0x63666A);
-medGrey.convertSRGBToLinear();
-const white = new THREE.Color(0xFAF9F6);
-white.convertSRGBToLinear();
-
 init();
 animate();
 
 function init() {
     // Scene
     scene = new THREE.Scene();
-    scene.background = white;
-    scene.fog = new THREE.FogExp2(scene.background, 0.001);
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 5000);
+    const backgroundTxt = new THREE.TextureLoader().load("../assets/images/gwen/background.png");
+    backgroundTxt.wrapS = THREE.RepeatWrapping;
+    backgroundTxt.wrapT = THREE.RepeatWrapping;
+    
+    const backgroundCol = new THREE.Color(0xf7dff7);
+    backgroundCol.convertSRGBToLinear();
+
+    scene.background = backgroundCol;
+    scene.fog = new THREE.FogExp2(backgroundCol, 0.002);
+    // scene.fog = new THREE.Fog(backgroundCol, 1, 500);
+
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2500);
 
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
     renderer.compile(scene, camera);
@@ -128,16 +132,16 @@ function init() {
     controls.getObject().position.set(0, standingHeight, 0);
 
     // Lights
-    var light = new THREE.AmbientLight(0xfafafa);
+    var light = new THREE.AmbientLight(backgroundCol);
     scene.add(light);
 
-    const hemLight = new THREE.HemisphereLight(white, white);
+    const hemLight = new THREE.HemisphereLight(0xffffff, backgroundCol);
     scene.add(hemLight);
 
-    const flashlight = new THREE.SpotLight(white, 1, 1000);
-    camera.add(flashlight);
-    flashlight.position.set(0,0,1);
-    flashlight.target = camera;
+    // const flashlight = new THREE.SpotLight(0xfafafa, 1, 1000);
+    // camera.add(flashlight);
+    // flashlight.position.set(0,0,1);
+    // flashlight.target = camera;
 
     const manager = new THREE.LoadingManager();
     manager.onLoad = function() {
@@ -147,6 +151,29 @@ function init() {
             transition.target.remove();
         });
     }
+
+    // Ground
+    const groundG = new THREE.PlaneGeometry(10000, 10000);
+    const groundM = new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide});
+    const ground = new THREE.Mesh(groundG, groundM);
+    ground.rotation.x = - Math.PI / 2;
+    ground.position.y = -15;
+    // scene.add(ground);
+
+    // Water
+    const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const waterCol = new THREE.Color(0xA0C090);
+    waterCol.convertSRGBToLinear();
+    const water2 = new Water2( waterGeometry, {
+        color: waterCol,
+        scale: 5,
+        flowDirection: new THREE.Vector2(-1, -1),
+        textureWidth: 1024,
+        textureHeight: 1024
+    } );
+    water2.rotation.x = - Math.PI / 2;
+    water2.position.y = -30;
+    scene.add(water2);
 
     // Load Models
     const loader = new GLTFLoader(manager);
@@ -159,6 +186,12 @@ function init() {
             function (glb) {
 
                 object = glb.scene;
+                object.traverse(function(node) {
+                    if (node.isMesh) {
+                        node.material.opacity = obj.o;
+                        node.material.transparent = obj.t;
+                    }
+                })
                 object.position.set(obj.x, obj.y, obj.z);
                 object.scale.set(2, 2, 2);
                 scene.add(object);
@@ -176,17 +209,6 @@ function init() {
                 }
         })
     }
-
-    const roomloader = new GLTFLoader(manager);
-    roomloader.load(
-        "../assets/models/gwen/room_test.glb",
-
-        function(glb) {
-            object = glb.scene;
-            object.position.set(0, 0, 0);
-            // scene.add(object);
-        }
-    )
 }
 
 function onWindowResize() {

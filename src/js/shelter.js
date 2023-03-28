@@ -196,7 +196,7 @@ function init() {
     } );
     water2.rotation.x = - Math.PI / 2;
     water2.position.y = 1;
-    scene.add( water2 );
+    scene.add(water2);
 
     // Audio Loader
     const audioLoader = new THREE.AudioLoader(manager);
@@ -247,7 +247,10 @@ function init() {
                 object.traverse(function(node) {
                     if (node.isMesh) {
                         node.material = new THREE.MeshPhongMaterial({
-                            color: white
+                            color: medGrey,
+                            opacity: 0.1,
+                            transparent: true,
+                            side: THREE.DoubleSide
                         })
                     }
                 })

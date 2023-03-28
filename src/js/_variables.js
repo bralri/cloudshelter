@@ -40,7 +40,7 @@ export const models = [
     {
         ID: "structure: ",
         URL: '../assets/models/gwen/red_nail.glb',
-        x: 0, y: -15, z: 0,
+        x: 0, y: -30, z: 0,
         o: 1, t: false
     },
 ]

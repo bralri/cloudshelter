@@ -17,8 +17,8 @@ const direction = new THREE.Vector3();
 const standingHeight = 10;
 const sittingHeight = 7.5;
 
-let speed = 5.0;
-let _speed = 100.0; 
+let speed = 5;
+let _speed = 50.0; 
 
 let objID = [];
 let objInfo = [];
@@ -41,7 +41,7 @@ function init() {
     // Scene
     scene = new THREE.Scene();
     scene.background = white;
-    scene.fog = new THREE.FogExp2(scene.background, 0.01);
+    scene.fog = new THREE.FogExp2(scene.background, 0.02);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
     camera.lookAt(0, 0, 0);
@@ -247,8 +247,8 @@ function init() {
                 object.traverse(function(node) {
                     if (node.isMesh) {
                         node.material = new THREE.MeshPhongMaterial({
-                            color: medGrey,
-                            opacity: 0.1,
+                            color: white,
+                            opacity: 0.6,
                             transparent: true,
                             side: THREE.DoubleSide
                         })

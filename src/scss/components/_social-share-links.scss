@@ -1,0 +1,23 @@
+.share-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    p i {
+        font-size: 24px;
+    }
+}
+
+.share-links {
+    font-size: 24px;
+    display: inline-flex;
+    margin-left: 0.5em;
+}
+
+.share-links li {
+    margin-right: 0.5em;
+}
+
+.share-text {
+    margin-right: 0.5em;
+}

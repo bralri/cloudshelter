@@ -15,8 +15,6 @@ h1, h2, h3, h4, h5, h6, p {
 a {
     font-family: fontItalic;
     color: $black;
-    text-decoration: underline;
-    text-decoration-style: dotted;
     transition: ease 0.3s;
 }
 a:hover {
@@ -24,4 +22,12 @@ a:hover {
     opacity: 60%;
     
     transition: ease 0.3s;
+}
+
+figcaption {
+    font-family: fontItalic;
+    color: $black;
+    font-size: 0.9375rem;
+    opacity: 0.9;
+    margin: 1rem 0;
 }

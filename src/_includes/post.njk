@@ -4,10 +4,17 @@ layout: 'updates-base.njk'
 
 <article class="main-article">
     <div class="container container--narrow flow">
-        <h2 class="article-title">
-            {{ title }}
-        </h2>
+        <h3 class="article-title">{{ title }}</h3>
+        <p class="article-title"><span>{{ date | postDate }}</span></p>
 
+        <img src="{{ image  }}" alt="{{ imageAlt }}" title="{{ imageAlt }}" class="main-article__figure">
+            <figcaption>
+                "{{ imageAlt }}".
+            </figcaption>
+        
+        <br>
+        
         {{ content | safe }}
+
     </div>
 </article>

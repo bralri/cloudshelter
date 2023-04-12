@@ -1,10 +1,70 @@
+body,
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+main {
+    flex: 1;
+}
+
 footer {
+    flex-shrink: 0;
+
     .container {
-        padding-top: $--size-900;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-top: $--size-700;
         padding-bottom: $--size-700;
+
+        .footer-text {
+            flex-grow: 1;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            li {
+                margin-top: 10px;
+            }
+
+            a {
+                display: inline-block;
+                color: $white;
+                font-size: 24px;
+                transition: color 0.2s;
+
+                &:hover {
+                    color: $light-grey;
+                }
+
+                &:not(:last-child) {
+                    margin-right: 10px;
+                }
+
+                .fa-brands {
+                    font-size: 1em;
+                }
+            }
+        }
     }
 }
 
-.footer--links {
-    text-align: right;
+@media (max-width: 50em) {
+    footer {
+        height: 200px;
+
+        .container {
+            padding-top: $--size-700;
+            padding-bottom: $--size-600;
+        }
+    }
 }

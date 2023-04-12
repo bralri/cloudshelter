@@ -2,5 +2,30 @@ header {
     .container {
         padding-top: $--size-700;
         padding-bottom: $--size-900;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .logo.home--button {
+        margin-right: auto;
+    }
+
+    .nav__links {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 0;
+    }
+
+    .nav__links li {
+        margin-left: 20px;
     }
 }

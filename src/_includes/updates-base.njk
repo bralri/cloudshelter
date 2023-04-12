@@ -33,16 +33,12 @@
         <title>Cloud Shelter</title>
     </head>
     <body>
-        <header>
-            {% include 'header.njk' %}
-        </header>
+        {% include 'header.njk' %}
 
         <main>
             {{ content | safe }}
         </main>
 
-        <footer>
-            {% include 'footer.njk' %}
-        </footer>
+        {% include 'footer.njk' %}
     </body>
 </html>

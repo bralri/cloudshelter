@@ -24,7 +24,7 @@
         <image>
           <title>{{ metadata.title }}</title>
           <link>{{ metadata.url }}</link>
-          <url>http://wwww.bralri.net/assets/images/og-meta.png</url>
+          <url>http://wwww.cloudshelter.space/assets/images/og-meta.png</url>
           <width>1080</width>
           <height>1080</height>
         </image>
@@ -41,7 +41,7 @@
               <link>{{ absolutePostUrl }}</link>
               <pubDate>{{ post.date | dateToRfc822 }}</pubDate>
               <guid>{{ absolutePostUrl }}</guid>
-              <description>{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}</description>
+              <description><![CDATA[{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}]]></description>
             </item>
         {%- endfor %}
     </channel>

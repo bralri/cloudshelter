@@ -3,6 +3,7 @@ title: Interim Shelter Space
 date: 2023-04-01
 tags: ['post', 'featured']
 image: /assets/images/shelter.gif
+imageTitle: Shelter
 imageAlt: GIF - Image of a bus shelter standing in clear reflective flowing water
 description: New Cloud Shelter interim space!
 ---

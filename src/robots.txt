@@ -1,0 +1,4 @@
+Sitemap: https://www.cloudshelter.space/sitemap.xml
+
+User-agent: *
+Disallow:

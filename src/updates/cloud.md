@@ -3,6 +3,7 @@ title: Cloud Shelter
 date: 2022-09-24
 tags: ['post', 'featured']
 image: /assets/images/cloud.gif
+imageTitle: Cloud
 imageAlt: GIF - Image of grey spinning clouds in thick grey fog
 description: Cloud Shelter launched!
 ---

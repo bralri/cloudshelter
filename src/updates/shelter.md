@@ -1,5 +1,6 @@
 ---
 title: Interim Shelter Space
+priority: 0.5
 date: 2023-04-01
 tags: ['post', 'featured']
 image: /assets/images/shelter.gif

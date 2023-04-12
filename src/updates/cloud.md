@@ -1,5 +1,6 @@
 ---
 title: Cloud Shelter
+priority: 0.5
 date: 2022-09-24
 tags: ['post', 'featured']
 image: /assets/images/cloud.gif

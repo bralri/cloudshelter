@@ -1,5 +1,6 @@
 ---
 title: Remnants
+priority: 0.5
 date: 2022-12-17
 tags: ['post', 'featured', 'exhibition']
 image: /assets/images/remnants.gif

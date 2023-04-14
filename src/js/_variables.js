@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 export const models = [
     // Environment
     {
@@ -42,5 +44,155 @@ export const models = [
         URL: '../assets/models/gwen/red_nail.glb',
         x: 0, y: -30, z: 0,
         o: 1, t: false
+    }
+]
+
+export const videos = [
+    // Holograms
+    {
+        ID: "Banner",
+        title: "AL-Ship Banner",
+        info: "",
+        MP3: "",
+        geometry: new THREE.PlaneGeometry(192, 108),
+        transparency: true,
+        x: 1400, y: 100, z: -500
     },
+    {
+        ID: "Holofied",
+        title: "AL-Ship Holofied",
+        info: "",
+        MP3: "../assets/videos/Holograms/Holofied/holofied.mp3",
+        geometry: new THREE.PlaneGeometry(192, 108),
+        transparency: true,
+        x: 1200, y: 100, z: -500
+    },
+
+    // Holes
+    // Bio-Nests
+    {
+        ID: "Bio-Nest-1",
+        title: "Bio-Nest-1",
+        info: "",
+        MP3: "../assets/videos/Holes/bio-nest-1/bio-nest-1.mp3",
+        geometry: new THREE.PlaneGeometry(72, 57),
+        transparency: true,
+        x: 1100, y: 10, z: -500
+    },
+    {
+        ID: "Bio-Nest-2",
+        title: "Bio-Nest-2",
+        info: "",
+        MP3: "../assets/videos/Holes/bio-nest-2/bio-nest-2.mp3",
+        geometry: new THREE.PlaneGeometry(72, 57),
+        transparency: true,
+        x: 1000, y: 10, z: -500
+    },
+    {
+        ID: "Bio-Nest-3",
+        title: "Bio-Nest-3",
+        info: "",
+        MP3: "../assets/videos/Holes/bio-nest-3/bio-nest-3.mp3",
+        geometry: new THREE.PlaneGeometry(72, 57),
+        transparency: true,
+        x: 900, y: 10, z: -500
+    },
+    {
+        ID: "Bio-Nest-4",
+        title: "Bio-Nest-4",
+        info: "",
+        MP3: "../assets/videos/Holes/bio-nest-4/bio-nest-4.mp3",
+        geometry: new THREE.PlaneGeometry(72, 57),
+        transparency: true,
+        x: 800, y: 10, z: -500
+    },
+    {
+        ID: "Bio-Nest-5",
+        title: "Bio-Nest-5",
+        info: "",
+        MP3: "../assets/videos/Holes/bio-nest-5/bio-nest-5.mp3",
+        geometry: new THREE.PlaneGeometry(72, 57),
+        transparency: true,
+        x: 700, y: 10, z: -500
+    },
+
+    // papaya
+    {
+        ID: "Papaya-0",
+        title: "Papaya-0",
+        info: "",
+        geometry: new THREE.PlaneGeometry(72, 58),
+        transparency: false,
+        x: 600, y: 10, z: -500
+    },
+    {
+        ID: "Papaya-1",
+        title: "Papaya-1",
+        info: "",
+        geometry: new THREE.PlaneGeometry(72, 58),
+        transparency: false,
+        x: 500, y: 10, z: -500
+    },
+    {
+        ID: "Papaya-2",
+        title: "Papaya-2",
+        info: "",
+        geometry: new THREE.PlaneGeometry(72, 58),
+        transparency: false,
+        x: 400, y: 10, z: -500
+    },
+
+    // morph
+    {
+        ID: "Morph-1",
+        title: "Morph-1",
+        info: "",
+        geometry: new THREE.PlaneGeometry(72, 108),
+        transparency: true,
+        x: 300, y: 10, z: -500
+    },
+    {
+        ID: "Morph-2",
+        title: "Morph-2",
+        info: "",
+        geometry: new THREE.PlaneGeometry(82, 108),
+        transparency: true,
+        x: 200, y: 10, z: -500
+    },
+
+    // AL-Ship
+    {
+        ID: "AL-ere(a)ction",
+        title: "AL-ere(a)ction",
+        info: "",
+        MP3: "../assets/videos/AL-SHIP/AL-ere(a)ction/AL-ere(a)ction.mp3",
+        geometry: new THREE.PlaneGeometry(72, 58),
+        transparency: false,
+        x: 100, y: 10, z: -500
+    },
+    {
+        ID: "AL-Feet",
+        title: "AL-Feet",
+        info: "",
+        MP3: "../assets/videos/AL-SHIP/AL-Feet/Al-Feet.mp3",
+        geometry: new THREE.PlaneGeometry(64, 48),
+        transparency: false,
+        x: 0, y: 10, z: -500
+    },
+    {
+        ID: "AL-Licking",
+        title: "AL-Licking",
+        info: "",
+        geometry: new THREE.PlaneGeometry(128, 72),
+        transparency: false,
+        x: -200, y: 10, z: -500
+    },
+    {
+        ID: "AL-Touching",
+        title: "AL-Touching",
+        info: "",
+        geometry: new THREE.PlaneGeometry(128, 72),
+        transparency: false,
+        x: -400, y: 10, z: -500
+    }
 ]

@@ -3,9 +3,10 @@ import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
 
-import {models} from './_variables.js';
+import {models, videos} from './_variables.js';
 
-let camera, scene, renderer, controls, object, water;
+let camera, scene, renderer, controls, object;
+let videoScreen, videoTexture;
 
 let moveForward = false;
 let moveBackward = false;
@@ -23,6 +24,10 @@ let _speed = 400.0;
 let objID = [];
 let objInfo = [];
 
+let playVideos = [];
+let playSounds = [];
+let playing = false;
+
 init();
 animate();
 
@@ -38,8 +43,8 @@ function init() {
     backgroundCol.convertSRGBToLinear();
 
     scene.background = backgroundCol;
-    scene.fog = new THREE.FogExp2(backgroundCol, 0.002);
-    // scene.fog = new THREE.Fog(backgroundCol, 1, 500);
+    // scene.fog = new THREE.FogExp2(backgroundCol, 0.001);
+    scene.fog = new THREE.Fog(backgroundCol, 1, 500);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2500);
 
@@ -60,6 +65,7 @@ function init() {
 
     title.addEventListener('click', function () {
         controls.lock();
+        playSoundsVideos();
     });
 
     controls.addEventListener('lock', function () {
@@ -138,11 +144,6 @@ function init() {
     const hemLight = new THREE.HemisphereLight(0xffffff, backgroundCol);
     scene.add(hemLight);
 
-    // const flashlight = new THREE.SpotLight(0xfafafa, 1, 1000);
-    // camera.add(flashlight);
-    // flashlight.position.set(0,0,1);
-    // flashlight.target = camera;
-
     const manager = new THREE.LoadingManager();
     manager.onLoad = function() {
         const loadingScreen = document.getElementById('loading-screen');
@@ -201,7 +202,7 @@ function init() {
                     objInfo.push([
                         object.children[i].id,
                         `
-                            <span class="artist"></span><br>
+                            <span class="artist">Gwen Senhui Chen</span><br>
                             <i>${obj.title}</i><br>
                             <span class="info">${obj.info}</span>
                         `
@@ -209,7 +210,71 @@ function init() {
                 }
         })
     }
+
+    // Audio Loader
+    const audioLoader = new THREE.AudioLoader(manager);
+    const audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
+
+    // Load Videos
+    for (let i = 0; i < videos.length; i++) {
+        const obj = videos[i];
+        const video = document.getElementById(obj.ID);
+        videoTexture = new THREE.VideoTexture(video);
+        videoTexture.encoding = THREE.sRGBEncoding;
+        videoTexture.minFilter = THREE.LinearFilter;
+        videoTexture.magFilter = THREE.LinearFilter;
+        const videoMaterial = new THREE.MeshStandardMaterial({
+            map: videoTexture,
+            side: THREE.DoubleSide,
+            // emissive: 0xffffff,
+            // emissiveIntensity: 1,
+            // emissiveMap: videoTexture,
+            transparent: obj.transparency,
+            opacity: 1
+        });
+        videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
+        videoScreen.position.set(obj.x, obj.y, obj.z);
+
+        const sound = new THREE.PositionalAudio(audioListener);
+        audioLoader.load(obj.MP3, function (buffer) {
+            sound.setBuffer(buffer);
+            sound.setLoop(true);
+            sound.setRefDistance(2);
+            sound.setVolume(2);
+            sound.setDirectionalCone(360, 360, 0);
+        });
+
+        playSounds.push(sound);
+        videoScreen.add(sound);
+        scene.add(videoScreen);
+        playVideos.push(video);
+
+        objID.push(videoScreen.id);
+        objInfo.push(
+            [videoScreen.id, 
+                `
+                <span class="artist">Gwen Senhui Chen</span><br>
+                <i>${obj.title}</i><br>
+                <span class="info">${obj.info}</span>
+                `
+            ]
+        );
+    };
 }
+
+function playSoundsVideos() {
+    if (!playing) {
+        for (let i = 0; i < playVideos.length; i++) {
+            playVideos[i].play();
+        }
+        for (let i = 0; i < playSounds.length; i++) {
+            playSounds[i].play();
+        }
+    }
+    playing = true;
+}
+
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -219,6 +284,10 @@ function onWindowResize() {
 
 function render() {
     renderer.render(scene, camera);
+
+    if (videoTexture) {
+        videoTexture.needsUpdate = true;
+    }
 }
 
 function animate() {

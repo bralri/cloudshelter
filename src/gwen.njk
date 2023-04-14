@@ -1,12 +1,94 @@
 ---
 layout: 'base.njk'
 eleventyExcludeFromCollections: true
+
+videos:
+  - src: "/assets/videos/Holograms/Banner/banner.webm"
+    width: "1920"
+    height: "1080"
+    ID: "Banner"
+  - src: "/assets/videos/Holograms/Holofied/holofied.webm"
+    width: "1920"
+    height: "1080"
+    ID: "Holofied"
+  - src: "/assets/videos/Holes/bio-nest-1/bio-nest-1.webm"
+    width: "720"
+    height: "576"
+    ID: "Bio-Nest-1"
+  - src: "/assets/videos/Holes/bio-nest-2/bio-nest-2.webm"
+    width: "720"
+    height: "576"
+    ID: "Bio-Nest-2"
+  - src: "/assets/videos/Holes/bio-nest-3/bio-nest-3.webm"
+    width: "720"
+    height: "576"
+    ID: "Bio-Nest-3"
+  - src: "/assets/videos/Holes/bio-nest-4/bio-nest-4.webm"
+    width: "720"
+    height: "576"
+    ID: "Bio-Nest-4"
+  - src: "/assets/videos/Holes/bio-nest-5/bio-nest-5.webm"
+    width: "720"
+    height: "576"
+    ID: "Bio-Nest-5"
+  - src: "/assets/videos/Holes/papaya-0/Papaya-0000.m4v"
+    width: "360"
+    height: "240"
+    ID: "Papaya-0"
+  - src: "/assets/videos/Holes/papaya-1/Papaya-0001.m4v"
+    width: "720"
+    height: "480"
+    ID: "Papaya-1"
+  - src: "/assets/videos/Holes/papaya-2/Papaya-0002.m4v"
+    width: "720"
+    height: "480"
+    ID: "Papaya-2"
+  - src: "/assets/videos/Morph/morph-1.webm"
+    width: "720"
+    height: "1079"
+    ID: "Morph-1"
+  - src: "/assets/videos/Morph/morph-2.webm"
+    width: "825"
+    height: "1080"
+    ID: "Morph-2"
+  - src: "/assets/videos/AL-SHIP/Al-ere(a)ction/Al-Ere(A)Ction.m4v"
+    width: "720"
+    height: "576"
+    ID: "AL-ere(a)ction"
+  - src: "/assets/videos/AL-SHIP/AL-Feet/Al-Feet.m4v"
+    width: "640"
+    height: "480"
+    ID: "AL-Feet"
+  - src: "/assets/videos/AL-SHIP/AL-Licking/Al-Licking.m4v"
+    width: "640"
+    height: "480"
+    ID: "AL-Licking"
+  - src: "/assets/videos/AL-SHIP/AL-Touching/Al-Touching.m4v"
+    width: "1280"
+    height: "720"
+    ID: "AL-Touching"
 ---
 
 {% include 'blocker-links-coords-captions.njk' %}
 
 <div id="instructions">
     <p></p>
+</div>
+
+<div class="videos">
+{% for media in videos %}
+    <video
+        ID="{{ media.ID }}"
+        playsinline="playsinLine"
+        webkit-playsinline="webkit-playsinLine"
+        loop="loop"
+        muted="muted"
+        width="{{ media.width }}"
+        height="{{ media.height }}"
+        src="{{ media.src }}"
+        style="display: none;">
+    </video>
+{% endfor %}
 </div>
 
 <script

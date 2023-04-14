@@ -1,5 +1,106 @@
 import * as THREE from 'three';
 
+const vol = 3;
+
+export const room = [
+    // Room 0
+    {
+        "artwork": [
+            // Factory
+            {
+                id: "Factory",
+                type: "glb",
+                title: "Factory",
+                info: "Factory",
+                src: "../assets/models/gwen/factory_2.glb",
+                x: 0, y: -30, z: -400,
+                o: 1, t: true
+            },
+            // Hole Videos
+            {
+                id: "Bio-Nest-1",
+                type: "video",
+                title: "Bio-Nest-1",
+                info: "Bio-Nest-1",
+                audio: "../assets/videos/Holes/bio-nest-1/bio-nest-1.mp3",
+                geometry: new THREE.PlaneGeometry(72, 57),
+                transparency: true,
+                x: 400, y: 10, z: -150,
+                volume: vol
+            },
+            {
+                id: "Bio-Nest-2",
+                type: "video",
+                title: "Bio-Nest-2",
+                info: "Bio-Nest-2",
+                audio: "../assets/videos/Holes/bio-nest-2/bio-nest-2.mp3",
+                geometry: new THREE.PlaneGeometry(72, 57),
+                transparency: true,
+                x: 200, y: 10, z: -150,
+                volume: vol
+            },
+            {
+                id: "Bio-Nest-3",
+                type: "video",
+                title: "Bio-Nest-3",
+                info: "Bio-Nest-3",
+                audio: "../assets/videos/Holes/bio-nest-3/bio-nest-3.mp3",
+                geometry: new THREE.PlaneGeometry(72, 57),
+                transparency: true,
+                x: 0, y: 10, z: -150,
+                volume: vol
+            },
+            {
+                id: "Bio-Nest-4",
+                type: "video",
+                title: "Bio-Nest-4",
+                info: "Bio-Nest-4",
+                audio: "../assets/videos/Holes/bio-nest-4/bio-nest-4.mp3",
+                geometry: new THREE.PlaneGeometry(72, 57),
+                transparency: true,
+                x: -200, y: 10, z: -150,
+                volume: vol
+            },
+            {
+                id: "Bio-Nest-5",
+                type: "video",
+                title: "Bio-Nest-5",
+                info: "Bio-Nest-5",
+                audio: "../assets/videos/Holes/bio-nest-5/bio-nest-5.mp3",
+                geometry: new THREE.PlaneGeometry(72, 57),
+                transparency: true,
+                x: -400, y: 10, z: -150,
+                volume: vol
+            }
+        ]
+    },
+    // Room 1
+    {
+        "artwork": [
+            {
+                id: "Structure",
+                type: "glb",
+                title: "Structure",
+                info: "Structure",
+                src: "../assets/models/gwen/structures/1.glb",
+                x: 0, y: 0, z: -300,
+                o: 1, t: true
+            },
+            {
+                id: "Bio-Nest-1",
+                type: "video",
+                title: "Bio-Nest-1",
+                info: "",
+                mp3: "../assets/videos/Holes/bio-nest-1/bio-nest-1.mp3",
+                geometry: new THREE.PlaneGeometry(72, 57),
+                transparency: true,
+                x: 0, y: 10, z: -150,
+                volume: vol
+            }
+        ]
+    }
+]
+
 export const models = [
     // Environment
     {

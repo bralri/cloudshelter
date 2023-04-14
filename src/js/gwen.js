@@ -3,7 +3,7 @@ import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
 
-import {models, videos} from './_variables.js';
+import {room} from './_variables.js';
 
 let camera, scene, renderer, controls, object;
 let videoScreen, videoTexture;
@@ -28,6 +28,9 @@ let playVideos = [];
 let playSounds = [];
 let playing = false;
 
+// Room Number
+let roomNumb = 0;
+
 init();
 animate();
 
@@ -43,8 +46,8 @@ function init() {
     backgroundCol.convertSRGBToLinear();
 
     scene.background = backgroundCol;
-    // scene.fog = new THREE.FogExp2(backgroundCol, 0.001);
-    scene.fog = new THREE.Fog(backgroundCol, 1, 500);
+    scene.fog = new THREE.FogExp2(backgroundCol, 0.003);
+    // scene.fog = new THREE.Fog(backgroundCol, 1, 500);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2500);
 
@@ -162,7 +165,7 @@ function init() {
     // scene.add(ground);
 
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const waterGeometry = new THREE.PlaneGeometry(2000, 2000);
     const waterCol = new THREE.Color(0xA0C090);
     waterCol.convertSRGBToLinear();
     const water2 = new Water2( waterGeometry, {
@@ -172,43 +175,48 @@ function init() {
         textureWidth: 1024,
         textureHeight: 1024
     } );
+    water2.renderOrder = 1;
     water2.rotation.x = - Math.PI / 2;
     water2.position.y = -30;
     scene.add(water2);
 
     // Load Models
     const loader = new GLTFLoader(manager);
-    for (let i = 0; i < models.length; i++) {
-        const obj = models[i];
-        loader.load(
-            
-            obj.URL, 
-            
-            function (glb) {
+    for (let i = 0; i < room[roomNumb].artwork.length; i++) {
+        if (room[roomNumb].artwork[i].type === "glb") {
 
-                object = glb.scene;
-                object.traverse(function(node) {
-                    if (node.isMesh) {
-                        node.material.opacity = obj.o;
-                        node.material.transparent = obj.t;
+            const obj = room[roomNumb].artwork[i];
+            loader.load(
+                
+                obj.src, 
+                
+                function (glb) {
+
+                    object = glb.scene;
+                    object.traverse(function(node) {
+                        if (node.isMesh) {
+                            node.material.opacity = obj.o;
+                            node.material.transparent = obj.t;
+                            node.renderOrder = 1;
+                        }
+                    })
+                    object.position.set(obj.x, obj.y, obj.z);
+                    object.scale.set(2, 2, 2);
+                    scene.add(object);
+
+                    for (var i in object.children) {
+                        objID.push(object.children[i].id);
+                        objInfo.push([
+                            object.children[i].id,
+                            `
+                                <span class="artist">Gwen Senhui Chen</span><br>
+                                <i>${obj.title}</i><br>
+                                <span class="info">${obj.info}</span>
+                            `
+                        ])
                     }
-                })
-                object.position.set(obj.x, obj.y, obj.z);
-                object.scale.set(2, 2, 2);
-                scene.add(object);
-
-                for (var i in object.children) {
-                    objID.push(object.children[i].id);
-                    objInfo.push([
-                        object.children[i].id,
-                        `
-                            <span class="artist">Gwen Senhui Chen</span><br>
-                            <i>${obj.title}</i><br>
-                            <span class="info">${obj.info}</span>
-                        `
-                    ])
-                }
-        })
+            })
+        }
     }
 
     // Audio Loader
@@ -217,49 +225,51 @@ function init() {
     camera.add(audioListener);
 
     // Load Videos
-    for (let i = 0; i < videos.length; i++) {
-        const obj = videos[i];
-        const video = document.getElementById(obj.ID);
-        videoTexture = new THREE.VideoTexture(video);
-        videoTexture.encoding = THREE.sRGBEncoding;
-        videoTexture.minFilter = THREE.LinearFilter;
-        videoTexture.magFilter = THREE.LinearFilter;
-        const videoMaterial = new THREE.MeshStandardMaterial({
-            map: videoTexture,
-            side: THREE.DoubleSide,
-            // emissive: 0xffffff,
-            // emissiveIntensity: 1,
-            // emissiveMap: videoTexture,
-            transparent: obj.transparency,
-            opacity: 1
-        });
-        videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
-        videoScreen.position.set(obj.x, obj.y, obj.z);
+    for (let i = 0; i < room[roomNumb].artwork.length; i++) {
+        if (room[roomNumb].artwork[i].type === "video") {
 
-        const sound = new THREE.PositionalAudio(audioListener);
-        audioLoader.load(obj.MP3, function (buffer) {
-            sound.setBuffer(buffer);
-            sound.setLoop(true);
-            sound.setRefDistance(2);
-            sound.setVolume(2);
-            sound.setDirectionalCone(360, 360, 0);
-        });
+            const obj = room[roomNumb].artwork[i];
 
-        playSounds.push(sound);
-        videoScreen.add(sound);
-        scene.add(videoScreen);
-        playVideos.push(video);
-
-        objID.push(videoScreen.id);
-        objInfo.push(
-            [videoScreen.id, 
-                `
-                <span class="artist">Gwen Senhui Chen</span><br>
-                <i>${obj.title}</i><br>
-                <span class="info">${obj.info}</span>
-                `
-            ]
-        );
+            const video = document.getElementById(obj.id);
+            videoTexture = new THREE.VideoTexture(video);
+            videoTexture.encoding = THREE.sRGBEncoding;
+            videoTexture.minFilter = THREE.LinearFilter;
+            videoTexture.magFilter = THREE.LinearFilter;
+            const videoMaterial = new THREE.MeshStandardMaterial({
+                map: videoTexture,
+                side: THREE.DoubleSide,
+                transparent: obj.transparency,
+                opacity: 1
+            });
+            videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
+            videoScreen.position.set(obj.x, obj.y, obj.z);
+            videoScreen.renderOrder = 2;
+    
+            const sound = new THREE.PositionalAudio(audioListener);
+            audioLoader.load(obj.audio, function (buffer) {
+                sound.setBuffer(buffer);
+                sound.setLoop(true);
+                sound.setRefDistance(1);
+                sound.setVolume(obj.volume);
+                sound.setDirectionalCone(360, 360, 0);
+            });
+    
+            playSounds.push(sound);
+            videoScreen.add(sound);
+            scene.add(videoScreen);
+            playVideos.push(video);
+    
+            objID.push(videoScreen.id);
+            objInfo.push(
+                [videoScreen.id, 
+                    `
+                    <span class="artist">Gwen Senhui Chen</span><br>
+                    <i>${obj.title}</i><br>
+                    <span class="info">${obj.info}</span>
+                    `
+                ]
+            );
+        }
     };
 }
 
@@ -274,7 +284,6 @@ function playSoundsVideos() {
     }
     playing = true;
 }
-
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;

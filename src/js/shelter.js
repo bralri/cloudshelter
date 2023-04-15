@@ -183,6 +183,7 @@ function init() {
             fog: scene.fog !== undefined
         }
     )
+    water.renderOrder = 1;
     water.rotation.x = - Math.PI / 2;
     water.position.y = 0;
     scene.add(water);
@@ -194,6 +195,7 @@ function init() {
         textureWidth: 1024,
         textureHeight: 1024
     } );
+    water2.renderOrder = 1;
     water2.rotation.x = - Math.PI / 2;
     water2.position.y = 1;
     scene.add(water2);
@@ -248,10 +250,11 @@ function init() {
                     if (node.isMesh) {
                         node.material = new THREE.MeshPhongMaterial({
                             color: white,
-                            opacity: 0.6,
+                            opacity: 0.5,
                             transparent: true,
                             side: THREE.DoubleSide
                         })
+                        node.renderOrder = 2;
                     }
                 })
                 object.position.set(obj.x, obj.y, obj.z);

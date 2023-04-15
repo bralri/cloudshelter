@@ -30,6 +30,10 @@ let playing = false;
 
 // Room Number
 let roomNumb = 0;
+let append = `room=${roomNumb}`;
+if (window.location.search.indexOf('?') === -1) {
+    window.location.search += append;
+}
 
 init();
 animate();

@@ -6,9 +6,9 @@ module.exports = (eleventyConfig) => {
     eleventyConfig.addPlugin(pluginRSS);
     eleventyConfig.addLiquidFilter("dateToRfc822", pluginRSS.dateToRfc822);
 
-    eleventyConfig.addPassthroughCopy('./src/js');
+    eleventyConfig.addPassthroughCopy('./src/js/');
     eleventyConfig.addPassthroughCopy('./src/assets');
-    eleventyConfig.addPassthroughCopy('./src/favicon.ico')
+    eleventyConfig.addPassthroughCopy('./src/favicon.ico');
     
 
     eleventyConfig.addWatchTarget('./src/scss');

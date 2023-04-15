@@ -248,9 +248,9 @@ function init() {
                 object = glb.scene;
                 object.traverse(function(node) {
                     if (node.isMesh) {
-                        node.material = new THREE.MeshPhongMaterial({
+                        node.material = new THREE.MeshLambertMaterial({
                             color: white,
-                            opacity: 0.5,
+                            opacity: 0.25,
                             transparent: true,
                             side: THREE.DoubleSide
                         })

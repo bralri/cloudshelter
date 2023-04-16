@@ -2,39 +2,28 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
-import {artworks} from './_variables.js';
+import {artworks} from './_config.js';
 
-let camera, scene, renderer, controls, object;
-let videoScreen, videoTexture;
+let camera, scene, renderer, controls, object, videoScreen, videoTexture, sphereTexture, sphere;
 
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
+let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
-const standingHeight = 15;
-let speed = 5.0;
-let _speed = 400.0; 
 
 let exitRoom = false, sceneReady = false;
 
 const urlParams = new URLSearchParams(window.location.search);
 let roomNumb = parseInt(urlParams.get('room')) > artworks.length ? '0' : parseInt(urlParams.get('room')) <= artworks.length ? parseInt(urlParams.get('room')) : 0;
-
-let objID = [];
-let objInfo = [];
 let door;
 
-let playVideos = [];
-let playSounds = [];
-let playing = false;
-
+const loadingScreen = document.getElementById('loading-screen');
 const blocker = document.getElementById('blocker');
-const title = document.getElementById('title');
 
-function setup() {
+let objID = [], objInfo = [];
+let playVideos = [], playSounds = []; let playing = false;
+
+function sceneSetup() {
 
     // Scene
     scene = new THREE.Scene();
@@ -43,22 +32,21 @@ function setup() {
     const backgroundTxt = new THREE.TextureLoader().load("../assets/images/gwen/background.png");
     backgroundTxt.wrapS = THREE.RepeatWrapping;
     backgroundTxt.wrapT = THREE.RepeatWrapping;
+
     const backgroundCol = new THREE.Color(0xf7dff7);
     backgroundCol.convertSRGBToLinear();
+
     scene.background = backgroundCol;
     scene.fog = new THREE.FogExp2(backgroundCol, 0.003);
-    // scene.fog = new THREE.Fog(backgroundCol, 1, 500);
 
     // Controls
     controls = new PointerLockControls(camera, document.body);
-    controls.getObject().position.y = standingHeight;
+    controls.getObject().position.y = 15;
     controls.addEventListener('lock', function () {
-        title.style.display = 'none';
         blocker.style.display = 'none';
     });
     controls.addEventListener('unlock', function () {
         blocker.style.display = 'block';
-        title.style.display = '';
     });
     title.addEventListener('click', function () {
         if (sceneReady) {
@@ -76,7 +64,6 @@ function setup() {
             case 'ArrowRight' : case 'KeyD' : moveRight = true; break;
         }
     };
-   
     const onKeyUp = function (event) {
         switch (event.code) {
             case 'ArrowUp' : case 'KeyW' : moveForward = false; break;
@@ -89,11 +76,15 @@ function setup() {
     document.addEventListener('keyup', onKeyUp);
 
     // Renderer
-    renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+    renderer = new THREE.WebGLRenderer({
+        antialias: true, 
+        alpha: true
+    });
     renderer.compile(scene, camera);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputEncoding = THREE.sRGBEncoding;
+    document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize);
 
@@ -135,8 +126,9 @@ function loadArtworks() {
         side: THREE.DoubleSide
     });
     door = new THREE.Mesh(doorGeometry, doorMaterial);
-    door.position.set(0, 10, 200);
+    door.position.set(0, 10, -200);
     scene.add(door);
+
 
     // GLB Models
     const loader = new GLTFLoader(manager);
@@ -188,7 +180,11 @@ function loadArtworks() {
 
             const obj = currentRoom[i];
 
-            const video = document.getElementById(obj.id);
+            const video = document.createElement('video');
+            video.src = obj.src; video.id = obj.id;
+            video.width = obj.width; video.height = obj.height;
+            video.style.display = "none"; video.loop = true;
+            video.playsInline = true; video.muted = true; video.preload = true;
             videoTexture = new THREE.VideoTexture(video);
             videoTexture.encoding = THREE.sRGBEncoding;
             videoTexture.minFilter = THREE.LinearFilter;
@@ -199,7 +195,8 @@ function loadArtworks() {
                 transparent: obj.transparency,
                 opacity: 1
             });
-            videoScreen = new THREE.Mesh(obj.geometry, videoMaterial);
+            const videoGeometry = new THREE.PlaneGeometry(obj.geometryW, obj.geometryH)
+            videoScreen = new THREE.Mesh(videoGeometry, videoMaterial);
             videoScreen.position.set(obj.x, obj.y, obj.z);
             videoScreen.renderOrder = 2;
     
@@ -227,6 +224,8 @@ function loadArtworks() {
                     `
                 ]
             );
+
+            document.getElementById('videos').appendChild(video);
         }
     };
 }
@@ -282,13 +281,13 @@ function animate() {
         // Controls
         const time = performance.now();
         const delta = (time - prevTime) / 1000;
-        velocity.x -= velocity.x * speed * delta;
-        velocity.z -= velocity.z * speed * delta;
+        velocity.x -= velocity.x * 5.0 * delta;
+        velocity.z -= velocity.z * 5.0 * delta;
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize();
-        if (moveForward || moveBackward) velocity.z -= direction.z * _speed * delta;
-        if (moveLeft || moveRight) velocity.x -= direction.x * _speed * delta;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 300.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 300.0 * delta;
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
         prevTime = time;
@@ -298,7 +297,10 @@ function animate() {
     if (videoTexture) {
         videoTexture.needsUpdate = true;
     }
-
+    if (sphereTexture) {
+        sphereTexture.needsUpdate = true;
+    }
+    
     // Display current co-ordinates
     document.querySelector('.co-ord').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
 
@@ -312,12 +314,10 @@ function onWindowResize() {
 }
 
 window.onload = function() {
-    setup();
+    sceneSetup();
     loadArtworks();
-    document.body.appendChild(renderer.domElement);
     setTimeout(animate, 1000);
     setTimeout(function() {
-        const loadingScreen = document.getElementById('loading-screen');
         loadingScreen.classList.add('fade-out');
         loadingScreen.addEventListener('transitionend', (transition) => {
             transition.target.remove();
@@ -329,9 +329,11 @@ window.onload = function() {
 
     let currentRoomName;
     if (roomNumb === 0) {
-        currentRoomName = '"The Factory"'
+        currentRoomName = '"Upkeep"'
     } else if (roomNumb === 1) {
-        currentRoomName = '"Next Space etc"'
+        currentRoomName = '"The Factory"'
+    } else if (roomNumb === 2) {
+        currentRoomName = '"Unknown"'
     }
     document.getElementById('room-name').innerHTML = currentRoomName;
 }

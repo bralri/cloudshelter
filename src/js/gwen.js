@@ -4,7 +4,8 @@ import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
 import {artworks} from './_config.js';
 
-let camera, scene, renderer, controls, object, videoScreen, videoTexture, sphereTexture, sphere;
+let camera, scene, renderer, controls, object, videoScreen, videoTexture;
+let currentRoomName;
 
 let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 let prevTime = performance.now();
@@ -17,8 +18,8 @@ const urlParams = new URLSearchParams(window.location.search);
 let roomNumb = parseInt(urlParams.get('room')) > artworks.length ? '0' : parseInt(urlParams.get('room')) <= artworks.length ? parseInt(urlParams.get('room')) : 0;
 let door;
 
-const loadingScreen = document.getElementById('loading-screen');
-const blocker = document.getElementById('blocker');
+const loading = document.getElementById('loading');
+const overlay = document.getElementById('overlay');
 
 let objID = [], objInfo = [];
 let playVideos = [], playSounds = []; let playing = false;
@@ -30,30 +31,26 @@ function sceneSetup() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2500);
 
     const backgroundTxt = new THREE.TextureLoader().load("../assets/images/gwen/background.png");
-    backgroundTxt.wrapS = THREE.RepeatWrapping;
-    backgroundTxt.wrapT = THREE.RepeatWrapping;
+    backgroundTxt.wrapS = THREE.RepeatWrapping; backgroundTxt.wrapT = THREE.RepeatWrapping;
 
-    const backgroundCol = new THREE.Color(0xf7dff7);
-    backgroundCol.convertSRGBToLinear();
-
-    scene.background = backgroundCol;
-    scene.fog = new THREE.FogExp2(backgroundCol, 0.003);
+    scene.background = new THREE.Color(0xf7dff7).convertSRGBToLinear();;
+    scene.fog = new THREE.FogExp2(scene.background, 0.002);
 
     // Controls
     controls = new PointerLockControls(camera, document.body);
     controls.getObject().position.y = 15;
     controls.addEventListener('lock', function () {
-        blocker.style.display = 'none';
+        overlay.style.display = 'none';
     });
     controls.addEventListener('unlock', function () {
-        blocker.style.display = 'block';
+        overlay.style.display = 'block';
     });
     title.addEventListener('click', function () {
         if (sceneReady) {
             controls.lock();
             playSoundsVideos();
         }
-    });
+    }, false);
     scene.add(controls.getObject());
 
     const onKeyDown = function (event) {
@@ -89,17 +86,16 @@ function sceneSetup() {
     window.addEventListener('resize', onWindowResize);
 
     // Lighting
-    const ambLight = new THREE.AmbientLight(backgroundCol);
+    const ambLight = new THREE.AmbientLight(scene.background);
     scene.add(ambLight);
 
-    const hemLight = new THREE.HemisphereLight(0xffffff, backgroundCol);
+    const hemLight = new THREE.HemisphereLight(0xffffff, scene.background);
     scene.add(hemLight);
 
     // Water
     const waterGeometry = new THREE.PlaneGeometry(2000, 2000);
-    const waterCol = new THREE.Color(0xA0C090);
-    waterCol.convertSRGBToLinear();
-    const water2 = new Water2( waterGeometry, {
+    const waterCol = new THREE.Color(0xA0C090).convertSRGBToLinear();
+    const water2 = new Water2(waterGeometry, {
         color: waterCol,
         scale: 5,
         flowDirection: new THREE.Vector2(-1, -1),
@@ -113,6 +109,8 @@ function sceneSetup() {
 
     sceneReady = true;
     exitRoom = true;
+
+    overlay.classList.remove('loading');
 }
 
 const manager = new THREE.LoadingManager();
@@ -126,7 +124,7 @@ function loadArtworks() {
         side: THREE.DoubleSide
     });
     door = new THREE.Mesh(doorGeometry, doorMaterial);
-    door.position.set(0, 10, -200);
+    door.position.set(0, 10, -500);
     scene.add(door);
 
 
@@ -186,31 +184,33 @@ function loadArtworks() {
             video.style.display = "none"; video.loop = true;
             video.playsInline = true; video.muted = true; video.preload = true;
             videoTexture = new THREE.VideoTexture(video);
-            videoTexture.encoding = THREE.sRGBEncoding;
-            videoTexture.minFilter = THREE.LinearFilter;
-            videoTexture.magFilter = THREE.LinearFilter;
-            const videoMaterial = new THREE.MeshStandardMaterial({
-                map: videoTexture,
-                side: THREE.DoubleSide,
-                transparent: obj.transparency,
-                opacity: 1
-            });
-            const videoGeometry = new THREE.PlaneGeometry(obj.geometryW, obj.geometryH)
-            videoScreen = new THREE.Mesh(videoGeometry, videoMaterial);
+            videoTexture.encoding = THREE.sRGBEncoding
+            videoScreen = new THREE.Mesh(
+                new THREE.PlaneGeometry(obj.geometryW, obj.geometryH), 
+                new THREE.MeshStandardMaterial({
+                    map: videoTexture,
+                    side: THREE.DoubleSide,
+                    transparent: obj.transparency,
+                    opacity: 1
+                })
+            );
             videoScreen.position.set(obj.x, obj.y, obj.z);
             videoScreen.renderOrder = 2;
     
-            const sound = new THREE.PositionalAudio(audioListener);
-            audioLoader.load(obj.audio, function (buffer) {
-                sound.setBuffer(buffer);
-                sound.setLoop(true);
-                sound.setRefDistance(1);
-                sound.setVolume(obj.volume);
-                sound.setDirectionalCone(360, 360, 0);
-            });
+            if (obj.audio) {
+                    const sound = new THREE.PositionalAudio(audioListener);
+                    audioLoader.load(obj.audio, function (buffer) {
+                    sound.setBuffer(buffer);
+                    sound.setLoop(true);
+                    sound.setRefDistance(obj.ref);
+                    sound.setVolume(obj.volume);
+                    sound.setDirectionalCone(360, 360, 0);
+                });
+
+                playSounds.push(sound);
+                videoScreen.add(sound);
+            }
     
-            playSounds.push(sound);
-            videoScreen.add(sound);
             scene.add(videoScreen);
             playVideos.push(video);
     
@@ -266,8 +266,8 @@ function animate() {
         if (camera.position.z >= door.position.z - 20 && camera.position.z <= door.position.z + 20 
             && camera.position.x >= door.position.x - 45 && camera.position.x <= door.position.x + 45) {
             controls.unlock();
-            // overlay.classList.add('fade');
-            // loading.classList.remove('fade');
+            overlay.classList.add('fade');
+            loading.classList.remove('fade');
             if ((roomNumb + 1) === artworks.length) {
                 roomNumb = 0;
             } else {
@@ -297,9 +297,6 @@ function animate() {
     if (videoTexture) {
         videoTexture.needsUpdate = true;
     }
-    if (sphereTexture) {
-        sphereTexture.needsUpdate = true;
-    }
     
     // Display current co-ordinates
     document.querySelector('.co-ord').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
@@ -318,22 +315,19 @@ window.onload = function() {
     loadArtworks();
     setTimeout(animate, 1000);
     setTimeout(function() {
-        loadingScreen.classList.add('fade-out');
-        loadingScreen.addEventListener('transitionend', (transition) => {
-            transition.target.remove();
-        });
+        loading.classList.add('fade');
         if (roomNumb !== 0) {
             controls.lock()
         }
     }, 1000);
 
-    let currentRoomName;
     if (roomNumb === 0) {
-        currentRoomName = '"Upkeep"'
+        currentRoomName = 'Upkeep'
     } else if (roomNumb === 1) {
-        currentRoomName = '"The Factory"'
+        currentRoomName = 'The Factory'
     } else if (roomNumb === 2) {
-        currentRoomName = '"Unknown"'
+        currentRoomName = 'Unknown'
     }
     document.getElementById('room-name').innerHTML = currentRoomName;
+    console.log(`Room ${roomNumb}: ${currentRoomName}: Ready`);
 }

@@ -9,6 +9,15 @@ export const variables = [
         structure4GLB: "../assets/models/gwen/structures/4.glb",
         structure6GLB: "../assets/models/gwen/structures/6.glb",
         redNailGLB: "../assets/models/gwen/red_nail.glb",
+        // Towers
+        celltower1GLB: "../assets/models/gwen/cell-tower/1.glb",
+        celltower2GLB: "../assets/models/gwen/cell-tower/2.glb",
+        // Aircon Units
+        aircon1GLB: "../assets/models/gwen/air-con/1.glb",
+        aircon2GLB: "../assets/models/gwen/air-con/2.glb",
+        aircon3GLB: "../assets/models/gwen/air-con/3.glb",
+        aircon4GLB: "../assets/models/gwen/air-con/4.glb",
+        aircon5GLB: "../assets/models/gwen/air-con/5.glb",
         // Environment/Landscapes
 
     // Videos

@@ -58,10 +58,9 @@ function init() {
     // Controls
     controls = new PointerLockControls(camera, document.body);
 
-    const blocker = document.getElementById('blocker');
-    const title = document.getElementById('title');
+    const overlay = document.getElementById('overlay');
 
-    title.addEventListener('click', function () {
+    overlay.addEventListener('click', function () {
         controls.lock();
         if (sitting === true) {
             document.removeEventListener('click', STAND__UP);
@@ -69,8 +68,7 @@ function init() {
     });
 
     controls.addEventListener('lock', function () {
-        title.style.display = 'none';
-        blocker.style.display = 'none';
+        overlay.style.display = 'none';
         document.addEventListener('click', STAND__UP);
         sound.play();
         console.log('audio playing');
@@ -78,8 +76,7 @@ function init() {
     });
 
     controls.addEventListener('unlock', function () {
-        blocker.style.display = 'block';
-        title.style.display = '';
+        overlay.style.display = 'block';
         sound.pause();
         console.log('audio paused');
         audioPlaying = false;
@@ -153,9 +150,9 @@ function init() {
 
     const manager = new THREE.LoadingManager();
     manager.onLoad = function() {
-        const loadingScreen = document.getElementById('loading-screen');
-        loadingScreen.classList.add('fade-out');
-        loadingScreen.addEventListener('transitionend', (transition) => {
+        const loading = document.getElementById('loading');
+        loading.classList.add('fade');
+        loading.addEventListener('transitionend', (transition) => {
             transition.target.remove();
         });
     }

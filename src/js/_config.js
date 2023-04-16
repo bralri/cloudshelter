@@ -2,10 +2,77 @@ import {variables} from './_variables.js';
 
 const v = variables[0];
 const vol = 3;
+const ref = 1;
 
 export const artworks = [
     // Room 0 - Entrance
     [
+        // Cell Towers
+        {
+            type: "glb",
+            id: "Cell-Tower-1",
+            title: "Cell-Tower-1",
+            info: "Cell-Tower-1",
+            src: v.celltower1GLB,
+            x: -100, y: -30, z: -400,
+            o: 1, t: false
+        },
+        {
+            type: "glb",
+            id: "Cell-Tower-2",
+            title: "Cell-Tower-2",
+            info: "Cell-Tower-2",
+            src: v.celltower2GLB,
+            x: 100, y: -30, z: -400,
+            o: 1, t: false
+        },
+        // Aircon Units
+        {
+            type: "glb",
+            id: "Aircon-1",
+            title: "Aircon-1",
+            info: "Aircon-1",
+            src: v.aircon1GLB,
+            x: 200, y: -30, z: -300,
+            o: 1, t: false
+        },
+        {
+            type: "glb",
+            id: "Aircon-2",
+            title: "Aircon-2",
+            info: "Aircon-2",
+            src: v.aircon2GLB,
+            x: 100, y: -30, z: -300,
+            o: 1, t: false
+        },
+        {
+            type: "glb",
+            id: "Aircon-3",
+            title: "Aircon-3",
+            info: "Aircon-3",
+            src: v.aircon3GLB,
+            x: 0, y: -30, z: -300,
+            o: 1, t: false
+        },
+        {
+            type: "glb",
+            id: "Aircon-4",
+            title: "Aircon-4",
+            info: "Aircon-4",
+            src: v.aircon4GLB,
+            x: -100, y: -30, z: -300,
+            o: 1, t: false
+        },
+        {
+            type: "glb",
+            id: "Aircon-5",
+            title: "Aircon-5",
+            info: "Aircon-5",
+            src: v.aircon5GLB,
+            x: -200, y: -30, z: -300,
+            o: 1, t: false
+        },
+        // Holograms
         {
             type: "video",
             id: "Banner",
@@ -13,11 +80,9 @@ export const artworks = [
             width: 1920, height: 1080,
             title: "AL-Ship Banner",
             info: "",
-            audio: "",
             geometryW: 192, geometryH: 108,
             transparency: true,
-            x: -100, y: 50, z: -150,
-            volume: vol
+            x: -100, y: 50, z: -150
         },
         {
             type: "video",
@@ -30,7 +95,7 @@ export const artworks = [
             geometryW: 192, geometryH: 108,
             transparency: true,
             x: 100, y: 50, z: -150,
-            volume: vol
+            volume: 5, ref: 5
         }
     ],
     // Room 1 - The Factory
@@ -55,7 +120,7 @@ export const artworks = [
             geometryW: 72, geometryH: 57,
             transparency: true,
             x: 400, y: 10, z: -150,
-            volume: vol
+            volume: vol, ref: ref
         },
         {
             type: "video",
@@ -68,7 +133,7 @@ export const artworks = [
             geometryW: 72, geometryH: 57,
             transparency: true,
             x: 200, y: 10, z: -150,
-            volume: vol
+            volume: vol, ref: ref
         },
         {
             type: "video",
@@ -81,7 +146,7 @@ export const artworks = [
             geometryW: 72, geometryH: 57,
             transparency: true,
             x: 0, y: 10, z: -150,
-            volume: vol
+            volume: vol, ref: ref
         },
         {
             type: "video",
@@ -94,7 +159,7 @@ export const artworks = [
             geometryW: 72, geometryH: 57,
             transparency: true,
             x: -200, y: 10, z: -150,
-            volume: vol
+            volume: vol, ref: ref
         },
         {
             type: "video",
@@ -107,7 +172,7 @@ export const artworks = [
             geometryW: 72, geometryH: 57,
             transparency: true,
             x: -400, y: 10, z: -150,
-            volume: vol
+            volume: vol, ref: ref
         }
     ],
     // Room 2
@@ -132,7 +197,7 @@ export const artworks = [
             geometryW: 72, geometryH: 57,
             transparency: true,
             x: 0, y: 10, z: -150,
-            volume: vol
+            volume: vol, ref: ref
         }
     ],
 ]

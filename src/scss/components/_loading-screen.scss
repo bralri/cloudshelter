@@ -1,18 +1,19 @@
-// Loading Screen
+// // Loading Screen
 
-#loading-screen {
-	position: absolute;
-	z-index: 9999;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #000;
-	opacity: 1;
- 	transition: 1s opacity;
+#loading {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: black;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.5s ease;
 }
 
-#loading-screen.fade-out {
+#loading.fade {
     opacity: 0;
 }
 
@@ -53,4 +54,45 @@
         -ms-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+#overlay {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    backdrop-filter: blur(7px);
+    cursor: pointer;
+}
+
+#overlay.fade {
+    background: transparent;
+}
+
+#overlay.loading {
+    cursor: progress;
+}
+
+#overlay #title {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    color: $white;
+}
+
+#overlay #title.hidden,
+#overlay.fade #title {
+    display: none;
 }

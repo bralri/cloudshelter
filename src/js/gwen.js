@@ -125,10 +125,10 @@ function sceneSetup() {
     overlay.classList.remove('loading');
 }
 
+const currentRoom = artworks[roomNumb];
 const manager = new THREE.LoadingManager();
 
 function loadArtworks() {
-    const currentRoom = artworks[roomNumb];
 
     for (let i = 0; i < currentRoom.length; i++) {
         if (currentRoom[i].type === "door") {
@@ -143,6 +143,15 @@ function loadArtworks() {
             door = new THREE.Mesh(doorGeometry, doorMaterial);
             door.position.set(obj.x, 10, obj.y);
             scene.add(door);
+
+            objID.push(door.id);
+            objInfo.push(
+                [door.id, 
+                    `
+                    <span class="artist">Travel to the next space</span>
+                    `
+                ]
+            );
         }
     }
 
@@ -339,13 +348,10 @@ window.onload = function() {
         }
     }, 1000);
 
-    if (roomNumb === 0) {
-        currentRoomName = 'Upkeep'
-    } else if (roomNumb === 1) {
-        currentRoomName = 'The Factory'
-    } else if (roomNumb === 2) {
-        currentRoomName = 'Unknown'
+    for (let i = 0; i < currentRoom.length; i++) {
+        if (currentRoom[i].type === "room-name") {
+            document.getElementById('room-name').innerHTML = currentRoom[i].name;
+        }
     }
-    document.getElementById('room-name').innerHTML = currentRoomName;
-    console.log(`Room ${roomNumb}: ${currentRoomName}: Ready`);
+    console.log(`Room Ready`);
 }

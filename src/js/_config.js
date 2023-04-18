@@ -8,6 +8,10 @@ const scale = 2;
 export const artworks = [
     // Room 0 - Entrance
     [
+        {
+            type: "room-name",
+            name: "Upkeep"
+        },
         // Portal
         {
             type: "door",
@@ -155,6 +159,10 @@ export const artworks = [
     ],
     // Room 1 - The Factory
     [
+        {
+            type: "room-name",
+            name: "The Factory"
+        },
         // Portal
         {
             type: "door",
@@ -237,6 +245,10 @@ export const artworks = [
     ],
     // Room 2
     [
+        {
+            type: "room-name",
+            name: "room 2"
+        },
         // Portal
         {
             type: "door",

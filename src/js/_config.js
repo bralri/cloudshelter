@@ -8,20 +8,18 @@ const scale = 2;
 export const artworks = [
     // Room 0 - Entrance
     [
-        {
-            type: "room-name",
-            name: "Upkeep"
-        },
         // Portal
         {
             type: "door",
+            currentRoom: "Upkeep",
+            nextRoom: "The Factory",
             x: 0, y: -500
         },
         // Environment
         {
             type: "glb",
             src: v.swampgrassGLB,
-            x: 0, y: -31, z: 0,
+            x: 0, y: -40, z: 0,
             o: 1, t: false, scale: 1
         },
         // Cell Towers
@@ -31,7 +29,7 @@ export const artworks = [
             title: "Cell-Tower-1",
             info: "Cell-Tower-1",
             src: v.celltower3GLB,
-            x: -100, y: -30, z: -400,
+            x: -100, y: -40, z: -400,
             o: 1, t: false, scale: scale
         },
         {
@@ -40,7 +38,7 @@ export const artworks = [
             title: "Cell-Tower-1",
             info: "Cell-Tower-1",
             src: v.celltower3GLB,
-            x: -300, y: -30, z: -400,
+            x: -300, y: -40, z: -400,
             o: 1, t: false, scale: 1.5
         },
         {
@@ -49,7 +47,7 @@ export const artworks = [
             title: "Cell-Tower-2",
             info: "Cell-Tower-2",
             src: v.celltower2GLB,
-            x: 100, y: -30, z: -400,
+            x: 100, y: -40, z: -400,
             o: 1, t: false, scale: scale
         },
         {
@@ -58,7 +56,7 @@ export const artworks = [
             title: "Cell-Tower-2",
             info: "Cell-Tower-2",
             src: v.celltower2GLB,
-            x: 300, y: -30, z: -400,
+            x: 300, y: -40, z: -400,
             o: 1, t: false, scale: 1.5
         },
         // Aircon Units
@@ -68,7 +66,7 @@ export const artworks = [
             title: "Aircon-1",
             info: "Aircon-1",
             src: v.aircon1GLB,
-            x: 200, y: -30, z: -300,
+            x: 200, y: -40, z: -300,
             o: 1, t: false, scale: scale
         },
         {
@@ -77,7 +75,7 @@ export const artworks = [
             title: "Aircon-2",
             info: "Aircon-2",
             src: v.aircon2GLB,
-            x: 100, y: -30, z: -300,
+            x: 100, y: -40, z: -300,
             o: 1, t: false, scale: scale
         },
         {
@@ -86,7 +84,7 @@ export const artworks = [
             title: "Aircon-3",
             info: "Aircon-3",
             src: v.aircon3GLB,
-            x: 0, y: -30, z: -300,
+            x: 0, y: -40, z: -300,
             o: 1, t: false, scale: scale
         },
         {
@@ -95,7 +93,7 @@ export const artworks = [
             title: "Aircon-4",
             info: "Aircon-4",
             src: v.aircon4GLB,
-            x: -100, y: -30, z: -300,
+            x: -100, y: -40, z: -300,
             o: 1, t: false, scale: scale
         },
         {
@@ -104,7 +102,7 @@ export const artworks = [
             title: "Aircon-5",
             info: "Aircon-5",
             src: v.aircon5GLB,
-            x: -200, y: -30, z: -300,
+            x: -200, y: -40, z: -300,
             o: 1, t: false, scale: scale
         },
         // Holograms
@@ -159,13 +157,11 @@ export const artworks = [
     ],
     // Room 1 - The Factory
     [
-        {
-            type: "room-name",
-            name: "The Factory"
-        },
         // Portal
         {
             type: "door",
+            currentRoom: "The Factory",
+            nextRoom: "Unknown room name",
             x: -200, y: 50
         },
         {
@@ -245,13 +241,11 @@ export const artworks = [
     ],
     // Room 2
     [
-        {
-            type: "room-name",
-            name: "room 2"
-        },
         // Portal
         {
             type: "door",
+            currentRoom: "Unknown room name",
+            nextRoom: "Upkeep",
             x: -200, y: 50
         },
         {

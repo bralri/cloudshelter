@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
+import {Water} from 'three/Water.js';
 import {artworks} from './_config.js';
 
-let camera, scene, renderer, controls, object, videoScreen, videoTexture;
-let currentRoomName;
+let camera, scene, renderer, controls, object, videoScreen, videoTexture, water;
 
 let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 let prevTime = performance.now();
@@ -16,13 +16,15 @@ let exitRoom = false, sceneReady = false;
 
 const urlParams = new URLSearchParams(window.location.search);
 let roomNumb = parseInt(urlParams.get('room')) > artworks.length ? '0' : parseInt(urlParams.get('room')) <= artworks.length ? parseInt(urlParams.get('room')) : 0;
-let door;
+let door; const currentRoom = artworks[roomNumb];
 
 const loading = document.getElementById('loading');
 const overlay = document.getElementById('overlay');
 
 let objID = [], objInfo = [];
 let playVideos = [], playSounds = []; let playing = false;
+
+const manager = new THREE.LoadingManager();
 
 function sceneSetup() {
 
@@ -92,41 +94,55 @@ function sceneSetup() {
     const hemLight = new THREE.HemisphereLight(0xffffff, scene.background);
     scene.add(hemLight);
 
-    // Ground
-    const groundGeometry = new THREE.PlaneGeometry(3000, 3000);
-    const groundMaterial = new THREE.MeshBasicMaterial({
-        color: new THREE.Color(0x000000).convertSRGBToLinear(),
-        side: THREE.DoubleSide
-    });
-    const tempGround = new THREE.Mesh(groundGeometry, groundMaterial);
-    tempGround.renderOrder = 1;
-    tempGround.rotation.x = - Math.PI / 2;
-    tempGround.position.y = -40;
-    // scene.add(tempGround);
-
     // Water
     const waterGeometry = new THREE.PlaneGeometry(3000, 3000);
-    const waterCol = new THREE.Color(0xA0C090).convertSRGBToLinear();
-    const water2 = new Water2(waterGeometry, {
-        color: waterCol,
-        scale: 10,
-        flowDirection: new THREE.Vector2(1, 1),
-        textureWidth: 1024,
-        textureHeight: 1024
-    } );
+    const waterCol2 = new THREE.Color(0xA0C090).convertSRGBToLinear();
+    const water2 = new Water2(
+        waterGeometry, 
+        {
+            color: waterCol2,
+            scale: 10,
+            flowDirection: new THREE.Vector2(1, 1),
+            textureWidth: 1024,
+            textureHeight: 1024
+        } 
+    );
     water2.renderOrder = 1;
     water2.rotation.x = - Math.PI / 2;
     water2.position.y = -30;
     scene.add(water2);
+
+    water = new Water(
+        waterGeometry,
+        {
+            textureWidth: 1024,
+            textureHeight: 1024,
+            waterNormals: new THREE.TextureLoader(manager).load( 
+
+                '../assets/images/waternormals.jpg', 
+                
+                function (texture) {
+
+                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+            }),
+            sunDirection: new THREE.Vector3(),
+            sunColor: scene.background,
+            waterColor: new THREE.Color(0xA0C090).convertSRGBToLinear(),
+            distortionScale: 3.4,
+            fog: scene.fog !== undefined
+        }
+    )
+    water.renderOrder = 1;
+    water.rotation.x = - Math.PI / 2;
+    water.position.y = -40;
+    scene.add(water);
 
     sceneReady = true;
     exitRoom = true;
 
     overlay.classList.remove('loading');
 }
-
-const currentRoom = artworks[roomNumb];
-const manager = new THREE.LoadingManager();
 
 function loadArtworks() {
 
@@ -148,7 +164,8 @@ function loadArtworks() {
             objInfo.push(
                 [door.id, 
                     `
-                    <span class="artist">Travel to the next space</span>
+                    <span class="artist">Journey to <i>${obj.nextRoom}</i>?</span>
+                    <br><br>
                     `
                 ]
             );
@@ -186,14 +203,15 @@ function loadArtworks() {
 
                     for (var i in object.children) {
                         objID.push(object.children[i].id);
-                        objInfo.push([
-                            object.children[i].id,
-                            `
+                        objInfo.push(
+                            [object.children[i].id,
+                                `
                                 <span class="artist">Gwen Senhui Chen</span><br>
                                 <i>${obj.title}</i><br>
                                 <span class="info">${obj.info}</span>
-                            `
-                        ])
+                                `
+                            ]
+                        )
                     }
             })
         }
@@ -249,8 +267,7 @@ function loadArtworks() {
                     <i>${obj.title}</i><br>
                     <span class="info">${obj.info}</span>
                     `
-                ]
-            );
+                ]);
 
             document.getElementById('videos').appendChild(video);
         }
@@ -271,6 +288,8 @@ function playSoundsVideos() {
 
 function animate() {
     requestAnimationFrame(animate);
+
+    water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
 
     if (controls.isLocked === true) {
         // Display captions
@@ -349,8 +368,8 @@ window.onload = function() {
     }, 1000);
 
     for (let i = 0; i < currentRoom.length; i++) {
-        if (currentRoom[i].type === "room-name") {
-            document.getElementById('room-name').innerHTML = currentRoom[i].name;
+        if (currentRoom[i].type === "door") {
+            document.getElementById('room-name').innerHTML = currentRoom[i].currentRoom;
         }
     }
     console.log(`Room Ready`);

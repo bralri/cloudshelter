@@ -164,7 +164,7 @@ function loadArtworks() {
             objInfo.push(
                 [door.id, 
                     `
-                    <span class="artist">Journey to <i>${obj.nextRoom}</i>?</span>
+                    <span class="artist">Journey to <i>${obj.nextRoom}</i> ?</span>
                     <br><br>
                     `
                 ]

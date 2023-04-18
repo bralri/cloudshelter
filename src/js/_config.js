@@ -3,19 +3,36 @@ import {variables} from './_variables.js';
 const v = variables[0];
 const vol = 3;
 const ref = 1;
+const scale = 2;
 
 export const artworks = [
     // Room 0 - Entrance
     [
+        // Environment
+        {
+            type: "glb",
+            src: v.swampgrassGLB,
+            x: 0, y: -31, z: 0,
+            o: 1, t: false, scale: 1
+        },
         // Cell Towers
         {
             type: "glb",
             id: "Cell-Tower-1",
             title: "Cell-Tower-1",
             info: "Cell-Tower-1",
-            src: v.celltower1GLB,
+            src: v.celltower3GLB,
             x: -100, y: -30, z: -400,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
+        },
+        {
+            type: "glb",
+            id: "Cell-Tower-1",
+            title: "Cell-Tower-1",
+            info: "Cell-Tower-1",
+            src: v.celltower3GLB,
+            x: -300, y: -30, z: -400,
+            o: 1, t: false, scale: 1.5
         },
         {
             type: "glb",
@@ -24,7 +41,16 @@ export const artworks = [
             info: "Cell-Tower-2",
             src: v.celltower2GLB,
             x: 100, y: -30, z: -400,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
+        },
+        {
+            type: "glb",
+            id: "Cell-Tower-2",
+            title: "Cell-Tower-2",
+            info: "Cell-Tower-2",
+            src: v.celltower2GLB,
+            x: 300, y: -30, z: -400,
+            o: 1, t: false, scale: 1.5
         },
         // Aircon Units
         {
@@ -34,7 +60,7 @@ export const artworks = [
             info: "Aircon-1",
             src: v.aircon1GLB,
             x: 200, y: -30, z: -300,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
         },
         {
             type: "glb",
@@ -43,7 +69,7 @@ export const artworks = [
             info: "Aircon-2",
             src: v.aircon2GLB,
             x: 100, y: -30, z: -300,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
         },
         {
             type: "glb",
@@ -52,7 +78,7 @@ export const artworks = [
             info: "Aircon-3",
             src: v.aircon3GLB,
             x: 0, y: -30, z: -300,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
         },
         {
             type: "glb",
@@ -61,7 +87,7 @@ export const artworks = [
             info: "Aircon-4",
             src: v.aircon4GLB,
             x: -100, y: -30, z: -300,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
         },
         {
             type: "glb",
@@ -70,7 +96,7 @@ export const artworks = [
             info: "Aircon-5",
             src: v.aircon5GLB,
             x: -200, y: -30, z: -300,
-            o: 1, t: false
+            o: 1, t: false, scale: scale
         },
         // Holograms
         {
@@ -107,7 +133,7 @@ export const artworks = [
             info: "Factory",
             src: v.factoryGLB,
             x: 0, y: -30, z: -400,
-            o: 1, t: true
+            o: 1, t: true, scale: scale
         },
         {
             type: "video",
@@ -184,7 +210,7 @@ export const artworks = [
             info: "Structure 1",
             src: v.structure1GLB,
             x: 0, y: 0, z: -300,
-            o: 1, t: true
+            o: 1, t: true, scale: scale
         },
         {
             type: "video",

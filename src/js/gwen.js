@@ -34,7 +34,7 @@ function sceneSetup() {
     backgroundTxt.wrapS = THREE.RepeatWrapping; backgroundTxt.wrapT = THREE.RepeatWrapping;
 
     scene.background = new THREE.Color(0xf7dff7).convertSRGBToLinear();;
-    scene.fog = new THREE.FogExp2(scene.background, 0.002);
+    scene.fog = new THREE.FogExp2(scene.background, 0.0025);
 
     // Controls
     controls = new PointerLockControls(camera, document.body);
@@ -45,7 +45,7 @@ function sceneSetup() {
     controls.addEventListener('unlock', function () {
         overlay.style.display = 'block';
     });
-    title.addEventListener('click', function () {
+    overlay.addEventListener('click', function () {
         if (sceneReady) {
             controls.lock();
             playSoundsVideos();
@@ -92,13 +92,25 @@ function sceneSetup() {
     const hemLight = new THREE.HemisphereLight(0xffffff, scene.background);
     scene.add(hemLight);
 
+    // Ground
+    const groundGeometry = new THREE.PlaneGeometry(3000, 3000);
+    const groundMaterial = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(0x000000).convertSRGBToLinear(),
+        side: THREE.DoubleSide
+    });
+    const tempGround = new THREE.Mesh(groundGeometry, groundMaterial);
+    tempGround.renderOrder = 1;
+    tempGround.rotation.x = - Math.PI / 2;
+    tempGround.position.y = -40;
+    // scene.add(tempGround);
+
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(2000, 2000);
+    const waterGeometry = new THREE.PlaneGeometry(3000, 3000);
     const waterCol = new THREE.Color(0xA0C090).convertSRGBToLinear();
     const water2 = new Water2(waterGeometry, {
         color: waterCol,
-        scale: 5,
-        flowDirection: new THREE.Vector2(-1, -1),
+        scale: 10,
+        flowDirection: new THREE.Vector2(1, 1),
         textureWidth: 1024,
         textureHeight: 1024
     } );
@@ -127,13 +139,17 @@ function loadArtworks() {
     door.position.set(0, 10, -500);
     scene.add(door);
 
+    // Audio Loader
+    const audioLoader = new THREE.AudioLoader(manager);
+    const audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
 
     // GLB Models
     const loader = new GLTFLoader(manager);
     for (let i = 0; i < currentRoom.length; i++) {
         if (currentRoom[i].type === "glb") {
 
-            const obj = artworks[roomNumb][i];
+            const obj = currentRoom[i];
             loader.load(
                 
                 obj.src, 
@@ -149,7 +165,7 @@ function loadArtworks() {
                         }
                     })
                     object.position.set(obj.x, obj.y, obj.z);
-                    object.scale.set(2, 2, 2);
+                    object.scale.set(obj.scale, obj.scale, obj.scale);
                     scene.add(object);
 
                     for (var i in object.children) {
@@ -166,11 +182,6 @@ function loadArtworks() {
             })
         }
     };
-
-    // Audio Loader
-    const audioLoader = new THREE.AudioLoader(manager);
-    const audioListener = new THREE.AudioListener();
-    camera.add(audioListener);
 
     // Load Videos
     for (let i = 0; i < currentRoom.length; i++) {
@@ -262,7 +273,7 @@ function animate() {
             document.getElementById('artwork-caption').style.display = 'none';
         }
 
-        // Transport to next room
+        // Transport to the next room
         if (camera.position.z >= door.position.z - 20 && camera.position.z <= door.position.z + 20 
             && camera.position.x >= door.position.x - 45 && camera.position.x <= door.position.x + 45) {
             controls.unlock();

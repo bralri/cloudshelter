@@ -12,6 +12,7 @@ export const variables = [
         // Towers
         celltower1GLB: "../assets/models/gwen/cell-tower/1.glb",
         celltower2GLB: "../assets/models/gwen/cell-tower/2.glb",
+        celltower3GLB: "../assets/models/gwen/cell-tower/3.glb",
         // Aircon Units
         aircon1GLB: "../assets/models/gwen/air-con/1.glb",
         aircon2GLB: "../assets/models/gwen/air-con/2.glb",
@@ -19,6 +20,7 @@ export const variables = [
         aircon4GLB: "../assets/models/gwen/air-con/4.glb",
         aircon5GLB: "../assets/models/gwen/air-con/5.glb",
         // Environment/Landscapes
+        swampgrassGLB: "../assets/models/gwen/environment/swampgrass.glb",
 
     // Videos
         // Holograms

@@ -8,6 +8,11 @@ const scale = 2;
 export const artworks = [
     // Room 0 - Entrance
     [
+        // Portal
+        {
+            type: "door",
+            x: 0, y: -500
+        },
         // Environment
         {
             type: "glb",
@@ -112,6 +117,17 @@ export const artworks = [
         },
         {
             type: "video",
+            id: "Banner",
+            src: v.bannerVideo,
+            width: 1920, height: 1080,
+            title: "AL-Ship Banner",
+            info: "",
+            geometryW: 192, geometryH: 108,
+            transparency: true,
+            x: -300, y: 50, z: -150
+        },
+        {
+            type: "video",
             id: "Holofied",
             src: v.holofiedVideo,
             width: 1920, height: 1080,
@@ -122,10 +138,28 @@ export const artworks = [
             transparency: true,
             x: 100, y: 50, z: -150,
             volume: 5, ref: 5
+        },
+        {
+            type: "video",
+            id: "Holofied",
+            src: v.holofiedVideo,
+            width: 1920, height: 1080,
+            title: "AL-Ship Holofied",
+            info: "",
+            audio: v.ALShipHolofiedMP3,
+            geometryW: 192, geometryH: 108,
+            transparency: true,
+            x: 300, y: 50, z: -150,
+            volume: 5, ref: 5
         }
     ],
     // Room 1 - The Factory
     [
+        // Portal
+        {
+            type: "door",
+            x: -200, y: 50
+        },
         {
             type: "glb",
             id: "Factory",
@@ -203,6 +237,11 @@ export const artworks = [
     ],
     // Room 2
     [
+        // Portal
+        {
+            type: "door",
+            x: -200, y: 50
+        },
         {
             type: "glb",
             id: "Structure 1",

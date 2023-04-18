@@ -130,14 +130,21 @@ const manager = new THREE.LoadingManager();
 function loadArtworks() {
     const currentRoom = artworks[roomNumb];
 
-    const doorGeometry = new THREE.BoxGeometry(50, 75, 25);
-    const doorMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffff00,
-        side: THREE.DoubleSide
-    });
-    door = new THREE.Mesh(doorGeometry, doorMaterial);
-    door.position.set(0, 10, -500);
-    scene.add(door);
+    for (let i = 0; i < currentRoom.length; i++) {
+        if (currentRoom[i].type === "door") {
+
+            const obj = currentRoom[i];
+
+            const doorGeometry = new THREE.BoxGeometry(50, 75, 25);
+            const doorMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffff00,
+                side: THREE.DoubleSide
+            });
+            door = new THREE.Mesh(doorGeometry, doorMaterial);
+            door.position.set(obj.x, 10, obj.y);
+            scene.add(door);
+        }
+    }
 
     // Audio Loader
     const audioLoader = new THREE.AudioLoader(manager);

@@ -30,7 +30,7 @@ function sceneSetup() {
 
     // Scene
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2500);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
 
     const backgroundTxt = new THREE.TextureLoader().load("../assets/images/gwen/background.png");
     backgroundTxt.wrapS = THREE.RepeatWrapping; backgroundTxt.wrapT = THREE.RepeatWrapping;
@@ -95,7 +95,7 @@ function sceneSetup() {
     scene.add(hemLight);
 
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(3000, 3000);
+    const waterGeometry = new THREE.PlaneGeometry(5000, 5000);
     const waterCol2 = new THREE.Color(0xA0C090).convertSRGBToLinear();
     const water2 = new Water2(
         waterGeometry, 
@@ -111,32 +111,6 @@ function sceneSetup() {
     water2.rotation.x = - Math.PI / 2;
     water2.position.y = -30;
     scene.add(water2);
-
-    water = new Water(
-        waterGeometry,
-        {
-            textureWidth: 1024,
-            textureHeight: 1024,
-            waterNormals: new THREE.TextureLoader(manager).load( 
-
-                '../assets/images/waternormals.jpg', 
-                
-                function (texture) {
-
-                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-            }),
-            sunDirection: new THREE.Vector3(),
-            sunColor: scene.background,
-            waterColor: new THREE.Color(0xA0C090).convertSRGBToLinear(),
-            distortionScale: 3.4,
-            fog: scene.fog !== undefined
-        }
-    )
-    water.renderOrder = 1;
-    water.rotation.x = - Math.PI / 2;
-    water.position.y = -40;
-    scene.add(water);
 
     sceneReady = true;
     exitRoom = true;
@@ -165,7 +139,9 @@ function loadArtworks() {
                 [door.id, 
                     `
                     <span class="artist">Journey to <i>${obj.nextRoom}</i> ?</span>
-                    <br><br>
+                    <br>
+                    <br>
+                    <br>
                     `
                 ]
             );
@@ -194,7 +170,8 @@ function loadArtworks() {
                         if (node.isMesh) {
                             node.material.opacity = obj.o;
                             node.material.transparent = obj.t;
-                            node.renderOrder = 1;
+                            node.renderOrder = 2;
+                            node.side = THREE.DoubleSide;
                         }
                     })
                     object.position.set(obj.x, obj.y, obj.z);
@@ -288,8 +265,6 @@ function playSoundsVideos() {
 
 function animate() {
     requestAnimationFrame(animate);
-
-    water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
 
     if (controls.isLocked === true) {
         // Display captions

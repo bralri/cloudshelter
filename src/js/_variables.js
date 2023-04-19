@@ -2,13 +2,13 @@ export const variables = [
     {
     // Models
         // Structures/Buildings
-        factoryGLB: "../assets/models/gwen/factory_2.glb",
-        structure1GLB: "../assets/models/gwen/structures/1.glb",
-        structure2GLB: "../assets/models/gwen/structures/2.glb",
-        structure3GLB: "../assets/models/gwen/structures/3.glb",
-        structure4GLB: "../assets/models/gwen/structures/4.glb",
-        structure6GLB: "../assets/models/gwen/structures/6.glb",
+        factoryGLB: "../assets/models/gwen/structures/factory.glb",
+        biltongGLB: "../assets/models/gwen/structures/biltong.glb",
+        footGLB: "../assets/models/gwen/structures/foot.glb",
+        handGLB: "../assets/models/gwen/structures/hand.glb",
+        exoSkeletonGLB: "../assets/models/gwen/structures/exo-skeleton.glb",
         redNailGLB: "../assets/models/gwen/red_nail.glb",
+        blueNailGLB: "../assets/models/gwen/structures/blueNail-sub.glb",
         // Towers
         celltower1GLB: "../assets/models/gwen/cell-tower/1.glb",
         celltower2GLB: "../assets/models/gwen/cell-tower/2.glb",

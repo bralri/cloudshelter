@@ -397,13 +397,11 @@ window.onload = function() {
     cannonInit();
     init();
     loadAssets();
-    if (cannonReady && sceneReady) {
-        setTimeout(animate, 1000);
-        setTimeout(function() {
-            loading.classList.add('fade');
-            if (roomNumb !== 0) {
-                controls.lock()
-            }
-        }, 1000);
-    }
+    setTimeout(animate, 1000);
+    setTimeout(function() {
+        loading.classList.add('fade');
+        if (roomNumb !== 0) {
+            controls.lock()
+        }
+    }, 1000);
 }

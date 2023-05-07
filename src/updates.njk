@@ -1,5 +1,5 @@
 ---
-layout: 'updates-base.njk'
+layout: 'layouts/updates-base.njk'
 
 title: Updates
 priority: 0.7
@@ -14,7 +14,7 @@ description: Updates from Cloud Shelter.
     <h3 class="section-title">Updates</h3>
     <ul role="list" class="articles__list flow">
         {%- for post in collections.featured | reverse -%}
-            {% include 'post-snippet.njk' %}
+            {% include 'layouts/post-snippet.njk' %}
         {%- endfor -%}
     </ul>
 </div>

@@ -1,0 +1,5 @@
+---
+permalink: /js/gwen.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/gwen.js" %}{% endset %}{{ js | jsmin | safe }}

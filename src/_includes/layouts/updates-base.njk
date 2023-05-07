@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GZ2VESCDLL"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-GZ2VESCDLL');
+        </script>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="Description" content="{{ description }}">
+
+        <meta property="og:title" content="{{ title }}">
+        <meta property="og:type" content="article">
+        <meta property="og:url" content="https://cloudshelter.space{{ page.url }}">
+        <meta property="og:description" content="{{ description }}">
+        <meta property="og:image" content="https://cloudshelter.space{{ image }}">
+        <meta property="og:image:alt" content="{{ imageAlt }}">
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@cloud_shelter" />
+        <meta name="twitter:title" content="{{ title }}" />
+        <meta name="twitter:description" content="{{ description }}" />
+        <meta name="twitter:image" content="https://cloudshelter.space{{ image }}" />
+        <meta name="twitter:creator" content="@cloud_shelter">
+
+        <link rel="stylesheet" href="{{ '/css/main.css' | url }}">
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="alternate" type="application/rss+xml" title="Cloud Shelter Updates" href="https://cloudshelter.space/rss.xml">
+
+        <script src="/js/jquery/jquery-3.6.2.min.js"></script>
+        <script src="/js/info-modal.js" defer></script>
+        <script src="/js/window-load.js" defer></script>
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org/",
+              "@type": "BlogPosting",
+              "headline": "{{ title }}",
+              "url": "https://cloudshelter.space{{ page.url }}",
+              "image": [
+                "https://cloudshelter.space{{ image }}"
+              ],
+              "datePublished": "{{ date }}",
+              "description": "{{ description }}",
+              "author": {
+                "@type": "Person",
+                "name": "Bryan Ridpath",
+                "url": "https://bralri.net"
+              }
+            }
+        </script>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        {% include 'layouts/header.njk' %}
+
+        <main>
+            {{ content | safe }}
+        </main>
+
+        {% include 'layouts/footer.njk' %}
+    </body>
+</html>

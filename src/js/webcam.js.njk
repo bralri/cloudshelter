@@ -1,0 +1,5 @@
+---
+permalink: /js/webcam.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/webcam.js" %}{% endset %}{{ js | jsmin | safe }}

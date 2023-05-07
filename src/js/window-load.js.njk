@@ -1,0 +1,5 @@
+---
+permalink: /js/window-load.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/window-load.js" %}{% endset %}{{ js | jsmin | safe }}

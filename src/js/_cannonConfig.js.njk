@@ -1,0 +1,5 @@
+---
+permalink: /js/_cannonConfig.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/_cannonConfig.js" %}{% endset %}{{ js | jsmin | safe }}

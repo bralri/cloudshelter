@@ -1,0 +1,5 @@
+---
+permalink: /js/_variables.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/_variables.js" %}{% endset %}{{ js | jsmin | safe }}

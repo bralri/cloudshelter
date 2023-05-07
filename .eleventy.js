@@ -1,7 +1,22 @@
 const { DateTime } = require("luxon");
 const pluginRSS = require("@11ty/eleventy-plugin-rss");
+const {minify} = require("terser");
 
 module.exports = (eleventyConfig) => {
+
+    eleventyConfig.addNunjucksAsyncFilter("jsmin", async function (
+        code,
+        callback
+    ){
+        try {
+            const minified = await minify(code);
+            callback(null, minified.code);
+        } catch (err) {
+            console.log("Terser error: ", err);
+            // Fail gracefully
+            callback(null, code);
+        }
+    });
 
     eleventyConfig.addPlugin(pluginRSS);
     eleventyConfig.addLiquidFilter("dateToRfc822", pluginRSS.dateToRfc822);

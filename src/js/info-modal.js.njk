@@ -1,0 +1,5 @@
+---
+permalink: /js/info-modal.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/info-modal.js" %}{% endset %}{{ js | jsmin | safe }}

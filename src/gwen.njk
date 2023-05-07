@@ -1,11 +1,9 @@
 ---
-layout: 'base.njk'
+layout: 'layouts/base.njk'
 eleventyExcludeFromCollections: true
-
 title: Pleasure Pursuit Lounge
+file: 'gwen.min.js'
 ---
-
-{% include 'blocker-links-coords-captions.njk' %}
 
 <div id="instructions">
     <p></p>
@@ -13,16 +11,5 @@ title: Pleasure Pursuit Lounge
 
 <div id="videos"></div>
 
-<script
-    async="async"
-    src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js">
-</script>
-<script type="importmap">
-    {
-        "imports": {
-            "three": "../js/three/three.module.js",
-            "three/": "../js/three/"
-        }
-    }
-</script>
-<script type="module" src="/js/gwen.js"></script>
+<script src="/js/cannon/cannon.min.js"></script>
+{% include 'layouts/blocker-links-coords-captions.njk' %}

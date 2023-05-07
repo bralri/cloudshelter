@@ -1,0 +1,5 @@
+---
+permalink: /js/shelter.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/shelter.js" %}{% endset %}{{ js | jsmin | safe }}

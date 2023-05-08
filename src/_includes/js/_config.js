@@ -9,24 +9,24 @@ const scale = 1;
 export const assets = [
     // Room 0 - Entrance
     [
-        {
-            id: "box",
-            geometry: new THREE.BoxGeometry(10, 10, 10),
-            colour: 0xff0000,
-            cannonObject: true,
-                mass: 1 / 12*12,
-                shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-                position: new CANNON.Vec3(0, 60, -75)
-        },
-        {
-            id: "sphere",
-            geometry: new THREE.SphereGeometry(10),
-            colour: 0x0000ff,
-            cannonObject: true,
-                mass: 1 / 12*12,
-                shape: new CANNON.Sphere(10),
-                position: new CANNON.Vec3(0, 20, -80)
-        },
+        // {
+        //     id: "box",
+        //     geometry: new THREE.BoxGeometry(10, 10, 10),
+        //     colour: 0xff0000,
+        //     cannonObject: true,
+        //         mass: 1 / 12*12,
+        //         shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
+        //         position: new CANNON.Vec3(0, 60, -75)
+        // },
+        // {
+        //     id: "sphere",
+        //     geometry: new THREE.SphereGeometry(10),
+        //     colour: 0x0000ff,
+        //     cannonObject: true,
+        //         mass: 1 / 12*12,
+        //         shape: new CANNON.Sphere(10),
+        //         position: new CANNON.Vec3(0, 20, -80)
+        // },
         // Portal
         {
             type: "door",

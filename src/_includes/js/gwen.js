@@ -20,6 +20,8 @@ let objID = [], objInfo = [];
 let meshes = [], cannonBodies = [], boxes = [], boxMeshes = [];
 let playVideos = [], playSounds = [], playing = false;
 
+let boxID = [];
+
 const urlParams = new URLSearchParams(window.location.search);
 let roomNumb = parseInt(urlParams.get('room')) > assets.length ? '0' : parseInt(urlParams.get('room')) <= assets.length ? parseInt(urlParams.get('room')) : 0;
 const currentRoom = assets[roomNumb];
@@ -48,23 +50,19 @@ function cannonInit() {
     world.addBody(groundPlaneBody);
 
     // Test CANNON Meshes
-    for (let i = 0; i < currentRoom.length; i++) {
+    // for (let i = 0; i < 3; i++) {
 
-        const obj = currentRoom[i];
+    //     const physicsMaterial = new CANNON.Material("material");
+    //     const cannonBody = new CANNON.Body({
+    //         type: CANNON.Body.STATIC,
+    //         shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
+    //         material: physicsMaterial,
+    //         position: new CANNON.Vec3((i * 20) - 20, -25, -100)
+    //     })
 
-        if (obj.cannonObject) {
-            const physicsMaterial = new CANNON.Material(obj.id);
-            const cannonBody = new CANNON.Body({
-                mass: obj.mass,
-                shape: obj.shape,
-                material: physicsMaterial,
-                position: obj.position
-            })
-    
-            world.addBody(cannonBody);
-            cannonBodies.push(cannonBody);
-        }
-    }
+    //     world.addBody(cannonBody);
+    //     cannonBodies.push(cannonBody);
+    // }
 
     cannonReady = true;
 }
@@ -96,23 +94,27 @@ function init() {
     scene.add(groundPlaneMesh);
 
     // Loop through test cannon physics objects
-    for (let i = 0; i < currentRoom.length; i++) {
+    const geometry = new THREE.BoxGeometry(10, 10, 10);
+    const material = new THREE.MeshBasicMaterial({
+        color:  0xff0000,
+        side: THREE.DoubleSide,
+    });
 
-        const obj = currentRoom[i];
+    const box = new THREE.Mesh(geometry, material);
+    box.position.set(0, 0, -20);
 
-        if (obj.cannonObject) {
-            const geometry = obj.geometry;
-            const material = new THREE.MeshBasicMaterial({
-                color: obj.colour,
-                side: THREE.DoubleSide,
-            });
-    
-            const mesh = new THREE.Mesh(geometry, material);
-    
-            scene.add(mesh);
-            meshes.push(mesh);
-        }
-    }
+    scene.add(box);
+    boxID.push(box.id);
+    console.log(boxID)
+
+    objID.push(box.id);
+    objInfo.push(
+        [box.id, 
+            `
+            <span class="artist">Box Group</span>
+            `
+        ]
+    );
 
     // Controls
     controls = new PointerLockControls(camera, document.body);
@@ -362,10 +364,10 @@ function playSoundsVideos() {
 function animate() {
     requestAnimationFrame(animate);
 
-    for (let i = 0; i < meshes.length; i++) {
-        meshes[i].position.copy(cannonBodies[i].position);
-        meshes[i].quaternion.copy(cannonBodies[i].quaternion);
-    }
+    // for (let i = 0; i < meshes.length; i++) {
+    //     meshes[i].position.copy(cannonBodies[i].position);
+    //     meshes[i].quaternion.copy(cannonBodies[i].quaternion);
+    // }
     for(let i = 0; i < boxes.length; i++){
         boxMeshes[i].position.copy(boxes[i].position);
         boxMeshes[i].quaternion.copy(boxes[i].quaternion);
@@ -390,6 +392,18 @@ function animate() {
             document.getElementById('artwork-caption').style.display = 'block';
         } else {
             document.getElementById('artwork-caption').style.display = 'none';
+        }
+
+        // Move Box group to infront of camera
+        if (objIntersections[0] && boxID.indexOf(objIntersections[0].object.id) !== -1) {
+            console.log(objIntersections[0].object.position)
+            document.addEventListener('click', function() {
+                camera.add(objIntersections[0].object);
+                objIntersections[0].object.target.position.set(0, 0, 1);
+                objIntersections[0].object.position.copy(camera.position)
+            }, false);
+        } else {
+            //
         }
 
         // Transport to the next room

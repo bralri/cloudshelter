@@ -1,0 +1,5 @@
+---
+permalink: /js/_shootBoxes.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/_shootBoxes.js" %}{% endset %}{{ js | jsmin | safe }}

@@ -2,40 +2,72 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
-import {world, cannonBodies, cannonReady, cannonInit} from '../js/_cannonConfig.min.js'
 import {assets} from '../js/_config.min.js';
+import {setupThrowBoxes} from '../js/_shootBoxes.min.js';
 
 let camera, scene, renderer, controls, object, videoScreen, videoTexture, sound;
+let groundPlaneMesh, groundPlaneBody, groundPhysicsMaterial;
+const world = new CANNON.World();
+const worldSize = 2000; // x2
 
-let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+let moveForward = false, moveBackward = false
+let moveLeft = false, moveRight = false;
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 
-let objID = [], objInfo = [], meshes = [];
-let playVideos = [], playSounds = []; let playing = false;
+let objID = [], objInfo = [];
+let meshes = [], cannonBodies = [], boxes = [], boxMeshes = [];
+let playVideos = [], playSounds = [], playing = false;
 
 const urlParams = new URLSearchParams(window.location.search);
-export let roomNumb = parseInt(urlParams.get('room')) > assets.length ? '0' : parseInt(urlParams.get('room')) <= assets.length ? parseInt(urlParams.get('room')) : 0;
+let roomNumb = parseInt(urlParams.get('room')) > assets.length ? '0' : parseInt(urlParams.get('room')) <= assets.length ? parseInt(urlParams.get('room')) : 0;
 const currentRoom = assets[roomNumb];
 let door;
 
 const manager = new THREE.LoadingManager();
-manager.onProgress = function(url, itemsLoaded, itemsTotal) {
-    console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-};
-manager.onLoad = function() {
-    console.log('Loading complete!');
-};
-manager.onError = function(url) {
-    console.error('There was an error loading ' + url)
-};
 
 const loading = document.getElementById('loading');
 const title = document.getElementById('title');
 const overlay = document.getElementById('overlay');
 
-let sceneReady = false;
+let sceneReady = false, cannonReady = false;
+
+function cannonInit() {
+
+    world.gravity.set(0, -9.82, 0);
+
+    groundPhysicsMaterial = new CANNON.Material("groundPhysicsMaterial");
+    groundPlaneBody = new CANNON.Body({
+        type: CANNON.Body.STATIC,
+        shape: new CANNON.Box(new CANNON.Vec3(worldSize, worldSize, 0.01)),
+        position: new CANNON.Vec3(0, -31, 0),
+        material: groundPhysicsMaterial
+    })
+    groundPlaneBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+    world.addBody(groundPlaneBody);
+
+    // Test CANNON Meshes
+    for (let i = 0; i < currentRoom.length; i++) {
+
+        const obj = currentRoom[i];
+
+        if (obj.cannonObject) {
+            const physicsMaterial = new CANNON.Material(obj.id);
+            const cannonBody = new CANNON.Body({
+                mass: obj.mass,
+                shape: obj.shape,
+                material: physicsMaterial,
+                position: obj.position
+            })
+    
+            world.addBody(cannonBody);
+            cannonBodies.push(cannonBody);
+        }
+    }
+
+    cannonReady = true;
+}
 
 function init() {
 
@@ -49,6 +81,21 @@ function init() {
     scene.background = new THREE.Color(0xf7dff7).convertSRGBToLinear();
     scene.fog = new THREE.FogExp2(scene.background, 0.0025);
 
+    // Global CANNON ground plane
+    const geometryFromBody = groundPlaneBody.shapes[0].halfExtents;
+    const groundGeometry = new THREE.PlaneGeometry(geometryFromBody.x * 2, geometryFromBody.y * 2);
+    groundPlaneMesh = new THREE.Mesh(
+        groundGeometry,
+        new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            wireframe: true
+        })
+    )
+    groundPlaneMesh.position.copy(groundPlaneBody.position);
+    groundPlaneMesh.quaternion.copy(groundPlaneBody.quaternion);
+    scene.add(groundPlaneMesh);
+
+    // Loop through test cannon physics objects
     for (let i = 0; i < currentRoom.length; i++) {
 
         const obj = currentRoom[i];
@@ -56,9 +103,8 @@ function init() {
         if (obj.cannonObject) {
             const geometry = obj.geometry;
             const material = new THREE.MeshBasicMaterial({
-                color: obj.c,
-                wireframe: obj.w,
-                side: THREE.DoubleSide
+                color: obj.colour,
+                side: THREE.DoubleSide,
             });
     
             const mesh = new THREE.Mesh(geometry, material);
@@ -83,6 +129,7 @@ function init() {
             playSoundsVideos();
         }
     }, false);
+
     scene.add(controls.getObject());
 
     const onKeyDown = function (event) {
@@ -125,10 +172,9 @@ function init() {
     scene.add(hemLight);
 
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(5000, 5000);
     const waterCol2 = new THREE.Color(0xA0C090).convertSRGBToLinear();
     const water2 = new Water2(
-        waterGeometry, 
+        groundGeometry, 
         {
             color: waterCol2,
             scale: 10,
@@ -149,6 +195,20 @@ function init() {
     }
 
     overlay.classList.remove('loading');
+
+    setupThrowBoxes(
+        world, 
+        scene, 
+        camera, 
+        controls, 
+        groundPhysicsMaterial, 
+        boxes, 
+        boxMeshes, 
+        moveForward,
+        moveBackward,
+        moveLeft,
+        moveRight
+    );
 
     sceneReady = true;
 }
@@ -237,12 +297,10 @@ function loadAssets() {
             const obj = currentRoom[i];
 
             const video = document.createElement('video');
-            video.addEventListener('loadedmetadata', onMediaLoad, false);
             video.src = obj.src; video.id = obj.id;
             video.width = obj.width; video.height = obj.height;
             video.style.display = "none"; video.loop = true;
             video.playsInline = true; video.muted = true; video.preload = "auto";
-            manager.itemStart(obj.src);
             videoTexture = new THREE.VideoTexture(video);
             videoTexture.encoding = THREE.sRGBEncoding
             videoScreen = new THREE.Mesh(
@@ -256,15 +314,9 @@ function loadAssets() {
             );
             videoScreen.position.set(obj.x, obj.y, obj.z);
             videoScreen.renderOrder = 2;
-    
-            // videoScreenClone = videoScreen.clone()
-            // videoScreenClone.position.set(obj.x, obj.y, obj.z);
-            // videoScreenClone.rotation.y = Math.PI / 1;
 
             if (obj.audio) {
                     sound = new THREE.PositionalAudio(audioListener);
-                    sound.addEventListener('loadedmetadata', onMediaLoad, false);
-                    manager.itemStart(obj.audio);
                     audioLoader.load(obj.audio, function (buffer) {
                     sound.setBuffer(buffer);
                     sound.setLoop(true);
@@ -291,13 +343,6 @@ function loadAssets() {
                 ]);
 
             document.getElementById('videos').appendChild(video);
-
-            function onMediaLoad() {
-                video.removeEventListener('loadedmetadata', onMediaLoad, false);
-                sound.removeEventListener('loadedmetadata', onMediaLoad, false);
-                manager.itemEnd(obj.src)
-                manager.itemEnd(obj.audio);
-            }
         }
     };
 }
@@ -317,12 +362,20 @@ function playSoundsVideos() {
 function animate() {
     requestAnimationFrame(animate);
 
+    for (let i = 0; i < meshes.length; i++) {
+        meshes[i].position.copy(cannonBodies[i].position);
+        meshes[i].quaternion.copy(cannonBodies[i].quaternion);
+    }
+    for(let i = 0; i < boxes.length; i++){
+        boxMeshes[i].position.copy(boxes[i].position);
+        boxMeshes[i].quaternion.copy(boxes[i].quaternion);
+    }
+
     if (controls.isLocked === true) {
 
         // Start CANNON World Physics
         world.step(1 / 60);
 
-        // Raycaster Events
         // Display captions
         let objIntersections = (new THREE.Raycaster(
             camera.position,
@@ -374,12 +427,6 @@ function animate() {
     if (videoTexture) {
         videoTexture.needsUpdate = true;
     }
-
-    // CANNON Bodys
-    for (let i = 0; i < meshes.length; i++) {
-        meshes[i].position.copy(cannonBodies[i].position);
-        meshes[i].quaternion.copy(cannonBodies[i].quaternion);
-    }
     
     // Display current co-ordinates
     document.querySelector('.co-ord').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
@@ -398,10 +445,12 @@ window.onload = function() {
     init();
     loadAssets();
     setTimeout(animate, 1000);
-    setTimeout(function() {
-        loading.classList.add('fade');
-        if (roomNumb !== 0) {
-            controls.lock()
-        }
-    }, 1000);
+    if (sceneReady && cannonReady) {
+        setTimeout(function() {
+            loading.classList.add('fade');
+            if (roomNumb !== 0) {
+                controls.lock()
+            }
+        }, 1000);
+    }
 }

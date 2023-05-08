@@ -9,39 +9,20 @@ const scale = 1;
 export const assets = [
     // Room 0 - Entrance
     [
-        // CANNON Tests
-        {
-            id: "plane",
-            // THREE
-            geometry: new THREE.PlaneGeometry(400, 400),
-            c: 0xffffff,
-            w: false,
-            cannonObject: true,
-                // CANNON
-                type: CANNON.Body.STATIC,
-                shape: new CANNON.Box(new CANNON.Vec3(200, 200, 0.1)),
-                position: new CANNON.Vec3(0, -40, -75)
-        },
         {
             id: "box",
-            // THREE
             geometry: new THREE.BoxGeometry(10, 10, 10),
-            c: 0xff0000,
-            w: true,
+            colour: 0xff0000,
             cannonObject: true,
-                // CANNON
                 mass: 1 / 12*12,
                 shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
                 position: new CANNON.Vec3(0, 60, -75)
         },
         {
             id: "sphere",
-            // THREE
             geometry: new THREE.SphereGeometry(10),
-            c: 0x0000ff,
-            w: true,
+            colour: 0x0000ff,
             cannonObject: true,
-                // CANNON
                 mass: 1 / 12*12,
                 shape: new CANNON.Sphere(10),
                 position: new CANNON.Vec3(0, 20, -80)
@@ -296,8 +277,6 @@ export const assets = [
             o: 0.9, t: true, scale: scale
         },
         // Videos
-        
-
         {
             type: "video",
             id: "ppt1609-Spam",

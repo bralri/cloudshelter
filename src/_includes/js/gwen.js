@@ -3,12 +3,13 @@ import {GLTFLoader} from 'three/GLTFLoader.js';
 import {PointerLockControls} from 'three/PointerLockControls.js';
 import {Water2} from 'three/Water2.js';
 import {assets} from '../js/_config.min.js';
-import {setupThrowBoxes} from '../js/_shootBoxes.min.js';
+import {throwBoxes} from '../js/_shootBoxes.min.js';
 
 let camera, scene, renderer, controls, object, videoScreen, videoTexture, sound;
 let groundPlaneMesh, groundPlaneBody, groundPhysicsMaterial;
 const world = new CANNON.World();
 const worldSize = 2000; // x2
+let angle;
 
 let moveForward = false, moveBackward = false
 let moveLeft = false, moveRight = false;
@@ -20,10 +21,10 @@ let objID = [], objInfo = [];
 let meshes = [], cannonBodies = [], boxes = [], boxMeshes = [];
 let playVideos = [], playSounds = [], playing = false;
 
-let boxID = [];
-
 const urlParams = new URLSearchParams(window.location.search);
-let roomNumb = parseInt(urlParams.get('room')) > assets.length ? '0' : parseInt(urlParams.get('room')) <= assets.length ? parseInt(urlParams.get('room')) : 0;
+let roomNumb =  parseInt(urlParams.get('room')) > assets.length ? '0' : 
+                parseInt(urlParams.get('room')) <= assets.length ? parseInt(urlParams.get('room')) : 
+                0;
 const currentRoom = assets[roomNumb];
 let door;
 
@@ -35,9 +36,13 @@ const overlay = document.getElementById('overlay');
 
 let sceneReady = false, cannonReady = false;
 
+let isCubeHeld = false;
+let cubeMesh, cubeBody;
+let cubeArray = [];
+
 function cannonInit() {
 
-    world.gravity.set(0, -9.82, 0);
+    world.gravity.set(0, -9.82 * 2, 0);
 
     groundPhysicsMaterial = new CANNON.Material("groundPhysicsMaterial");
     groundPlaneBody = new CANNON.Body({
@@ -48,21 +53,6 @@ function cannonInit() {
     })
     groundPlaneBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     world.addBody(groundPlaneBody);
-
-    // Test CANNON Meshes
-    // for (let i = 0; i < 3; i++) {
-
-    //     const physicsMaterial = new CANNON.Material("material");
-    //     const cannonBody = new CANNON.Body({
-    //         type: CANNON.Body.STATIC,
-    //         shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-    //         material: physicsMaterial,
-    //         position: new CANNON.Vec3((i * 20) - 20, -25, -100)
-    //     })
-
-    //     world.addBody(cannonBody);
-    //     cannonBodies.push(cannonBody);
-    // }
 
     cannonReady = true;
 }
@@ -92,29 +82,6 @@ function init() {
     groundPlaneMesh.position.copy(groundPlaneBody.position);
     groundPlaneMesh.quaternion.copy(groundPlaneBody.quaternion);
     scene.add(groundPlaneMesh);
-
-    // Loop through test cannon physics objects
-    const geometry = new THREE.BoxGeometry(10, 10, 10);
-    const material = new THREE.MeshBasicMaterial({
-        color:  0xff0000,
-        side: THREE.DoubleSide,
-    });
-
-    const box = new THREE.Mesh(geometry, material);
-    box.position.set(0, 0, -20);
-
-    scene.add(box);
-    boxID.push(box.id);
-    console.log(boxID)
-
-    objID.push(box.id);
-    objInfo.push(
-        [box.id, 
-            `
-            <span class="artist">Box Group</span>
-            `
-        ]
-    );
 
     // Controls
     controls = new PointerLockControls(camera, document.body);
@@ -198,19 +165,7 @@ function init() {
 
     overlay.classList.remove('loading');
 
-    setupThrowBoxes(
-        world, 
-        scene, 
-        camera, 
-        controls, 
-        groundPhysicsMaterial, 
-        boxes, 
-        boxMeshes, 
-        moveForward,
-        moveBackward,
-        moveLeft,
-        moveRight
-    );
+    createCube();
 
     sceneReady = true;
 }
@@ -293,16 +248,26 @@ function loadAssets() {
     
 
     // Load Videos
+    const hologramVideos = currentRoom.filter(obj => obj.type === "video" && obj.hologram);
+    const numHologramVideos = hologramVideos.length;
+    const hologramHeight = 100;
+    const hologramRadius = Math.sin(Math.PI / numHologramVideos) * 250;
+
     for (let i = 0; i < currentRoom.length; i++) {
         if (currentRoom[i].type === "video") {
 
             const obj = currentRoom[i];
 
             const video = document.createElement('video');
-            video.src = obj.src; video.id = obj.id;
-            video.width = obj.width; video.height = obj.height;
-            video.style.display = "none"; video.loop = true;
-            video.playsInline = true; video.muted = true; video.preload = "auto";
+            video.src = obj.src;
+            video.id = obj.id;
+            video.width = obj.width;
+            video.height = obj.height;
+            video.style.display = "none";
+            video.loop = true;
+            video.playsInline = true;
+            video.muted = true;
+            video.preload = "auto";
             videoTexture = new THREE.VideoTexture(video);
             videoTexture.encoding = THREE.sRGBEncoding
             videoScreen = new THREE.Mesh(
@@ -314,12 +279,25 @@ function loadAssets() {
                     opacity: 1
                 })
             );
-            videoScreen.position.set(obj.x, obj.y, obj.z);
+
+            if (obj.hologram) {
+                const angle = (i / numHologramVideos) * Math.PI * 2;
+                videoScreen.position.set(
+                    hologramRadius * Math.cos(angle),
+                    hologramHeight,
+                    hologramRadius * Math.sin(angle)
+                );
+                videoScreen.lookAt(new THREE.Vector3(0, hologramHeight, 0));
+                videoScreen.rotation.y += Math.PI;
+            } else {
+                videoScreen.position.set(obj.x, obj.y, obj.z);
+            }
+
             videoScreen.renderOrder = 2;
 
             if (obj.audio) {
-                    sound = new THREE.PositionalAudio(audioListener);
-                    audioLoader.load(obj.audio, function (buffer) {
+                sound = new THREE.PositionalAudio(audioListener);
+                audioLoader.load(obj.audio, function (buffer) {
                     sound.setBuffer(buffer);
                     sound.setLoop(true);
                     sound.setRefDistance(obj.ref);
@@ -331,9 +309,10 @@ function loadAssets() {
                 videoScreen.add(sound);
             }
 
+
             scene.add(videoScreen);
             playVideos.push(video);
-    
+
             objID.push(videoScreen.id);
             objInfo.push(
                 [videoScreen.id, 
@@ -361,6 +340,99 @@ function playSoundsVideos() {
     playing = true;
 }
 
+function createCube() {
+    const cubeSize = 10;
+
+    const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+    const cubeShape = new CANNON.Box(new CANNON.Vec3(cubeSize / 2, cubeSize / 2, cubeSize / 2));
+    cubeBody = new CANNON.Body({ 
+        type: CANNON.Body.STATIC
+    });
+
+    cubeBody.addShape(cubeShape);
+    cubeBody.position.set(0, -25, -100);
+
+    scene.add(cubeMesh);
+    cubeArray.push(cubeMesh.id);
+    world.addBody(cubeBody);
+
+    objID.push(cubeMesh.id);
+    objInfo.push(
+        [cubeMesh.id, 
+            `
+            <span class="artist">Pick me up!</span>
+            `
+        ]
+    );
+}
+
+function pickUpBox() {
+    if (isCubeHeld) return;
+    isCubeHeld = true;
+    scene.remove(cubeMesh);
+    world.removeBody(cubeBody);
+
+    scene.add(cubeMesh);
+    world.add(cubeBody);
+    camera.add(cubeMesh);
+    cubeBody.position.set(0, 0, -20); // set position relative to the camera
+
+    objInfo.push([
+        cubeMesh.id,
+        `<span class="artist">Click to throw me!</span>`
+    ]);
+    
+        const dropBox = () => {
+            if (!isCubeHeld) return;
+            isCubeHeld = false;
+
+            window.removeEventListener('click', dropBox);
+            angle = 0;
+            const shakeDuration = 300;
+            const shakeIntensity = 0.05;
+            const shakeAxis = new THREE.Vector3(1, 0, 0);
+            const initialRotation = new THREE.Quaternion().copy(cubeMesh.quaternion);
+            let elapsedTime = 0;
+            let isShaking = true;
+            const clock = new THREE.Clock();
+    
+            const shake = () => {
+                if (!isShaking) return;
+                    elapsedTime += clock.getDelta() * 1000;
+                    const shakeAngle = Math.random() * Math.PI * 2;
+                    const shakeRotation = new THREE.Quaternion().setFromAxisAngle(shakeAxis, shakeAngle).normalize();
+                    const targetRotation = new THREE.Quaternion().copy(initialRotation).multiply(shakeRotation);
+                    const newRotation = new THREE.Quaternion().slerp(targetRotation, shakeIntensity).normalize();
+                    cubeMesh.quaternion.copy(newRotation);
+                    cubeBody.quaternion.copy(newRotation);
+                    requestAnimationFrame(shake);
+        
+                    if (elapsedTime >= shakeDuration) {
+                        camera.remove(cubeMesh);
+                        world.removeBody(cubeBody);
+                        scene.remove(cubeMesh);
+                        throwBoxes(
+                            world, 
+                            scene, 
+                            camera, 
+                            controls, 
+                            boxes, 
+                            boxMeshes
+                        );
+                        isShaking = false;
+                        setTimeout(createCube, 10000);
+                    }
+            };
+
+            shake();
+        };
+
+    window.addEventListener('click', dropBox);
+}  
+
 function animate() {
     requestAnimationFrame(animate);
 
@@ -372,6 +444,9 @@ function animate() {
         boxMeshes[i].position.copy(boxes[i].position);
         boxMeshes[i].quaternion.copy(boxes[i].quaternion);
     }
+
+    cubeMesh.position.copy(cubeBody.position);
+    cubeMesh.quaternion.copy(cubeBody.quaternion);
 
     if (controls.isLocked === true) {
 
@@ -394,17 +469,22 @@ function animate() {
             document.getElementById('artwork-caption').style.display = 'none';
         }
 
-        // Move Box group to infront of camera
-        if (objIntersections[0] && boxID.indexOf(objIntersections[0].object.id) !== -1) {
-            console.log(objIntersections[0].object.position)
-            document.addEventListener('click', function() {
-                camera.add(objIntersections[0].object);
-                objIntersections[0].object.target.position.set(0, 0, 1);
-                objIntersections[0].object.position.copy(camera.position)
-            }, false);
+        if (objIntersections[0] && cubeArray.indexOf(objIntersections[0].object.id) !== -1) {
+            window.addEventListener('click', pickUpBox)
         } else {
-            //
+            window.removeEventListener('click', pickUpBox)
+            isCubeHeld = false;
         }
+        if (isCubeHeld) {
+            angle = 0.003;
+            const position = cubeMesh.position.clone();
+            const axis = new THREE.Vector3(-1, 0, 0);
+            const rotationAxis = position.clone().cross(axis).normalize();
+            const rotation = new THREE.Quaternion().setFromAxisAngle(rotationAxis, angle);
+            cubeMesh.quaternion.multiply(rotation);
+            cubeBody.quaternion.copy(cubeMesh.quaternion);
+        }
+          
 
         // Transport to the next room
         if (camera.position.z >= door.position.z - 20 && camera.position.z <= door.position.z + 20 

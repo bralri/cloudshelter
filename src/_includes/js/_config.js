@@ -9,24 +9,6 @@ const scale = 1;
 export const assets = [
     // Room 0 - Entrance
     [
-        // {
-        //     id: "box",
-        //     geometry: new THREE.BoxGeometry(10, 10, 10),
-        //     colour: 0xff0000,
-        //     cannonObject: true,
-        //         mass: 1 / 12*12,
-        //         shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-        //         position: new CANNON.Vec3(0, 60, -75)
-        // },
-        // {
-        //     id: "sphere",
-        //     geometry: new THREE.SphereGeometry(10),
-        //     colour: 0x0000ff,
-        //     cannonObject: true,
-        //         mass: 1 / 12*12,
-        //         shape: new CANNON.Sphere(10),
-        //         position: new CANNON.Vec3(0, 20, -80)
-        // },
         // Portal
         {
             type: "door",
@@ -34,131 +16,56 @@ export const assets = [
             nextRoom: "The Factory",
             x: 0, y: -500
         },
-        // Cell Towers
+        // Cell Tower + aircon units
         // {
         //     type: "glb",
         //     id: "Cell-Tower-1",
         //     title: "Cell-Tower-1",
         //     info: "Cell-Tower-1",
-        //     src: v.celltower3GLB,
-        //     x: -100, y: -30, z: -400,
+        //     src: v.celltowerGLB,
+        //     x: 0, y: -30, z: 0,
         //     o: 1, t: false, scale: scale
-        // },
-        // {
-        //     type: "glb",
-        //     id: "Cell-Tower-2",
-        //     title: "Cell-Tower-2",
-        //     info: "Cell-Tower-2",
-        //     src: v.celltower2GLB,
-        //     x: 100, y: -30, z: -400,
-        //     o: 1, t: false, scale: scale
-        // },
-        // Aircon Units
-        // {
-        //     type: "glb",
-        //     id: "Aircon-1",
-        //     title: "Aircon-1",
-        //     info: "Aircon-1",
-        //     src: v.aircon1GLB,
-        //     x: 200, y: -30, z: -300,
-        //     o: 1, t: false, scale: 2
-        // },
-        // {
-        //     type: "glb",
-        //     id: "Aircon-2",
-        //     title: "Aircon-2",
-        //     info: "Aircon-2",
-        //     src: v.aircon2GLB,
-        //     x: 100, y: -30, z: -300,
-        //     o: 1, t: false, scale: 2
-        // },
-        // {
-        //     type: "glb",
-        //     id: "Aircon-3",
-        //     title: "Aircon-3",
-        //     info: "Aircon-3",
-        //     src: v.aircon3GLB,
-        //     x: 0, y: -30, z: -300,
-        //     o: 1, t: false, scale: 2
-        // },
-        // {
-        //     type: "glb",
-        //     id: "Aircon-4",
-        //     title: "Aircon-4",
-        //     info: "Aircon-4",
-        //     src: v.aircon4GLB,
-        //     x: -100, y: -30, z: -300,
-        //     o: 1, t: false, scale: 2
-        // },
-        // {
-        //     type: "glb",
-        //     id: "Aircon-5",
-        //     title: "Aircon-5",
-        //     info: "Aircon-5",
-        //     src: v.aircon5GLB,
-        //     x: -200, y: -30, z: -300,
-        //     o: 1, t: false, scale: 2
         // },
         // // Videos
         // {
         //     type: "video",
+        //     hologram: true,
         //     id: "AL-Ship-Banner",
         //     title: "AL-Ship Banner",
-        //     info: "",
         //     src: v.ALShipBannerVideo,
-        //     width: 1920 * 4, height: 1080 * 4,
+        //     width: 1920, height: 1080,
         //     geometryW: 192, geometryH: 108,
-        //     transparency: true,
-        //     x: -400, y: 400, z: -151
+        //     transparency: true
         // },
         // {
         //     type: "video",
+        //     hologram: true,
         //     id: "AL-Ship-Ad",
         //     title: "AL-Ship Ad",
-        //     info: "",
         //     src: v.ALShipAdVideo,
         //     audio: v.ALShipHolofiedMP3,
         //     width: 1920, height: 1080,
-        //     geometryW: 192, geometryH: 108,
         //     transparency: true,
-        //     x: -200, y: 25, z: -150,
         //     volume: vol, ref: ref
         // },
         // {
         //     type: "video",
+        //     hologram: true,
         //     id: "TOD-Ad",
         //     title: "TOD-Ad",
-        //     info: "",
         //     src: v.TODAdVideo,
         //     width: 1920, height: 1080,
-        //     geometryW: 192, geometryH: 108,
-        //     transparency: true,
-        //     x: 0, y: 25, z: -150
+        //     transparency: true
         // },
         // {
         //     type: "video",
+        //     hologram: true,
         //     id: "Tanqueray-TOD",
         //     title: "Tanqueray-TOD",
-        //     info: "",
         //     src: v.TanquerayTODVideo,
         //     audio: v.TanquerayTODAudio,
         //     width: 1280, height: 720,
-        //     geometryW: 192, geometryH: 108,
         //     transparency: true,
-        //     x: 200, y: 25, z: -150,
-        //     volume: vol, ref: ref
-        // },
-        // {
-        //     type: "video",
-        //     id: "Tanqueray-Ad",
-        //     title: "Tanqueray-Ad",
-        //     info: "",
-        //     src: v.TanquerayAdVideo,
-        //     audio: v.TanquerayAdAudio,
-        //     width: 1920, height: 1080,
-        //     geometryW: 192, geometryH: 108,
-        //     transparency: true,
-        //     x: 400, y: 25, z: -150,
         //     volume: vol, ref: ref
         // }
     ],

@@ -7,9 +7,10 @@ import {throwBoxes} from '../js/_shootBoxes.min.js';
 
 let camera, scene, renderer, controls, object, videoScreen, videoTexture, sound;
 let groundPlaneMesh, groundPlaneBody, groundPhysicsMaterial;
+let sceneReady = false, cannonReady = false;
+const manager = new THREE.LoadingManager();
 const world = new CANNON.World();
 const worldSize = 2000; // x2
-let angle;
 
 let moveForward = false, moveBackward = false
 let moveLeft = false, moveRight = false;
@@ -18,7 +19,7 @@ const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 
 let objID = [], objInfo = [];
-let meshes = [], cannonBodies = [], boxes = [], boxMeshes = [];
+let boxes = [], boxMeshes = [];
 let playVideos = [], playSounds = [], playing = false;
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -28,17 +29,16 @@ let roomNumb =  parseInt(urlParams.get('room')) > assets.length ? '0' :
 const currentRoom = assets[roomNumb];
 let door;
 
-const manager = new THREE.LoadingManager();
+let isCubeHeld = false;
+let heldCube = null;
+let angle;
+let cubeMeshTest;
+let amountOfBoxes;
+let cubes = [], cubeID = [];
 
 const loading = document.getElementById('loading');
 const title = document.getElementById('title');
 const overlay = document.getElementById('overlay');
-
-let sceneReady = false, cannonReady = false;
-
-let isCubeHeld = false;
-let cubeMesh, cubeBody;
-let cubeArray = [];
 
 function cannonInit() {
 
@@ -341,116 +341,114 @@ function playSoundsVideos() {
 }
 
 function createCube() {
-    const cubeSize = 10;
+    const cubeSize = 20;
+    for (let i = 0; i < 5; i++) {
+        amountOfBoxes = i + 1;
+        const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    
+        cubeMesh.position.set((i * 50) - 100, -25, -100);
 
-    const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        let hasBeenThrown = false
+    
+        scene.add(cubeMesh);
+        cubeID.push(cubeMesh.id);
+        cubes.push([
+            cubeMesh.id,
+            cubeMesh,
+            cubeMesh.position,
+            amountOfBoxes,
+            hasBeenThrown
+        ]);
 
-    const cubeShape = new CANNON.Box(new CANNON.Vec3(cubeSize / 2, cubeSize / 2, cubeSize / 2));
-    cubeBody = new CANNON.Body({ 
-        type: CANNON.Body.STATIC
-    });
-
-    cubeBody.addShape(cubeShape);
-    cubeBody.position.set(0, -25, -100);
-
-    scene.add(cubeMesh);
-    cubeArray.push(cubeMesh.id);
-    world.addBody(cubeBody);
-
-    objID.push(cubeMesh.id);
-    objInfo.push(
-        [cubeMesh.id, 
-            `
-            <span class="artist">Pick me up!</span>
-            `
-        ]
-    );
+        objID.push(cubeMesh.id);
+        objInfo.push(
+            [cubeMesh.id, 
+                `
+                <span class="artist">Pick me up!</span>
+                `
+            ]
+        );
+    }
 }
 
-function pickUpBox() {
-    if (isCubeHeld) return;
+function pickUpBox(cubeMesh) {
+    if (heldCube || !cubeMesh) {
+        return;
+    };
+  
     isCubeHeld = true;
-    scene.remove(cubeMesh);
-    world.removeBody(cubeBody);
+    let amountOfBoxes = cubeMesh[3];
+    scene.remove(cubeMesh[1]);
+  
+    scene.add(cubeMesh[1]);
+    camera.add(cubeMesh[1]);
+    cubeMesh[2].set(0, 0, -40);
+  
+    heldCube = cubeMesh;
+    heldCube[5] = new THREE.Quaternion().copy(heldCube[1].quaternion);
 
-    scene.add(cubeMesh);
-    world.add(cubeBody);
-    camera.add(cubeMesh);
-    cubeBody.position.set(0, 0, -20); // set position relative to the camera
+    objInfo.push(
+        [cubeMesh[0], `<span class="artist">Click to throw me!</span>`]
+    );
 
-    objInfo.push([
-        cubeMesh.id,
-        `<span class="artist">Click to throw me!</span>`
-    ]);
-    
-        const dropBox = () => {
-            if (!isCubeHeld) return;
-            isCubeHeld = false;
-
-            window.removeEventListener('click', dropBox);
-            angle = 0;
-            const shakeDuration = 300;
-            const shakeIntensity = 0.05;
-            const shakeAxis = new THREE.Vector3(1, 0, 0);
-            const initialRotation = new THREE.Quaternion().copy(cubeMesh.quaternion);
-            let elapsedTime = 0;
-            let isShaking = true;
-            const clock = new THREE.Clock();
-    
-            const shake = () => {
-                if (!isShaking) return;
-                    elapsedTime += clock.getDelta() * 1000;
-                    const shakeAngle = Math.random() * Math.PI * 2;
-                    const shakeRotation = new THREE.Quaternion().setFromAxisAngle(shakeAxis, shakeAngle).normalize();
-                    const targetRotation = new THREE.Quaternion().copy(initialRotation).multiply(shakeRotation);
-                    const newRotation = new THREE.Quaternion().slerp(targetRotation, shakeIntensity).normalize();
-                    cubeMesh.quaternion.copy(newRotation);
-                    cubeBody.quaternion.copy(newRotation);
-                    requestAnimationFrame(shake);
-        
-                    if (elapsedTime >= shakeDuration) {
-                        camera.remove(cubeMesh);
-                        world.removeBody(cubeBody);
-                        scene.remove(cubeMesh);
-                        throwBoxes(
-                            world, 
-                            scene, 
-                            camera, 
-                            controls, 
-                            boxes, 
-                            boxMeshes
-                        );
-                        isShaking = false;
-                        setTimeout(createCube, 10000);
-                    }
-            };
-
-            shake();
+    const dropBox = () => {
+        if (!isCubeHeld && !heldCube) {
+            return;
         };
 
+        isCubeHeld = false;
+        window.removeEventListener('click', dropBox);
+
+        angle = 0;
+        const shakeDuration = 300;
+        const shakeIntensity = 0.05;
+        const shakeAxis = new THREE.Vector3(1, 0, 0);
+        const initialRotation = new THREE.Quaternion().copy(cubeMesh[1].quaternion);
+        let elapsedTime = 0;
+        let isShaking = true;
+        const clock = new THREE.Clock();
+
+        const shake = () => {
+            if (!isShaking) {
+                return;
+            };
+
+            elapsedTime += clock.getDelta() * 1000;
+            const shakeAngle = Math.random() * Math.PI * 2;
+            const shakeRotation = new THREE.Quaternion().setFromAxisAngle(shakeAxis, shakeAngle).normalize();
+            const targetRotation = new THREE.Quaternion().copy(initialRotation).multiply(shakeRotation);
+            const newRotation = new THREE.Quaternion().slerp(targetRotation, shakeIntensity).normalize();
+            cubeMesh[1].quaternion.copy(newRotation);
+            requestAnimationFrame(shake);
+
+            if (!cubeMesh[4] && elapsedTime >= shakeDuration) {
+                cubeMesh[4] = true;
+                camera.remove(cubeMesh[1]);
+                scene.remove(cubeMesh[1]);
+                throwBoxes(world, scene, camera, controls, boxes, boxMeshes, amountOfBoxes);
+                isShaking = false;
+                heldCube = null;
+            };
+        };
+
+        window.addEventListener('click', shake);
+    };
+
     window.addEventListener('click', dropBox);
-}  
+}
 
 function animate() {
     requestAnimationFrame(animate);
 
-    // for (let i = 0; i < meshes.length; i++) {
-    //     meshes[i].position.copy(cannonBodies[i].position);
-    //     meshes[i].quaternion.copy(cannonBodies[i].quaternion);
-    // }
     for(let i = 0; i < boxes.length; i++){
         boxMeshes[i].position.copy(boxes[i].position);
         boxMeshes[i].quaternion.copy(boxes[i].quaternion);
-    }
-
-    cubeMesh.position.copy(cubeBody.position);
-    cubeMesh.quaternion.copy(cubeBody.quaternion);
+    };
 
     if (controls.isLocked === true) {
 
-        // Start CANNON World Physics
         world.step(1 / 60);
 
         // Display captions
@@ -462,28 +460,36 @@ function animate() {
             for (let i = 0; i < objInfo.length; i++) {
                 if (objIntersections[0].object.id === objInfo[i][0]) {
                     document.querySelector('#artwork-caption p').innerHTML = objInfo[i][1];
-                }
-            }
+                };
+            };
             document.getElementById('artwork-caption').style.display = 'block';
         } else {
             document.getElementById('artwork-caption').style.display = 'none';
-        }
+        };
 
-        if (objIntersections[0] && cubeArray.indexOf(objIntersections[0].object.id) !== -1) {
-            window.addEventListener('click', pickUpBox)
+        if (objIntersections[0] && cubeID.indexOf(objIntersections[0].object.id) !== -1) {
+            for (let i = 0; i < cubes.length; i++) {
+                if (objIntersections[0].object.id === cubes[i][0]) {
+                    cubeMeshTest = cubes[i];
+                };
+            };
+            document.addEventListener('click', function() {
+                if (cubeMeshTest) {
+                    pickUpBox(cubeMeshTest)
+                };
+            });
         } else {
-            window.removeEventListener('click', pickUpBox)
+            document.removeEventListener('click', function() {pickUpBox});
             isCubeHeld = false;
         }
-        if (isCubeHeld) {
+        if (heldCube) {
             angle = 0.003;
-            const position = cubeMesh.position.clone();
+            const position = heldCube[2].clone();
             const axis = new THREE.Vector3(-1, 0, 0);
             const rotationAxis = position.clone().cross(axis).normalize();
             const rotation = new THREE.Quaternion().setFromAxisAngle(rotationAxis, angle);
-            cubeMesh.quaternion.multiply(rotation);
-            cubeBody.quaternion.copy(cubeMesh.quaternion);
-        }
+            heldCube[1].quaternion.multiply(rotation);
+        };
           
 
         // Transport to the next room
@@ -496,11 +502,11 @@ function animate() {
                 roomNumb = 0;
             } else {
                 roomNumb++;
-            }
+            };
             setTimeout(function () {
                 window.location.href = `?room=${roomNumb}`;
-            }, 1200)
-        }
+            }, 1200);
+        };
 
         // Controls
         const time = performance.now();
@@ -515,12 +521,12 @@ function animate() {
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
         prevTime = time;
-    }
+    };
 
     // Update video textures
     if (videoTexture) {
         videoTexture.needsUpdate = true;
-    }
+    };
     
     // Display current co-ordinates
     document.querySelector('.co-ord').innerHTML = Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);
@@ -546,5 +552,5 @@ window.onload = function() {
                 controls.lock()
             }
         }, 1000);
-    }
+    };
 }

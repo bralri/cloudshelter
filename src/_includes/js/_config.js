@@ -17,15 +17,15 @@ export const assets = [
             x: 0, y: -500
         },
         // Cell Tower + aircon units
-        // {
-        //     type: "glb",
-        //     id: "Cell-Tower-1",
-        //     title: "Cell-Tower-1",
-        //     info: "Cell-Tower-1",
-        //     src: v.celltowerGLB,
-        //     x: 0, y: -30, z: 0,
-        //     o: 1, t: false, scale: scale
-        // },
+        {
+            type: "glb",
+            id: "",
+            title: "",
+            info: "",
+            src: v.celltowerGLB,
+            x: 0, y: -30, z: 0,
+            o: 1, t: false, scale: scale * 2
+        },
         // // Videos
         // {
         //     type: "video",

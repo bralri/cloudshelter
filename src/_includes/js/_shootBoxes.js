@@ -10,13 +10,10 @@ export function throwBoxes(
     amountOfBoxes
 ) {
     const boxSize = 2;
-    const boxShape = new CANNON.Box(new CANNON.Vec3(boxSize / 2, boxSize / 2, boxSize / 2));
-    const boxMaterial = new CANNON.Material();
 
-    const boxGeometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
     const shootVelocity = 20;
+    const shootDelay = 1000; // 1 sec
     let canShoot = true;
-    const shootDelay = 500;
 
     const getShootDir = (targetVec) => {
         const vector = targetVec;
@@ -32,7 +29,7 @@ export function throwBoxes(
         const boxPosition = cameraPosition.clone().add(vector.multiplyScalar(20)).add(randomOffset);
 
         return boxPosition;
-    }
+    };
 
     if (!canShoot || !controls.isLocked) return;
 
@@ -43,11 +40,11 @@ export function throwBoxes(
     for (let i = 0; i < amountOfBoxes; i++) {
         const boxBody = new CANNON.Body({
             mass: 5, 
-            shape: boxShape, 
-            material: boxMaterial
+            shape: new CANNON.Box(new CANNON.Vec3(boxSize / 2, boxSize / 2, boxSize / 2)),
+            material: new CANNON.Material()
         });
         const boxMesh = new THREE.Mesh(
-            boxGeometry,
+            new THREE.BoxGeometry(boxSize, boxSize, boxSize),
             new THREE.MeshBasicMaterial({color: new THREE.Color()})
         );
         world.addBody(boxBody);
@@ -60,18 +57,18 @@ export function throwBoxes(
         ).multiplyScalar(spreadFactor);
         shootDirection.add(randomSpread).normalize().multiplyScalar(shootVelocity);
         boxBody.velocity.copy(shootDirection);
-        const positionOffset = shootDirection.clone().normalize().multiplyScalar(boxShape.boundingSphereRadius * 1.02 + boxSize + i * 2);
+        const positionOffset = shootDirection.clone().normalize().multiplyScalar(boxBody.shapes[0].boundingSphereRadius * 1.02 + boxSize + i * 2);
         const boxPosition = getShootDir(shootDirection).add(positionOffset);
         boxBody.position.copy(boxPosition);
         boxMesh.position.copy(boxPosition);
         boxes.push(boxBody);
         boxMeshes.push(boxMesh);
 
-        if (boxes.length > 21) {
+        if (boxes.length > 20) {
             world.removeBody(...boxes.splice(0, 1));
             scene.remove(...boxMeshes.splice(0, 1));
-        }
-    }
+        };
+    };
 
     setTimeout(() => {
         canShoot = true;

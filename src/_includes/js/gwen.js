@@ -7,10 +7,10 @@ import {throwBoxes} from '../js/_shootBoxes.min.js';
 
 let camera, scene, renderer, controls, object, videoScreen, videoTexture, sound;
 let groundPlaneMesh, groundPlaneBody, groundPhysicsMaterial;
-let sceneReady = false, cannonReady = false;
+let sceneReady = false;
 const manager = new THREE.LoadingManager();
-const world = new CANNON.World();
 const worldSize = 2000; // x2
+let world;
 
 let moveForward = false, moveBackward = false
 let moveLeft = false, moveRight = false;
@@ -26,24 +26,43 @@ const urlParams = new URLSearchParams(window.location.search);
 let roomNumb =  parseInt(urlParams.get('room')) > assets.length ? '0' : 
                 parseInt(urlParams.get('room')) <= assets.length ? parseInt(urlParams.get('room')) : 
                 0;
-const currentRoom = assets[roomNumb];
-let door;
+const currentRoom = assets[roomNumb]; let door;
 
-let isCubeHeld = false;
-let heldCube = null;
-let angle;
-let cubeMeshTest;
-let amountOfBoxes;
+let isCubeHeld = false; let heldCube = null;
+let angle; let cube; let amountOfBoxes;
 let cubes = [], cubeID = [];
 
 const loading = document.getElementById('loading');
 const title = document.getElementById('title');
 const overlay = document.getElementById('overlay');
 
-function cannonInit() {
+function init() {
 
+    // Scene
+    scene = new THREE.Scene();
+    world = new CANNON.World();
     world.gravity.set(0, -9.82 * 2, 0);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
 
+    const backgroundTxt = new THREE.TextureLoader(manager).load("../assets/images/gwen/background.png");
+    backgroundTxt.wrapS = THREE.RepeatWrapping; 
+    backgroundTxt.wrapT = THREE.RepeatWrapping;
+    const worldSphereGeometry = new THREE.SphereGeometry(2000, 32, 16);
+    const worldSphereMaterial = new THREE.MeshBasicMaterial({
+        map: backgroundTxt,
+        side: THREE.DoubleSide
+    });
+    const worldSphere = new THREE.Mesh(
+        worldSphereGeometry,
+        worldSphereMaterial
+    );
+    scene.add(worldSphere);
+
+    const backgroundColour = new THREE.Color(0xf7dff7).convertSRGBToLinear();
+    scene.background = backgroundColour;
+    scene.fog = new THREE.FogExp2(scene.background, 0.001);
+
+    // Global CANNON ground plane
     groundPhysicsMaterial = new CANNON.Material("groundPhysicsMaterial");
     groundPlaneBody = new CANNON.Body({
         type: CANNON.Body.STATIC,
@@ -54,22 +73,6 @@ function cannonInit() {
     groundPlaneBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     world.addBody(groundPlaneBody);
 
-    cannonReady = true;
-}
-
-function init() {
-
-    // Scene
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
-
-    const backgroundTxt = new THREE.TextureLoader(manager).load("../assets/images/gwen/background.png");
-    backgroundTxt.wrapS = THREE.RepeatWrapping; backgroundTxt.wrapT = THREE.RepeatWrapping;
-
-    scene.background = new THREE.Color(0xf7dff7).convertSRGBToLinear();
-    scene.fog = new THREE.FogExp2(scene.background, 0.0025);
-
-    // Global CANNON ground plane
     const geometryFromBody = groundPlaneBody.shapes[0].halfExtents;
     const groundGeometry = new THREE.PlaneGeometry(geometryFromBody.x * 2, geometryFromBody.y * 2);
     groundPlaneMesh = new THREE.Mesh(
@@ -85,7 +88,7 @@ function init() {
 
     // Controls
     controls = new PointerLockControls(camera, document.body);
-    controls.getObject().position.y = 15;
+    controls.getObject().position.set(0, 15, -20);
     controls.addEventListener('lock', function () {
         overlay.style.display = 'none';
     });
@@ -93,7 +96,7 @@ function init() {
         overlay.style.display = 'block';
     });
     title.addEventListener('click', function () {
-        if (sceneReady && cannonReady) {
+        if (sceneReady) {
             controls.lock();
             playSoundsVideos();
         }
@@ -341,57 +344,51 @@ function playSoundsVideos() {
 }
 
 function createCube() {
-    const cubeSize = 20;
+    const cubeSize = 10;
     for (let i = 0; i < 5; i++) {
         amountOfBoxes = i + 1;
+
         const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
         const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    
         cubeMesh.position.set((i * 50) - 100, -25, -100);
 
         let hasBeenThrown = false
     
-        scene.add(cubeMesh);
         cubeID.push(cubeMesh.id);
-        cubes.push([
-            cubeMesh.id,
-            cubeMesh,
-            cubeMesh.position,
-            amountOfBoxes,
-            hasBeenThrown
-        ]);
+        cubes.push({
+            id: cubeMesh.id,
+            mesh: cubeMesh,
+            position: cubeMesh.position,
+            amountOfBoxes: amountOfBoxes,
+            hasBeenThrown: hasBeenThrown,
+            quaternion: new THREE.Quaternion()
+        });
 
+        scene.add(cubeMesh);
         objID.push(cubeMesh.id);
-        objInfo.push(
-            [cubeMesh.id, 
-                `
-                <span class="artist">Pick me up!</span>
-                `
-            ]
-        );
+        objInfo.push([cubeMesh.id, `<span class="artist">Pick me up!</span>`]);
     }
 }
 
-function pickUpBox(cubeMesh) {
-    if (heldCube || !cubeMesh) {
+function pickUpBox(cube) {
+    if (heldCube || !cube) {
         return;
     };
   
     isCubeHeld = true;
-    let amountOfBoxes = cubeMesh[3];
-    scene.remove(cubeMesh[1]);
+    let amountOfBoxes = cube.amountOfBoxes;
+    scene.remove(cube.mesh);
   
-    scene.add(cubeMesh[1]);
-    camera.add(cubeMesh[1]);
-    cubeMesh[2].set(0, 0, -40);
-  
-    heldCube = cubeMesh;
-    heldCube[5] = new THREE.Quaternion().copy(heldCube[1].quaternion);
+    scene.add(cube.mesh);
+    camera.add(cube.mesh);
 
-    objInfo.push(
-        [cubeMesh[0], `<span class="artist">Click to throw me!</span>`]
-    );
+    let cubeOffsetFromCamera = cube.mesh.geometry.parameters.width * -2;
+    cube.position.set(0, 0, cubeOffsetFromCamera);
+    cube.quaternion.copy(cube.mesh.quaternion);
+    heldCube = cube;
+
+    objInfo.push([cube.id, `<span class="artist">Click to throw me!</span>`]);
 
     const dropBox = () => {
         if (!isCubeHeld && !heldCube) {
@@ -405,7 +402,7 @@ function pickUpBox(cubeMesh) {
         const shakeDuration = 300;
         const shakeIntensity = 0.05;
         const shakeAxis = new THREE.Vector3(1, 0, 0);
-        const initialRotation = new THREE.Quaternion().copy(cubeMesh[1].quaternion);
+        const initialRotation = new THREE.Quaternion().copy(cube.mesh.quaternion);
         let elapsedTime = 0;
         let isShaking = true;
         const clock = new THREE.Clock();
@@ -420,13 +417,13 @@ function pickUpBox(cubeMesh) {
             const shakeRotation = new THREE.Quaternion().setFromAxisAngle(shakeAxis, shakeAngle).normalize();
             const targetRotation = new THREE.Quaternion().copy(initialRotation).multiply(shakeRotation);
             const newRotation = new THREE.Quaternion().slerp(targetRotation, shakeIntensity).normalize();
-            cubeMesh[1].quaternion.copy(newRotation);
+            cube.mesh.quaternion.copy(newRotation);
             requestAnimationFrame(shake);
 
-            if (!cubeMesh[4] && elapsedTime >= shakeDuration) {
-                cubeMesh[4] = true;
-                camera.remove(cubeMesh[1]);
-                scene.remove(cubeMesh[1]);
+            if (!cube.hasBeenThrown && elapsedTime >= shakeDuration) {
+                cube.hasBeenThrown = true;
+                camera.remove(cube.mesh);
+                scene.remove(cube.mesh);
                 throwBoxes(world, scene, camera, controls, boxes, boxMeshes, amountOfBoxes);
                 isShaking = false;
                 heldCube = null;
@@ -442,6 +439,7 @@ function pickUpBox(cubeMesh) {
 function animate() {
     requestAnimationFrame(animate);
 
+    // Update meshes and bodies
     for(let i = 0; i < boxes.length; i++){
         boxMeshes[i].position.copy(boxes[i].position);
         boxMeshes[i].quaternion.copy(boxes[i].quaternion);
@@ -451,11 +449,12 @@ function animate() {
 
         world.step(1 / 60);
 
-        // Display captions
+        // Raycaster
         let objIntersections = (new THREE.Raycaster(
             camera.position,
             camera.getWorldDirection(new THREE.Vector3()))).intersectObjects(scene.children, true);
 
+        // Display Captions
         if (objIntersections[0] && objID.indexOf(objIntersections[0].object.id) !== -1) {
             for (let i = 0; i < objInfo.length; i++) {
                 if (objIntersections[0].object.id === objInfo[i][0]) {
@@ -467,30 +466,30 @@ function animate() {
             document.getElementById('artwork-caption').style.display = 'none';
         };
 
+        // Pick-Up and Throw models
         if (objIntersections[0] && cubeID.indexOf(objIntersections[0].object.id) !== -1) {
             for (let i = 0; i < cubes.length; i++) {
-                if (objIntersections[0].object.id === cubes[i][0]) {
-                    cubeMeshTest = cubes[i];
+                if (objIntersections[0].object.id === cubes[i].id) {
+                    cube = cubes[i];
                 };
             };
             document.addEventListener('click', function() {
-                if (cubeMeshTest) {
-                    pickUpBox(cubeMeshTest)
-                };
+                pickUpBox(cube);
             });
         } else {
-            document.removeEventListener('click', function() {pickUpBox});
+            document.removeEventListener('click', function() {
+                pickUpBox();
+            });
             isCubeHeld = false;
-        }
+        };
         if (heldCube) {
             angle = 0.003;
-            const position = heldCube[2].clone();
+            const position = heldCube.position.clone();
             const axis = new THREE.Vector3(-1, 0, 0);
             const rotationAxis = position.clone().cross(axis).normalize();
             const rotation = new THREE.Quaternion().setFromAxisAngle(rotationAxis, angle);
-            heldCube[1].quaternion.multiply(rotation);
+            heldCube.mesh.quaternion.multiply(rotation);
         };
-          
 
         // Transport to the next room
         if (camera.position.z >= door.position.z - 20 && camera.position.z <= door.position.z + 20 
@@ -508,7 +507,7 @@ function animate() {
             }, 1200);
         };
 
-        // Controls
+        // Update Controls
         const time = performance.now();
         const delta = (time - prevTime) / 1000;
         velocity.x -= velocity.x * 5.0 * delta;
@@ -541,16 +540,15 @@ function onWindowResize() {
 }
 
 window.onload = function() {
-    cannonInit();
     init();
     loadAssets();
     setTimeout(animate, 1000);
-    if (sceneReady && cannonReady) {
+    if (sceneReady) {
         setTimeout(function() {
             loading.classList.add('fade');
             if (roomNumb !== 0) {
-                controls.lock()
-            }
+                controls.lock();
+            };
         }, 1000);
     };
 }

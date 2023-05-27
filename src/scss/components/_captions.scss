@@ -1,51 +1,26 @@
 // Captions
-
-#artwork-caption {
+#caption {
     position: absolute;
     z-index: 99;
-    bottom: 0;
-    left: 0;
-    padding: 16px;
     display: none;
-    width: 1000px;
-
+    padding: 10px;
     color: $white;
+
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -95%);
+
+    background-color: rgba($black, 0.1);
+    border-radius: 10px;
 }
-#artwork-caption p {
+#caption p {
     font-size: 20px;
 }
-#artwork-caption p .artist {
+#caption p .caption {
     font-weight: 600;
     display: inline-block;
-    padding-bottom: 4px;
 }
-#artwork-caption p .info {
-    font-weight: 400;
-    font-size: 18px;
-}
-
-// Instructions
-
-#instructions {
-    position: absolute;
-    z-index: 99;
-    bottom: 0;
-    left: 0;
-    padding: 16px;
-    display: none;
-    width: 1000px;
-
-    color: $white; //change this based on background colours
-}
-#instructions p {
-    font-size: 20px;
-}
-#instructions p .artist {
-    font-weight: 600;
-    display: inline-block;
-    padding-bottom: 4px;
-}
-#instructions p .info {
+#caption p .info {
     font-weight: 400;
     font-size: 18px;
 }

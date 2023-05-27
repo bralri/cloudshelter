@@ -223,13 +223,12 @@ function init() {
             id: 'shelter',
             URL: '../assets/models/shelter.glb',
             x: 0, y: 0, z: 0,
-            caption: ''
         },
         {
             id: 'seat',
             URL: '../assets/models/seat.glb',
             x: 0, y: 0, z: 0,
-            caption: `'Click' to sit down`
+            caption: `LMB to sit down`
         }
     ]
 
@@ -257,14 +256,16 @@ function init() {
                 object.position.set(obj.x, obj.y, obj.z);
                 scene.add(object);
                 
-                for (var i in object.children) {
-                    objID.push(object.children[i].id);
-                    objInfo.push([
-
-                        object.children[i].id,
-                        `<span class="info">${obj.caption}</span><br>`
-
-                    ])
+                if (obj.caption) {
+                    for (var i in object.children) {
+                        objID.push(object.children[i].id);
+                        objInfo.push([
+    
+                            object.children[i].id,
+                            `<span class="caption">${obj.caption}</span><br>`
+    
+                        ])
+                    }
                 }
 
                 if (obj.id === "seat") {
@@ -307,13 +308,11 @@ function SIT__DOWN() {
         speed = 0;
         _speed = 0;
 
-        // display instructions
-        document.getElementById('instructions').style.display = 'block'
-        document.getElementById('instructions').innerHTML = `<span class="info">'Click' to stand up</span><br><span class="info">'M' to pause audio</span>`;
 
+        document.getElementById('caption').innerHTML = `<span class="caption">LMB to stand up, M to pause audio</span>`;
+
+        console.log(document.getElementById('caption').innerHTML)
         document.addEventListener('click', STAND__UP);
-
-        console.log('user sitting')
     }
 }
 
@@ -328,7 +327,7 @@ function STAND__UP() {
         speed = 5.0;
         _speed = 100.0;
 
-        document.getElementById('instructions').style.display = 'none'
+        document.getElementById('caption').style.display = 'none'
         document.removeEventListener('click', STAND__UP);
 
         console.log('user standing')
@@ -362,16 +361,12 @@ function animate() {
         if (objIntersections[0] && objID.indexOf(objIntersections[0].object.id) !== -1) {
             for (let i = 0; i < objInfo.length; i++) {
                 if (objIntersections[0].object.id === objInfo[i][0]) {
-                    document.querySelector('#artwork-caption p').innerHTML = objInfo[i][1];
+                    document.querySelector('#caption p').innerHTML = objInfo[i][1];
                 }
             }
-            document.getElementById('artwork-caption').style.display = 'block';
-
-            if (sitting === true) {
-                document.getElementById('artwork-caption').style.display = 'none';
-            }
+            document.getElementById('caption').style.display = 'block';
         } else {
-            document.getElementById('artwork-caption').style.display = 'none';
+            document.getElementById('caption').style.display = 'none';
         }
 
         if (objIntersections[0] && seatID.indexOf(objIntersections[0].object.id) !== -1) {

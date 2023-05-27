@@ -216,10 +216,14 @@ const loadAssets = () => {
 const playAssets = () => {
     if (!playing) {
         for (let i = 0; i < playVideos.length; i++) {
-            playVideos[i][0].play();
+            if (playVideos[i][0].readyState >= playVideos[i][0].HAVE_ENOUGH_DATA) {
+                playVideos[i][0].play();
+            }
         }
         for (let i = 0; i < playAudio.length; i++) {
-            playAudio[i].play();
+            if (playAudio[i].readyState >= playAudio[i].HAVE_ENOUGH_DATA) {
+                playAudio[i].play();
+            }
         }
         for (let i = 0; i < animationActions.length; i++) {
             animationActions[i].play();
@@ -361,7 +365,7 @@ const animate = () => {
 
     if (controls.isLocked === true) {
 
-        world.step(1 / 60);
+        world.step(1 / 30);
 
         // Raycaster
         const raycaster = (
@@ -387,21 +391,21 @@ const animate = () => {
             if (asset.userData.method) {
                 if (asset.userData.method.pickUp) {
                     document.addEventListener('click', () => {
-                        PICK_UP_ASSET(asset.userData.mesh);
+                        pickUpAsset(asset.userData.mesh);
                     })
                 } else if (asset.userData.mesh && asset.userData.hasBeenThrown) {
                     document.removeEventListener('click', () => {
-                        PICK_UP_ASSET();
+                        pickUpAsset();
                     });
                 }
             } else if (asset.parent.userData.method) {
                 if (asset.parent.userData.method.pickUp) {
                     document.addEventListener('click', () => {
-                        PICK_UP_ASSET(asset.parent);
+                        pickUpAsset(asset.parent);
                     })
                 } else if (asset.parent && asset.userData.hasBeenThrown) {
                     document.removeEventListener('click', () => {
-                        PICK_UP_ASSET();
+                        pickUpAsset();
                     });
                 }
             }
@@ -457,7 +461,7 @@ const animate = () => {
     }
 
     document.querySelector('.co-ord').innerHTML =  Math.round(controls.getObject().position.x) + ", " + Math.round(controls.getObject().position.z);;
-    water.material.uniforms['time'].value += 1 / 60;
+    water.material.uniforms['time'].value += 1 / 30;
     renderer.render(scene, camera);
 }
 

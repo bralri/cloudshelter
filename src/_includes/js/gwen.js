@@ -221,9 +221,7 @@ const playAssets = () => {
             }
         }
         for (let i = 0; i < playAudio.length; i++) {
-            if (playAudio[i].readyState >= playAudio[i].HAVE_ENOUGH_DATA) {
-                playAudio[i].play();
-            }
+            playAudio[i].play();
         }
         for (let i = 0; i < animationActions.length; i++) {
             animationActions[i].play();

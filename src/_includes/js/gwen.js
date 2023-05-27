@@ -441,7 +441,11 @@ const animate = () => {
     // Update Video Textures
     if (playVideos) {
         for (let i = 0; i < playVideos.length; i++) {
-            playVideos[i][1].needsUpdate = true;
+            setInterval(() => {
+                if (playVideos[i][0].readyState >= playVideos[i][0].HAVE_ENOUGH_DATA) {
+                    playVideos[i][1].needsUpdate = true;
+                }
+            }, 1000 / 30);
         }
     }
     

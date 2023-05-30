@@ -854,7 +854,7 @@ const createAudioObject = (src, id, x, y, z) => {
  * @param {number} w The rotation of the asset in degrees
  * @returns 
  */
-export async function createAssetInstance(id, x, y, z, w) {
+export const createAssetInstance = async (id, x, y, z, w) => {
     if (id in database) {
         const assetFunction = database[id];
         const asset = await assetFunction(x, y, z, w);

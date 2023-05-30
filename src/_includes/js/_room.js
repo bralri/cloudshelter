@@ -43,7 +43,7 @@ export const room = [
 
         {
             id: 'tanqueray-tod',
-            x: -90, y: 450, z: 0, w: -90
+            x: -90, y: 400, z: 0, w: -90
         },
         {
             id: 'ppt1609-spam',
@@ -51,7 +51,7 @@ export const room = [
         },
         {
             id: 'ppt1609-qr',
-            x: -90, y: 250, z: -30, w: -90
+            x: -90, y: 200, z: -30, w: -90
         },
     ],
 // Room 1 - ?

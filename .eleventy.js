@@ -22,7 +22,14 @@ module.exports = (eleventyConfig) => {
     eleventyConfig.addLiquidFilter("dateToRfc822", pluginRSS.dateToRfc822);
 
     eleventyConfig.addPassthroughCopy('./src/js/');
-    eleventyConfig.addPassthroughCopy('./src/assets');
+
+    eleventyConfig.addPassthroughCopy('./src/assets/fonts');
+    eleventyConfig.addPassthroughCopy('./src/assets/images');
+    eleventyConfig.addPassthroughCopy('./src/assets/models');
+    eleventyConfig.addPassthroughCopy('./src/assets/sounds');
+    eleventyConfig.addPassthroughCopy('./src/assets/videos');
+
+
     eleventyConfig.addPassthroughCopy('./src/favicon.ico');
     
 

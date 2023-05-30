@@ -1,0 +1,5 @@
+---
+permalink: /js/_room.min.js
+eleventyExcludeFromCollections: true
+---
+{% set js %}{% include "js/_room.js" %}{% endset %}{{ js | jsmin | safe }}
